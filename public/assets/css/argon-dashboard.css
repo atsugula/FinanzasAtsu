@@ -19184,7 +19184,8 @@ textarea.form-control-lg {
   padding: 0.3rem 0.3rem;
 }
 .btn.btn-sm i, .btn-group-sm > .btn i {
-  font-size: 0.7rem;
+  /* font-size: 0.7rem; */ /* Modificado por comodidad */
+  font-size: 0.9rem;
 }
 .btn.btn-lg.btn-icon-only, .btn-group-lg > .btn.btn-icon-only {
   width: 3.25rem;
