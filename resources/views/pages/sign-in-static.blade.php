@@ -9,7 +9,7 @@
                     class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4">
                     <div class="container-fluid">
                         <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="{{ route('home') }}">
-                            Argon Dashboard 2 Laravel
+                            {{ env('APP_NAME', 'Argon Dashboard 2') }}
                         </a>
                         <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
@@ -48,12 +48,12 @@
                                     </a>
                                 </li>
                             </ul>
-                            <ul class="navbar-nav d-lg-block d-none">
+                            {{-- <ul class="navbar-nav d-lg-block d-none">
                                 <li class="nav-item">
                                     <a href="https://www.creative-tim.com/product/argon-dashboard-laravel" target="_blank"
                                         class="btn btn-sm mb-0 me-1 btn-primary">Free Download</a>
                                 </li>
-                            </ul>
+                            </ul> --}}
                         </div>
                     </div>
                 </nav>

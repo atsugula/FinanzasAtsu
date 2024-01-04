@@ -5,7 +5,7 @@
     <div class="row mt-4 mx-4">
         <div class="col-12">
             <div class="alert alert-light" role="alert">
-                This feature is available in <strong>Argon Dashboard 2 Pro Laravel</strong>. Check it
+                This feature is available in <strong>{{ env('APP_NAME', 'Argon Dashboard 2') }}</strong>. Check it
                 <strong>
                     <a href="https://www.creative-tim.com/product/argon-dashboard-pro-laravel" target="_blank">
                         here
