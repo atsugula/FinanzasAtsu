@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\V1\ExpensesCategoryController;
+use App\Http\Controllers\V1\ExpenseController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\V1\IncomeController;
 use App\Http\Controllers\RegisterController;
@@ -33,6 +34,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('users', UserController::class)->names('users');
 	Route::resource('incomes', IncomeController::class)->names('incomes');
 	Route::resource('expenses-categories', ExpensesCategoryController::class)->names('expenses-categories');
+	Route::resource('expenses', ExpenseController::class)->names('expenses');
 	/* Paginas de la plantilla */
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');

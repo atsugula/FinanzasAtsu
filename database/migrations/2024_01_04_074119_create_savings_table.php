@@ -19,7 +19,7 @@ return new class extends Migration
 
             $table->double('amount');
             $table->text('goal');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->date('date')->nullable();
 
             $table->timestamps();

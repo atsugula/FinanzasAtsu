@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('category')->references('id')->on('expenses_categories');
 
             $table->double('amount');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->date('date')->nullable();
 
 
