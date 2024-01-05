@@ -19,7 +19,7 @@ return new class extends Migration
             
             $table->double('amount');
             $table->string('source', 191);
-            $table->date('date')->nullable();
+            $table->text('date')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
