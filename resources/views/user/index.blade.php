@@ -28,6 +28,7 @@
                         </div>
                     </div>
 
+                    {{-- Separar card --}}
                     <span class="card-separator"></span>
 
                     {{-- Plantilla mensajes--}}
