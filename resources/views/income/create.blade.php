@@ -1,16 +1,16 @@
-@extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
+@extends('layouts.app')
 
 @section('template_title')
-    {{ __('Update') }} User
+    {{ __('Create Income') }}
 @endsection
 
 @section('content')
 
     {{-- Navbar template --}}
-    @include('layouts.navbars.auth.topnav', ['title' => __('User')])
+    @include('layouts.navbars.auth.topnav', ['title' => __('Income')])
 
     <section class="content container-fluid">
-        <div class="">
+        <div class="row">
             <div class="col-md-12">
 
                 @includeif('partials.errors')
@@ -19,10 +19,10 @@
 
                     <div class="card-header">
                         <div class="float-left">
-                            <span class="card-title">{{ __('Update User') }} </span>
+                            <span class="card-title">{{ __('Create Income') }} </span>
                         </div>
                         <div class="float-right">
-                            <a class="btn btn-primary" href="{{ route('users.index') }}"> {{__('Back')}}</a>
+                            <a class="btn btn-primary" href="{{ route('incomes.index') }}"> {{__('Back')}}</a>
                         </div>
                     </div>
 
@@ -30,11 +30,10 @@
                     <span class="card-separator"></span>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('users.update', $user->id) }}"  role="form" enctype="multipart/form-data">
-                            {{ method_field('PATCH') }}
+                        <form method="POST" action="{{ route('incomes.store') }}"  role="form" enctype="multipart/form-data">
                             @csrf
 
-                            @include('user.form')
+                            @include('income.form')
 
                         </form>
                     </div>

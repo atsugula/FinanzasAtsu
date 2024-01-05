@@ -83,4 +83,5 @@
     
     {{-- Boton para todo --}}
     @include('layouts.btn-submit')
+    
 </div>
