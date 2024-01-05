@@ -1,30 +1,20 @@
 <?php
 
+use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\V1\UserController;            
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\ChangePassword;            
+use App\Http\Controllers\ResetPassword;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\UserProfileController;
-use App\Http\Controllers\ResetPassword;
-use App\Http\Controllers\ChangePassword;            
-            
+Route::resource('users', UserController::class)->names('users');
 
 Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
