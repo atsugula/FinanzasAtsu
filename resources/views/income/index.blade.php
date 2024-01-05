@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('template_title')
-    {{ __('User') }}
+    {{ __('Income') }}
 @endsection
 
 @section('content')
@@ -17,11 +17,11 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('User') }}
+                                {{ __('Income') }}
                             </span>
 
                             <div class="float-right">
-                                <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                <a href="{{ route('incomes.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                                     {{ __('Create New') }}
                                 </a>
                             </div>
@@ -41,38 +41,28 @@
                                     <tr>
                                         <th>No</th>
                                         
-										<th>Username</th>
-										<th>Firstname</th>
-										<th>Lastname</th>
-										<th>Email</th>
-										<th>Address</th>
-										<th>City</th>
-										<th>Country</th>
-										<th>Postal</th>
-										<th>About</th>
+										<th>User</th>
+										<th>Amount</th>
+										<th>Source</th>
+										<th>Date</th>
 
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($users as $user)
+                                    @foreach ($incomes as $income)
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-											<td>{{ $user->username }}</td>
-											<td>{{ $user->firstname }}</td>
-											<td>{{ $user->lastname }}</td>
-											<td>{{ $user->email }}</td>
-											<td>{{ $user->address }}</td>
-											<td>{{ $user->city }}</td>
-											<td>{{ $user->country }}</td>
-											<td>{{ $user->postal }}</td>
-											<td>{{ $user->about }}</td>
+											<td>{{ $income->user?->firstname }}</td>
+											<td>{{ $income->amount }}</td>
+											<td>{{ $income->source }}</td>
+											<td>{{ $income->date }}</td>
 
                                             <td>
-                                                <form action="{{ route('users.destroy',$user->id) }}" method="POST" class="form-delete">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('users.show',$user->id) }}"><i class="fa fa-fw fa-eye"></i>{{--  {{ __('Show') }} --}}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('users.edit',$user->id) }}"><i class="fa fa-fw fa-edit"></i>{{--  {{ __('Edit') }} --}}</a>
+                                                <form action="{{ route('incomes.destroy',$income->id) }}" method="POST" class="form-delete">
+                                                    <a class="btn btn-sm btn-primary " href="{{ route('incomes.show',$income->id) }}"><i class="fa fa-fw fa-eye"></i>{{--  {{ __('Show') }} --}}</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('incomes.edit',$income->id) }}"><i class="fa fa-fw fa-edit"></i>{{--  {{ __('Edit') }} --}}</a>
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i>{{--  {{ __('Delete') }} --}}</button>
@@ -85,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-                {!! $users->links() !!}
+                {!! $incomes->links() !!}
             </div>
         </div>
     </div>
@@ -101,3 +91,4 @@
     {{-- <script src="{{ asset('assets/js/plugins/datatable.js') }}"></script> --}}
 
 @endsection
+
