@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\V1;
 
 use App\Models\User;
-use App\Models\V1\Income;
+use App\Models\V1\Saving;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
- * Class IncomeController
+ * Class SavingController
  * @package App\Http\Controllers
  */
-class IncomeController extends Controller
+class SavingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,10 +20,10 @@ class IncomeController extends Controller
      */
     public function index()
     {
-        $incomes = Income::paginate();
+        $savings = Saving::paginate();
 
-        return view('income.index', compact('incomes'))
-            ->with('i', (request()->input('page', 1) - 1) * $incomes->perPage());
+        return view('saving.index', compact('savings'))
+            ->with('i', (request()->input('page', 1) - 1) * $savings->perPage());
     }
 
     /**
@@ -33,11 +33,11 @@ class IncomeController extends Controller
      */
     public function create()
     {
-        $income = new Income();
+        $saving = new Saving();
 
         $users = User::pluck('firstname AS label', 'id as value');
 
-        return view('income.create', compact('income', 'users'));
+        return view('saving.create', compact('saving', 'users'));
     }
 
     /**
@@ -48,12 +48,12 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate(Income::$rules);
+        request()->validate(Saving::$rules);
 
-        $income = Income::create($request->all());
+        $saving = Saving::create($request->all());
 
-        return redirect()->route('incomes.index')
-            ->with('success', 'Income created successfully.');
+        return redirect()->route('savings.index')
+            ->with('success', 'Saving created successfully.');
     }
 
     /**
@@ -64,9 +64,9 @@ class IncomeController extends Controller
      */
     public function show($id)
     {
-        $income = Income::find($id);
+        $saving = Saving::find($id);
 
-        return view('income.show', compact('income'));
+        return view('saving.show', compact('saving'));
     }
 
     /**
@@ -77,28 +77,28 @@ class IncomeController extends Controller
      */
     public function edit($id)
     {
-        $income = Income::find($id);
+        $saving = Saving::find($id);
 
         $users = User::pluck('firstname AS label', 'id as value');
 
-        return view('income.edit', compact('income', 'users'));
+        return view('saving.edit', compact('saving', 'users'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  Income $income
+     * @param  Saving $saving
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Income $income)
+    public function update(Request $request, Saving $saving)
     {
-        request()->validate(Income::$rules);
+        request()->validate(Saving::$rules);
 
-        $income->update($request->all());
+        $saving->update($request->all());
 
-        return redirect()->route('incomes.index')
-            ->with('success', 'Income updated successfully');
+        return redirect()->route('savings.index')
+            ->with('success', 'Saving updated successfully');
     }
 
     /**
@@ -108,9 +108,9 @@ class IncomeController extends Controller
      */
     public function destroy($id)
     {
-        $income = Income::find($id)->delete();
+        $saving = Saving::find($id)->delete();
 
-        return redirect()->route('incomes.index')
-            ->with('success', 'Income deleted successfully');
+        return redirect()->route('savings.index')
+            ->with('success', 'Saving deleted successfully');
     }
 }
