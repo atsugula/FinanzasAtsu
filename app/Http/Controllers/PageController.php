@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class PageController extends Controller
 {
@@ -14,11 +15,15 @@ class PageController extends Controller
      */
     public function index(string $page)
     {
+
+        // Si la vista existe, devolverla
         if (view()->exists("pages.{$page}")) {
             return view("pages.{$page}");
         }
 
+        // Si no se cumple ninguna condición, lanzar un error 404
         return abort(404);
+
     }
 
     public function vr()

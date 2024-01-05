@@ -59,6 +59,7 @@
   --bs-body-line-height: 1.5;
   --bs-body-color: #67748e;
   --bs-body-bg: #fff;
+  --color-base: #fb6340;
 }
 
 *,
@@ -24866,4 +24867,28 @@ pre[class*=language-] {
   .ps {
     overflow: auto !important;
   }
+}
+
+/* Clases creados por atsu */
+
+.float-left {
+  float: left !important;
+}
+
+.float-right {
+  float: right !important;
+}
+
+.float-none {
+  float: none !important;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.card-separator {
+  background: var(--color-base) !important;
+  height: .1rem;
+  /* border-radius: 0 0 .3rem .3rem; */
 }
