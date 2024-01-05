@@ -41,7 +41,7 @@ return [
     'layout' => 'layouts.app',
 
     'model' => [
-        'namespace' => 'App\Models',
+        'namespace' => 'App\Models\V1',
 
         /*
          * Do not make these columns $fillable in Model or views
@@ -58,7 +58,7 @@ return [
     ],
 
     'controller' => [
-        'namespace' => 'App\Http\Controllers',
+        'namespace' => 'App\Http\Controllers\V1',
     ],
 
 ];

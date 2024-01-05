@@ -59,6 +59,7 @@
   --bs-body-line-height: 1.5;
   --bs-body-color: #67748e;
   --bs-body-bg: #fff;
+  --color-base: #fb6340;
 }
 
 *,
@@ -19184,7 +19185,8 @@ textarea.form-control-lg {
   padding: 0.3rem 0.3rem;
 }
 .btn.btn-sm i, .btn-group-sm > .btn i {
-  font-size: 0.7rem;
+  /* font-size: 0.7rem; */ /* Modificado por comodidad */
+  font-size: 0.9rem;
 }
 .btn.btn-lg.btn-icon-only, .btn-group-lg > .btn.btn-icon-only {
   width: 3.25rem;
@@ -21144,7 +21146,7 @@ hr.horizontal.gray-light {
 .navbar-vertical.navbar-expand-xs .navbar-collapse {
   display: block;
   overflow: auto;
-  height: calc(100vh - 360px);
+  /* height: calc(100vh - 360px); */ /* Toca quitarlo pa que se muestre bonito */
 }
 .navbar-vertical.navbar-expand-xs > [class*=container] {
   flex-direction: column;
@@ -24865,4 +24867,28 @@ pre[class*=language-] {
   .ps {
     overflow: auto !important;
   }
+}
+
+/* Clases creados por atsu */
+
+.float-left {
+  float: left !important;
+}
+
+.float-right {
+  float: right !important;
+}
+
+.float-none {
+  float: none !important;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.card-separator {
+  background: var(--color-base) !important;
+  height: .1rem;
+  /* border-radius: 0 0 .3rem .3rem; */
 }
