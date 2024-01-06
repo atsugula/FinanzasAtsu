@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Income
  *
  * @property $id
- * @property $user_id
+ * @property $created_by
  * @property $amount
  * @property $source
  * @property $date
@@ -29,7 +29,6 @@ class Income extends Model
   protected $table = "incomes";
 
   static $rules = [
-    'user_id' => 'required',
     'amount' => 'required',
     'source' => 'required',
   ];
@@ -42,7 +41,7 @@ class Income extends Model
    * @var array
    */
   protected $fillable = [
-    'user_id',
+    'created_by',
     'amount',
     'source',
     'date'
@@ -53,7 +52,7 @@ class Income extends Model
    */
   public function user()
   {
-    return $this->hasOne(User::class, 'id', 'user_id');
+    return $this->hasOne(User::class, 'id', 'created_by');
   }
 
 }

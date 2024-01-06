@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Saving
  *
  * @property $id
- * @property $user_id
+ * @property $created_by
  * @property $amount
  * @property $goal
  * @property $description
@@ -28,10 +28,8 @@ class Saving extends Model
     use SoftDeletes;
 
     static $rules = [
-      'user_id' => 'required',
       'amount' => 'required',
       'goal' => 'required',
-      'description' => 'required',
     ];
 
     protected $perPage = 20;
@@ -42,7 +40,7 @@ class Saving extends Model
      * @var array
      */
     protected $fillable = [
-      'user_id',
+      'created_by',
       'amount',
       'goal',
       'description',
@@ -54,7 +52,7 @@ class Saving extends Model
      */
     public function user()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'created_by');
     }
     
 
