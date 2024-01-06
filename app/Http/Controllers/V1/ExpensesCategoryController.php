@@ -46,6 +46,11 @@ class ExpensesCategoryController extends Controller
     {
         request()->validate(ExpensesCategory::$rules);
 
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+
+        $request['created_by'] = $id_auth;
+
         $expensesCategory = ExpensesCategory::create($request->all());
 
         return redirect()->route('expenses-categories.index')
