@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Expense
  *
  * @property $id
- * @property $user_id
+ * @property $created_by
  * @property $category
  * @property $amount
  * @property $description
@@ -29,10 +29,8 @@ class Expense extends Model
     use SoftDeletes;
 
     static $rules = [
-		'user_id' => 'required',
 		'category' => 'required',
 		'amount' => 'required',
-		'description' => 'required',
     ];
 
     protected $perPage = 20;
@@ -42,7 +40,13 @@ class Expense extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id','category','amount','description','date'];
+    protected $fillable = [
+        'created_by',
+        'category',
+        'amount',
+        'description',
+        'date'
+    ];
 
 
     /**
@@ -58,7 +62,7 @@ class Expense extends Model
      */
     public function user()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'created_by');
     }
     
 
