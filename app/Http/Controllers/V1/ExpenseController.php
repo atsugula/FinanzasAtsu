@@ -21,7 +21,11 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        $expenses = Expense::paginate();
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+
+        $expenses = Expense::where('created_by', $id_auth)->paginate();
 
         return view('expense.index', compact('expenses'))
             ->with('i', (request()->input('page', 1) - 1) * $expenses->perPage());
@@ -36,8 +40,11 @@ class ExpenseController extends Controller
     {
         $expense = new Expense();
 
-        $users = User::pluck('firstname AS label', 'id as value');
-        $categories = ExpensesCategory::pluck('name AS label', 'id as value');
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+
+        $users = User::where('id', $id_auth)->pluck('firstname AS label', 'id as value');
+        $categories = ExpensesCategory::where('created_by', $id_auth)->pluck('name AS label', 'id as value');
 
         return view('expense.create', compact('expense', 'users', 'categories'));
     }
@@ -51,6 +58,11 @@ class ExpenseController extends Controller
     public function store(Request $request)
     {
         request()->validate(Expense::$rules);
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+
+        $request['created_by'] = $id_auth;
 
         $expense = Expense::create($request->all());
 

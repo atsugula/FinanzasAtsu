@@ -15,17 +15,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('username');
-            $table->string('firstname')->nullable();
-            $table->string('lastname')->nullable();
-            $table->string('email')->unique();
+            $table->string('username', 191);
+            $table->string('firstname', 191)->nullable();
+            $table->string('lastname', 191)->nullable();
+            $table->string('email', 191)->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('country')->nullable();
-            $table->string('postal')->nullable();
-            $table->text('about')->nullable();
+            $table->string('password', 191);
+            $table->string('address', 191)->nullable();
+            $table->string('city', 191)->nullable();
+            $table->string('country', 191)->nullable();
+            $table->string('postal', 191)->nullable();
+            $table->text('about', 191)->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

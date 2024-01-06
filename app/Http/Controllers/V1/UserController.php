@@ -20,7 +20,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate();
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+        
+        $users = User::where('id', $id_auth)->paginate();
 
         return view('user.index', compact('users'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
