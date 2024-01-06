@@ -20,7 +20,11 @@ class IncomeController extends Controller
      */
     public function index()
     {
-        $incomes = Income::paginate();
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+        
+        $incomes = Income::where('created_by', $id_auth)->paginate();
 
         return view('income.index', compact('incomes'))
             ->with('i', (request()->input('page', 1) - 1) * $incomes->perPage());
@@ -49,6 +53,11 @@ class IncomeController extends Controller
     public function store(Request $request)
     {
         request()->validate(Income::$rules);
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+
+        $request['created_by'] = $id_auth;
 
         $income = Income::create($request->all());
 

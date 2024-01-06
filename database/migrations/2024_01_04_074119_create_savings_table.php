@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('savings', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('created_by');
+            $table->foreign('created_by')->references('id')->on('users');
 
             $table->double('amount');
             $table->text('goal');

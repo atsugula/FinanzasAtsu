@@ -21,31 +21,39 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ExpensesCategory extends Model
 {
-    use SoftDeletes;
+  use SoftDeletes;
 
-    static $rules = [
-      'name' => 'required',
-    ];
+  static $rules = [
+    'name' => 'required',
+  ];
 
-    protected $perPage = 20;
+  protected $perPage = 20;
 
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-      'name'
-    ];
+  /**
+   * Attributes that should be mass-assignable.
+   *
+   * @var array
+   */
+  protected $fillable = [
+    'name',
+    'created_by'
+  ];
 
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function expenses()
-    {
-        return $this->hasMany(Expense::class, 'category', 'id');
-    }
-    
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function expenses()
+  {
+    return $this->hasMany(Expense::class, 'category', 'id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasOne
+   */
+  public function user()
+  {
+    return $this->hasOne(User::class, 'id', 'created_by');
+  }    
 
 }
