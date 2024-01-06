@@ -21,7 +21,11 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        $expenses = Expense::paginate();
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+
+        $expenses = Expense::where('created_by', $id_auth)->paginate();
 
         return view('expense.index', compact('expenses'))
             ->with('i', (request()->input('page', 1) - 1) * $expenses->perPage());
@@ -36,6 +40,7 @@ class ExpenseController extends Controller
     {
         $expense = new Expense();
 
+        /* Capturamos el ID del usuario logeado */
         $id_auth = \Auth::id();
 
         $users = User::where('id', $id_auth)->pluck('firstname AS label', 'id as value');

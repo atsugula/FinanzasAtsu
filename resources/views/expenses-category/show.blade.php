@@ -33,8 +33,33 @@
                             {{ $expensesCategory->name }}
                         </div>
 
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th>No</th>
+                                        
+                                        <th>{{ __('User') }}</th>
+										<th>{{ __('Amount') }}</th>
+										<th>{{ __('Date') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($expensesCategory->expenses as $key => $expense)
+                                        <tr>
+                                            <td>{{ ++$key }}</td>
+                                            
+											<td>{{ $expense->user?->firstname }}</td>
+											<td>{{ $expense->amount }}</td>
+											<td>{{ $expense->date }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+                {{-- {!! $expensesCategory->expenses->links() !!} --}}
             </div>
         </div>
     </section>
