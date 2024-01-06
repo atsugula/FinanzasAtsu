@@ -20,7 +20,11 @@ class SavingController extends Controller
      */
     public function index()
     {
-        $savings = Saving::paginate();
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+        
+        $savings = Saving::where('created_by', $id_auth)->paginate();
 
         return view('saving.index', compact('savings'))
             ->with('i', (request()->input('page', 1) - 1) * $savings->perPage());
@@ -49,6 +53,11 @@ class SavingController extends Controller
     public function store(Request $request)
     {
         request()->validate(Saving::$rules);
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+
+        $request['created_by'] = $id_auth;
 
         $saving = Saving::create($request->all());
 

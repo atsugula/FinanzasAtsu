@@ -4,15 +4,15 @@
     @include('layouts.navbars.auth.topnav', ['title' => 'Dashboard'])
     <div class="container-fluid py-4">
         <div class="row">
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Money</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Expense</p>
                                     <h5 class="font-weight-bolder">
-                                        $53,000
+                                        ${{ $count_expense }}
                                     </h5>
                                     <p class="mb-0">
                                         <span class="text-success text-sm font-weight-bolder">+55%</span>
@@ -29,15 +29,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Users</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Income</p>
                                     <h5 class="font-weight-bolder">
-                                        2,300
+                                        ${{ $count_incomes }}
                                     </h5>
                                     <p class="mb-0">
                                         <span class="text-success text-sm font-weight-bolder">+3%</span>
@@ -54,15 +54,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">New Clients</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">TODAY'S SAVING</p>
                                     <h5 class="font-weight-bolder">
-                                        +3,462
+                                        ${{ $count_saving }}
                                     </h5>
                                     <p class="mb-0">
                                         <span class="text-danger text-sm font-weight-bolder">-2%</span>
@@ -79,7 +79,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-sm-6">
+            {{-- <div class="col-xl-3 col-sm-6">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="row mt-4">
             <div class="col-lg-7 mb-lg-0 mb-4">
@@ -318,7 +318,34 @@
                     </div>
                     <div class="card-body p-3">
                         <ul class="list-group">
-                            <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            @forelse ($categories as $category)
+                                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
+                                            <i class="ni ni-tag text-white opacity-10"></i>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <h6 class="mb-1 text-dark text-sm">{{ $category->name }}</h6>
+                                            <span class="text-xs">123 closed, 
+                                                <span class="font-weight-bold">
+                                                    15 open
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <a class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto" href="{{ route('expenses-categories.show',$category->id) }}">
+                                            <i class="ni ni-bold-right" aria-hidden="true"></i>
+                                        </a>
+                                        {{-- <button
+                                            class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i
+                                                class="ni ni-bold-right" aria-hidden="true"></i></button> --}}
+                                    </div>
+                                </li>
+                            @empty
+                                <p>No data available.</p>
+                            @endforelse
+                            {{-- <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                                 <div class="d-flex align-items-center">
                                     <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
                                         <i class="ni ni-mobile-button text-white opacity-10"></i>
@@ -327,23 +354,6 @@
                                         <h6 class="mb-1 text-dark text-sm">Devices</h6>
                                         <span class="text-xs">250 in stock, <span class="font-weight-bold">346+
                                                 sold</span></span>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <button
-                                        class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i
-                                            class="ni ni-bold-right" aria-hidden="true"></i></button>
-                                </div>
-                            </li>
-                            <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                                <div class="d-flex align-items-center">
-                                    <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                                        <i class="ni ni-tag text-white opacity-10"></i>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-1 text-dark text-sm">Tickets</h6>
-                                        <span class="text-xs">123 closed, <span class="font-weight-bold">15
-                                                open</span></span>
                                     </div>
                                 </div>
                                 <div class="d-flex">
@@ -384,7 +394,7 @@
                                         class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i
                                             class="ni ni-bold-right" aria-hidden="true"></i></button>
                                 </div>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </div>
