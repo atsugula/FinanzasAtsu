@@ -7,6 +7,8 @@ use App\Models\V1\Expense;
 use Illuminate\Http\Request;
 use App\Models\V1\ExpensesCategory;
 use App\Http\Controllers\Controller;
+use App\Models\V1\Status;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ExpenseController
@@ -23,7 +25,7 @@ class ExpenseController extends Controller
     {
 
         /* Capturamos el ID del usuario logeado */
-        $id_auth = \Auth::id();
+        $id_auth = Auth::id();
 
         $expenses = Expense::where('created_by', $id_auth)->paginate();
 
@@ -41,12 +43,13 @@ class ExpenseController extends Controller
         $expense = new Expense();
 
         /* Capturamos el ID del usuario logeado */
-        $id_auth = \Auth::id();
+        $id_auth = Auth::id();
 
+        $statuses = Status::pluck('name AS label', 'id as value');
         $users = User::where('id', $id_auth)->pluck('firstname AS label', 'id as value');
         $categories = ExpensesCategory::where('created_by', $id_auth)->pluck('name AS label', 'id as value');
 
-        return view('expense.create', compact('expense', 'users', 'categories'));
+        return view('expense.create', compact('expense', 'users', 'categories', 'statuses'));
     }
 
     /**
@@ -60,7 +63,7 @@ class ExpenseController extends Controller
         request()->validate(Expense::$rules);
 
         /* Capturamos el ID del usuario logeado */
-        $id_auth = \Auth::id();
+        $id_auth = Auth::id();
 
         $request['created_by'] = $id_auth;
 
@@ -94,9 +97,10 @@ class ExpenseController extends Controller
         $expense = Expense::find($id);
 
         $users = User::pluck('firstname AS label', 'id as value');
+        $statuses = Status::pluck('name AS label', 'id as value');
         $categories = ExpensesCategory::pluck('name AS label', 'id as value');
 
-        return view('expense.edit', compact('expense', 'users', 'categories'));
+        return view('expense.edit', compact('expense', 'users', 'categories', 'statuses'));
     }
 
     /**

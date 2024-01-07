@@ -44,6 +44,10 @@
                             {{ $expense->date }}
                         </div>
                         <div class="form-group">
+                            <strong>Status:</strong>
+                            {{ $expense->statuse?->name }}
+                        </div>
+                        <div class="form-group">
                             <strong>Description:</strong>
                             {{ $expense->description }}
                         </div>

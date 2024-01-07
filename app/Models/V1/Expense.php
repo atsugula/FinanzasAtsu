@@ -45,6 +45,7 @@ class Expense extends Model
         'category',
         'amount',
         'description',
+        'status',
         'date'
     ];
 
@@ -65,5 +66,12 @@ class Expense extends Model
         return $this->hasOne(User::class, 'id', 'created_by');
     }
     
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function statuse()
+    {
+        return $this->hasOne(Status::class, 'id', 'status');
+    }
 
 }
