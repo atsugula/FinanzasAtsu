@@ -8,7 +8,14 @@
                     {{ Form::date('date', $income->date, ['class' => 'form-control' . ($errors->has('date') ? ' is-invalid' : ''), 'placeholder' => 'Date']) }}
                     {!! $errors->first('date', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
-            </div>            
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    {{ Form::label('status',__('Status')) }}
+                    {{ Form::select('status', $statuses, $income->status, ['class' => 'form-control select2' . ($errors->has('status') ? ' is-invalid' : ''), 'placeholder' => __('Select the status')]) }}
+                    {!! $errors->first('status', '<div class="invalid-feedback">:message</div>') !!}
+                </div>
+            </div>   
             <div class="col-12 col-md-6">
                 <div class="form-group">
                     {{ Form::label('amount', __('Amount')) }}
@@ -16,13 +23,13 @@
                     {!! $errors->first('amount', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>
-            <div class="col-12 col-md-12">
+            <div class="col-12 col-md-6">
                 <div class="form-group">
                     {{ Form::label('source', __('Source')) }}
                     {{ Form::text('source', $income->source, ['class' => 'form-control' . ($errors->has('source') ? ' is-invalid' : ''), 'placeholder' => 'Source']) }}
                     {!! $errors->first('source', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
-            </div>
+            </div>            
         </div>
 
     </div>

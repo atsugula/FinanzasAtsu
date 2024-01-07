@@ -44,8 +44,8 @@
 										<th>User</th>
 										<th>Category</th>
 										<th>Amount</th>
-										<th>Description</th>
 										<th>Date</th>
+										<th>Status</th>
 
                                         <th>Actions</th>
                                     </tr>
@@ -58,8 +58,8 @@
 											<td>{{ $expense->user?->firstname }}</td>
 											<td>{{ $expense->expensesCategory?->name }}</td>
 											<td>{{ $expense->amount }}</td>
-											<td>{{ $expense->description }}</td>
 											<td>{{ $expense->date }}</td>
+											<td>{{ $expense->statuse?->name }}</td>
 
                                             <td>
                                                 <form action="{{ route('expenses.destroy',$expense->id) }}" method="POST" class="form-delete">
