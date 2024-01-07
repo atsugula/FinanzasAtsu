@@ -2,6 +2,7 @@
 
 namespace App\Models\V1;
 
+use App\Models\User;
 use App\Models\V1\Expense;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

@@ -44,7 +44,10 @@
                             <strong>Date:</strong>
                             {{ $income->date }}
                         </div>
-
+                        <div class="form-group">
+                            <strong>Status:</strong>
+                            {{ $income->statuse?->name }}
+                        </div>
                     </div>
                 </div>
             </div>
