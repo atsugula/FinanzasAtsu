@@ -326,9 +326,9 @@
                                         </div>
                                         <div class="d-flex flex-column">
                                             <h6 class="mb-1 text-dark text-sm">{{ $category->name }}</h6>
-                                            <span class="text-xs">123 closed, 
+                                            <span class="text-xs">
                                                 <span class="font-weight-bold">
-                                                    15 open
+                                                    {{ count($category->expenses) }} Expenses
                                                 </span>
                                             </span>
                                         </div>
@@ -423,7 +423,7 @@
                     tension: 0.4,
                     borderWidth: 0,
                     pointRadius: 0,
-                    borderColor: "#fb6340",
+                    borderColor: "#438CE8",
                     backgroundColor: gradientStroke1,
                     borderWidth: 3,
                     fill: true,
