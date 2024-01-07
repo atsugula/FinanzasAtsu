@@ -1113,7 +1113,7 @@ code[class*=language-], pre[class*=language-] {
 }
 
 .ct-docs-info-icon-warning {
-  background: linear-gradient(87deg, #fb6340 0, #fbb140 100%) !important;
+  background: linear-gradient(87deg, #438CE8 0, #fbb140 100%) !important;
 }
 
 .ct-docs-content-col>table>tbody>tr>td,
