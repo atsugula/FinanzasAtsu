@@ -45,6 +45,7 @@
 										<th>Amount</th>
 										<th>Source</th>
 										<th>Date</th>
+										<th>Status</th>
 
                                         <th>Actions</th>
                                     </tr>
@@ -58,6 +59,7 @@
 											<td>{{ $income->amount }}</td>
 											<td>{{ $income->source }}</td>
 											<td>{{ $income->date }}</td>
+											<td>{{ $income->statuse?->name }}</td>
 
                                             <td>
                                                 <form action="{{ route('incomes.destroy',$income->id) }}" method="POST" class="form-delete">

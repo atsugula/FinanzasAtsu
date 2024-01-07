@@ -44,7 +44,8 @@ class Income extends Model
     'created_by',
     'amount',
     'source',
-    'date'
+    'status',
+    'date',
   ];
 
   /**
@@ -53,6 +54,14 @@ class Income extends Model
   public function user()
   {
     return $this->hasOne(User::class, 'id', 'created_by');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasOne
+   */
+  public function statuse()
+  {
+      return $this->hasOne(Status::class, 'id', 'status');
   }
 
 }
