@@ -149,8 +149,8 @@
                                     </td>
                                     <td class="align-middle text-sm">
                                         <div class="col text-center">
-                                            <p class="text-xs font-weight-bold mb-0">{{ __('Savings') }}:</p>
-                                            <h6 class="text-sm mb-0">${{ number_format($count_saving, 1) }}</h6>
+                                            <p class="text-xs font-weight-bold mb-0">{{ __('Balance') }}:</p>
+                                            <h6 class="text-sm mb-0">${{ number_format($count_incomes_am_owed - $count_expense_must, 1) }}</h6>
                                         </div>
                                     </td>
                                 </tr>
