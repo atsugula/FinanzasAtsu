@@ -34,8 +34,9 @@ class HomeController extends Controller
         /* Inicializamos variables */
         $count_incomes = $count_expense = $count_saving = 0;
 
-        /* Capturamos el ID del usuario logeado */
-        $id_auth = Auth::id();
+        /* Capturamos los datos del usuario logeado */
+        $user = Auth::user();
+        $id_auth = $user->id;
 
         $today = Carbon::now()->toDateString(); // Obtener la fecha actual en formato 'Y-m-d'
         $incomes = Income::where('created_by', $id_auth)/* ->whereDate('created_at', $today) */->get();
@@ -58,6 +59,6 @@ class HomeController extends Controller
                                         ->take(5)
                                         ->get();
 
-        return view('pages.dashboard', compact('count_incomes', 'count_expense', 'count_saving', 'categories'));
+        return view('pages.dashboard', compact('count_incomes', 'count_expense', 'count_saving', 'categories', 'user'));
     }
 }
