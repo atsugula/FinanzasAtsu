@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\V1\ExpensesCategoryController;
+use App\Http\Controllers\V1\PaymentExpenseController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\V1\ExpenseController;
 use App\Http\Controllers\V1\SavingController;
@@ -36,6 +37,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('incomes', IncomeController::class)->names('incomes');
 	Route::resource('expenses-categories', ExpensesCategoryController::class)->names('expenses-categories');
 	Route::resource('expenses', ExpenseController::class)->names('expenses');
+	Route::resource('payment-expenses', PaymentExpenseController::class)
+		->only('index', 'edit', 'destroy', 'show')->names('payment-expenses');
 	Route::resource('savings', SavingController::class)->names('savings');
 	/* Paginas de la plantilla */
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
