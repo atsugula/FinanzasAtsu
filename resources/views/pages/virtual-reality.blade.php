@@ -12,7 +12,7 @@
                         <div class="col-lg-1 col-md-1 pt-5 pt-lg-0 ms-lg-5 text-center">
                             <a href="javascript:;" class="avatar avatar-md border-0 d-block mb-2" data-bs-toggle="tooltip"
                                 data-bs-placement="left" title="My Profile">
-                                <img class="border-radius-lg" alt="Image placeholder" src="/img/team-1.jpg">
+                                <img class="border-radius-lg" alt="Image placeholder" src="{{ asset('img/team-1.jpg') }}">
                             </a>
                             <button class="btn btn-white border-radius-lg p-2 mt-0 mt-md-2 d-block mx-2 mx-md-0"
                                 type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Home">
@@ -139,13 +139,13 @@
                                                             class="avatar avatar-sm border-0 rounded-circle"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
                                                             title="2 New Messages">
-                                                            <img alt="Image placeholder" src="/img/team-1.jpg">
+                                                            <img alt="Image placeholder" src="{{ asset('img/team-1.jpg') }}">
                                                         </a>
                                                         <a href="javascript:;"
                                                             class="avatar avatar-sm border-0 rounded-circle"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
                                                             title="1 New Message">
-                                                            <img alt="Image placeholder" src="/img/team-2.jpg">
+                                                            <img alt="Image placeholder" src="{{ asset('img/team-2.jpg') }}">
                                                         </a>
                                                         <a href="javascript:;"
                                                             class="avatar avatar-sm border-0 rounded-circle"
