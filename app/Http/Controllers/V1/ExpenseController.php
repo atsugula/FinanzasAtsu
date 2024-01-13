@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\V1;
 
 use App\Models\User;
+use App\Models\V1\Status;
 use App\Models\V1\Expense;
 use Illuminate\Http\Request;
 use App\Models\V1\ExpensesCategory;
 use App\Http\Controllers\Controller;
-use App\Models\V1\Status;
 use Illuminate\Support\Facades\Auth;
 
 /**
