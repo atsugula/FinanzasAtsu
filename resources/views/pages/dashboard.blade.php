@@ -93,10 +93,14 @@
                         <table class="table align-items-center ">
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <div class="text-center">
+                                    <td class="w-30">
+                                        <div class="d-flex px-2 py-1 align-items-center">
                                             <div>
                                                 <img src="{{ asset('img/icons/flags/balance.png') }}" alt="Country flag">
+                                            </div>
+                                            <div class="ms-4">
+                                                <p class="text-xs font-weight-bold mb-0">{{ __('Reason') }}:</p>
+                                                <h6 class="text-sm mb-0">{{ __('Accounting') }}</h6>
                                             </div>
                                         </div>
                                     </td>
@@ -116,6 +120,37 @@
                                         <div class="col text-center">
                                             <p class="text-xs font-weight-bold mb-0">{{ __('Balance') }}:</p>
                                             <h6 class="text-sm mb-0">${{ number_format($count_incomes - $count_expense, 1) }}</h6>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-30">
+                                        <div class="d-flex px-2 py-1 align-items-center">
+                                            <div>
+                                                <img src="{{ asset('img/icons/flags/saving.png') }}" alt="Country flag">
+                                            </div>
+                                            <div class="ms-4">
+                                                <p class="text-xs font-weight-bold mb-0">{{ __('Reason') }}:</p>
+                                                <h6 class="text-sm mb-0">{{ __('Savings') }}</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ __('Owe me') }}:</p>
+                                            <h6 class="text-sm mb-0">${{ number_format($count_incomes_am_owed, 1) }}</h6>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ __('I must') }}:</p>
+                                            <h6 class="text-sm mb-0">${{ number_format($count_expense_must, 1) }}</h6>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-sm">
+                                        <div class="col text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ __('Savings') }}:</p>
+                                            <h6 class="text-sm mb-0">${{ number_format($count_saving, 1) }}</h6>
                                         </div>
                                     </td>
                                 </tr>
