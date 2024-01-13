@@ -164,7 +164,7 @@
                                     <a class="dropdown-item border-radius-md" href="javascript:;">
                                         <div class="d-flex py-1">
                                             <div class="my-auto">
-                                                <img src="/img/team-2.jpg" class="avatar avatar-sm  ms-3 ">
+                                                <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm  ms-3 ">
                                             </div>
                                             <div class="d-flex flex-column justify-content-center">
                                                 <h6 class="text-sm font-weight-normal mb-1">
@@ -644,12 +644,12 @@
                                                     <a href="javascript:;" class="avatar avatar-xs rounded-circle"
                                                         data-bs-toggle="tooltip" data-bs-placement="bottom"
                                                         title="Ryan Tompson">
-                                                        <img alt="Image placeholder" src="/img/team-1.jpg">
+                                                        <img alt="Image placeholder" src="{{ asset('img/team-1.jpg') }}">
                                                     </a>
                                                     <a href="javascript:;" class="avatar avatar-xs rounded-circle"
                                                         data-bs-toggle="tooltip" data-bs-placement="bottom"
                                                         title="Romina Hadid">
-                                                        <img alt="Image placeholder" src="/img/team-2.jpg">
+                                                        <img alt="Image placeholder" src="{{ asset('img/team-2.jpg') }}">
                                                     </a>
                                                     <a href="javascript:;" class="avatar avatar-xs rounded-circle"
                                                         data-bs-toggle="tooltip" data-bs-placement="bottom"
@@ -697,7 +697,7 @@
                                                     <a href="javascript:;" class="avatar avatar-xs rounded-circle"
                                                         data-bs-toggle="tooltip" data-bs-placement="bottom"
                                                         title="Romina Hadid">
-                                                        <img alt="Image placeholder" src="/img/team-2.jpg">
+                                                        <img alt="Image placeholder" src="{{ asset('img/team-2.jpg') }}">
                                                     </a>
                                                     <a href="javascript:;" class="avatar avatar-xs rounded-circle"
                                                         data-bs-toggle="tooltip" data-bs-placement="bottom"
@@ -745,7 +745,7 @@
                                                     <a href="javascript:;" class="avatar avatar-xs rounded-circle"
                                                         data-bs-toggle="tooltip" data-bs-placement="bottom"
                                                         title="Jessica Doe">
-                                                        <img alt="Image placeholder" src="/img/team-1.jpg">
+                                                        <img alt="Image placeholder" src="{{ asset('img/team-1.jpg') }}">
                                                     </a>
                                                 </div>
                                             </td>
@@ -800,7 +800,7 @@
                                                     <a href="javascript:;" class="avatar avatar-xs rounded-circle"
                                                         data-bs-toggle="tooltip" data-bs-placement="bottom"
                                                         title="Jessica Doe">
-                                                        <img alt="Image placeholder" src="/img/team-1.jpg">
+                                                        <img alt="Image placeholder" src="{{ asset('img/team-1.jpg') }}">
                                                     </a>
                                                 </div>
                                             </td>
@@ -877,7 +877,7 @@
                                                     <a href="javascript:;" class="avatar avatar-xs rounded-circle"
                                                         data-bs-toggle="tooltip" data-bs-placement="bottom"
                                                         title="Ryan Tompson">
-                                                        <img alt="Image placeholder" src="/img/team-1.jpg">
+                                                        <img alt="Image placeholder" src="{{ asset('img/team-1.jpg') }}">
                                                     </a>
                                                     <a href="javascript:;" class="avatar avatar-xs rounded-circle"
                                                         data-bs-toggle="tooltip" data-bs-placement="bottom"
