@@ -28,13 +28,25 @@ return [
     [
         'text' => 'Savings',
         'route' => 'savings.index',
-        'icon' => 'fa fa-paypa',
+        'icon' => 'fa fa-paypal',
         'page' => 0, // Para saber si la ruta es por parametro post o no
     ],
     [
         'text' => 'Pay expenses',
-        'route' => 'payment-expenses',
+        'route' => 'payment-expenses.index',
         'icon' => 'ni ni-money-coins',
+        'page' => 0, // Para saber si la ruta es por parametro post o no
+    ],
+    [
+        'text' => 'Partners',
+        'route' => 'partners.index',
+        'icon' => 'ni ni-badge',
+        'page' => 0, // Para saber si la ruta es por parametro post o no
+    ],
+    [
+        'text' => 'Payments History',
+        'route' => 'payments-histories.index',
+        'icon' => 'fa fa-history',
         'page' => 0, // Para saber si la ruta es por parametro post o no
     ],
 ];

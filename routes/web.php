@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\V1\ExpensesCategoryController;
+use App\Http\Controllers\V1\PaymentsHistoryController;
 use App\Http\Controllers\V1\PaymentExpenseController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\V1\ExpenseController;
+use App\Http\Controllers\V1\PartnerController;
 use App\Http\Controllers\V1\SavingController;
 use App\Http\Controllers\V1\IncomeController;
 use App\Http\Controllers\RegisterController;
@@ -40,6 +42,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('payment-expenses', PaymentExpenseController::class)
 		->only('index', 'edit', 'destroy', 'show')->names('payment-expenses');
 	Route::resource('savings', SavingController::class)->names('savings');
+	Route::resource('partners', PartnerController::class)->names('partners');
+	Route::resource('payments-histories', PaymentsHistoryController::class)->names('payments-histories');
 	/* Paginas de la plantilla */
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
