@@ -1,13 +1,13 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('template_title')
-    {{ __('Update Expense') }}
+    {{ __('Update Payments History') }} 
 @endsection
 
 @section('content')
 
     {{-- Navbar template --}}
-    @include('layouts.navbars.auth.topnav', ['title' => __('Income')])
+    @include('layouts.navbars.auth.topnav', ['title' => __('Payments History')])
 
     <section class="content container-fluid">
         <div class="">
@@ -19,22 +19,22 @@
                     
                     <div class="card-header">
                         <div class="float-left">
-                            <span class="card-title">{{ __('Update Expense') }} </span>
+                            <span class="card-title">{{ __('Update Payments History') }} </span>
                         </div>
                         <div class="float-right">
-                            <a class="btn btn-primary" href="{{ route('expenses.index') }}"> {{__('Back')}}</a>
+                            <a class="btn btn-primary" href="{{ route('payments-histories.index') }}"> {{__('Back')}}</a>
                         </div>
                     </div>
 
                     {{-- Separar card --}}
                     <span class="card-separator"></span>
-
+                    
                     <div class="card-body">
-                        <form method="POST" action="{{ route('expenses.update', $expense->id) }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('payments-histories.update', $paymentsHistory->id) }}"  role="form" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf
 
-                            @include('expense.form')
+                            @include('payments-history.form')
 
                         </form>
                     </div>
@@ -46,4 +46,8 @@
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
 
+@endsection
+
+@section('js')
+    <script src="{{ asset('assets/js/calculation.js') }}"></script>
 @endsection
