@@ -7,6 +7,7 @@ use App\Models\V1\Income;
 use App\Models\V1\Status;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\V1\Partner;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -41,10 +42,14 @@ class IncomeController extends Controller
     {
         $income = new Income();
 
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = Auth::id();
+
+        $partners = Partner::where('created_by', $id_auth)->pluck('company_name AS label', 'id as value');
         $users = User::pluck('firstname AS label', 'id as value');
         $statuses = Status::pluck('name AS label', 'id as value');
 
-        return view('income.create', compact('income', 'users', 'statuses'));
+        return view('income.create', compact('income', 'users', 'statuses', 'partners'));
     }
 
     /**
@@ -91,10 +96,15 @@ class IncomeController extends Controller
     {
         $income = Income::find($id);
 
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = Auth::id();
+
+        $partners = Partner::where('created_by', $id_auth)->pluck('company_name AS label', 'id as value');
+
         $users = User::pluck('firstname AS label', 'id as value');
         $statuses = Status::pluck('name AS label', 'id as value');
 
-        return view('income.edit', compact('income', 'users', 'statuses'));
+        return view('income.edit', compact('income', 'users', 'statuses', 'partners'));
     }
 
     /**

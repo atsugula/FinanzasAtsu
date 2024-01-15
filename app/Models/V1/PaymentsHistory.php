@@ -34,10 +34,9 @@ class PaymentsHistory extends Model
 
     static $rules = [
 		'paid' => 'required',
-		'payable' => 'required',
 		'status' => 'required',
 		'partner_id' => 'required',
-		'created_by' => 'required',
+        'date' => 'required',
     ];
 
     protected $perPage = 20;
@@ -47,8 +46,16 @@ class PaymentsHistory extends Model
      *
      * @var array
      */
-    protected $fillable = ['paid','payable','date','description','status','partner_id','created_by'];
-
+    protected $fillable = [
+        'paid',
+        'payable',
+        'date',
+        'description',
+        'status',
+        'partner_id',
+        'created_by',
+        'expense_id'
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -56,6 +63,14 @@ class PaymentsHistory extends Model
     public function partner()
     {
         return $this->hasOne(Partner::class, 'id', 'partner_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function expense()
+    {
+        return $this->hasOne(Expense::class, 'id', 'expense_id');
     }
     
     /**
@@ -65,6 +80,13 @@ class PaymentsHistory extends Model
     {
         return $this->hasOne(User::class, 'id', 'created_by');
     }
-    
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function statuses()
+    {
+        return $this->hasOne(Status::class, 'id', 'status');
+    }    
 
 }

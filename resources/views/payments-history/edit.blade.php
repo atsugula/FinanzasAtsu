@@ -47,3 +47,7 @@
     @include('layouts.footers.auth.footer')
 
 @endsection
+
+@section('js')
+    <script src="{{ asset('assets/js/calculation.js') }}"></script>
+@endsection

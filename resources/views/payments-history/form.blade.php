@@ -21,18 +21,26 @@
             <div class="col-12 col-md-4">
                 <div class="form-group">
                     {{ Form::label('paid', __('Paid')) }}
-                    {{ Form::number('paid', $paymentsHistory->paid, ['class' => 'form-control' . ($errors->has('paid') ? ' is-invalid' : ''), 'placeholder' => 'Paid']) }}
+                    {{ Form::number('paid', $paymentsHistory->paid, ['class' => 'form-control' . ($errors->has('paid') ? ' is-invalid' : ''), 'id' => 'paid', 'placeholder' => 'Paid']) }}
                     {!! $errors->first('paid', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
-            </div> 
+            </div>
             
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-2">
                 <div class="form-group">
                     {{ Form::label('payable', __('Payable')) }}
-                    {{ Form::number('payable', $paymentsHistory->payable, ['class' => 'form-control' . ($errors->has('payable') ? ' is-invalid' : ''), 'placeholder' => 'Payable']) }}
+                    {{ Form::number('payable', $paymentsHistory->payable, ['class' => 'form-control' . ($errors->has('payable') ? ' is-invalid' : ''), 'id' => 'payable', 'disabled' => 'disabled', 'placeholder' => 'Payable']) }}
                     {!! $errors->first('payable', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div> 
+
+            <div class="col-12 col-md-2">
+                <div class="form-group">
+                    {{ Form::label('amount',__('Amount')) }}
+                    {{ Form::text('amount', $paymentsHistory->expense?->amount, ['class' => 'form-control' . ($errors->has('amount') ? ' is-invalid' : ''), 'id' => 'amount', 'disabled' => 'disabled', 'placeholder' => 'Amount']) }}
+                    {!! $errors->first('amount', '<div class="invalid-feedback">:message</div>') !!}
+                </div>
+            </div>
             
             <div class="col-12 col-md-4">
                 <div class="form-group">
@@ -48,7 +56,7 @@
                     {{ Form::textArea('description', $paymentsHistory->description, ['class' => 'form-control' . ($errors->has('description') ? ' is-invalid' : ''), 'placeholder' => 'Description']) }}
                     {!! $errors->first('description', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
-            </div> 
+            </div>
 
         </div>
     </div>

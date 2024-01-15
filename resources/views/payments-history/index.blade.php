@@ -19,12 +19,7 @@
                             <span id="card_title">
                                 {{ __('Payments History') }}
                             </span>
-
-                             <div class="float-right">
-                                <a href="{{ route('payments-histories.create') }}" class="btn btn-primary btn-sm float-right" data-placement="left">
-                                  {{ __('Create New') }}
-                                </a>
-                              </div>
+                            
                         </div>
                     </div>
 
@@ -41,13 +36,12 @@
                                     <tr>
                                         <th>No</th>
                                         
-										<th>Paid</th>
-										<th>Payable</th>
-										<th>Date</th>
-										<th>Description</th>
-										<th>Status</th>
 										<th>Partner</th>
 										<th>User</th>
+										<th>Paid</th>
+										<th>Payable</th>
+										<th>Date</th>										
+                                        <th>Status</th>
 
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
@@ -57,13 +51,12 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-											<td>{{ $paymentsHistory->paid }}</td>
-											<td>{{ $paymentsHistory->payable }}</td>
-											<td>{{ $paymentsHistory->date }}</td>
-											<td>{{ $paymentsHistory->description }}</td>
-											<td>{{ $paymentsHistory->status }}</td>
 											<td>{{ $paymentsHistory->partner?->company_name }}</td>
 											<td>{{ $paymentsHistory->user?->firstname }}</td>
+											<td>{{ $paymentsHistory->paid }}</td>
+											<td>{{ $paymentsHistory->payable }}</td>
+											<td>{{ $paymentsHistory->date }}</td>											
+                                            <td>{{ $paymentsHistory->statuses?->name }}</td>
 
                                             <td>
                                                 <form action="{{ route('payments-histories.destroy',$paymentsHistory->id) }}" method="POST" class="form-delete">

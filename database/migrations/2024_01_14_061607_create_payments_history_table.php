@@ -17,7 +17,9 @@ return new class extends Migration
             $table->double('payable');
             $table->date('date')->nullable();
             $table->text('description')->nullable();
-            $table->string('status')->default('Pendiente de Aprobación');
+
+            $table->unsignedBigInteger('status')->default(1);
+            $table->foreign('status')->references('id')->on('statuses');
 
             $table->unsignedBigInteger('expense_id');
             $table->foreign('expense_id')->references('id')->on('expenses');

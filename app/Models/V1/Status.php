@@ -20,7 +20,7 @@ class Status extends Model
 {
     
   static $rules = [
-  'name' => 'required',
+    'name' => 'required',
   ];
 
   protected $perPage = 20;

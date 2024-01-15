@@ -24892,3 +24892,10 @@ pre[class*=language-] {
   height: .1rem;
   /* border-radius: 0 0 .3rem .3rem; */
 }
+
+.card-separator-form {
+  display: block;
+  background: #8a9097 !important;
+  height: .2rem;
+  border-radius: .3rem;
+}

@@ -9,4 +9,5 @@ return [
     'PROG' => 6,
     'REC' => 7,
     'DED' => 8,
+    'ENPROC' => 9,
 ];

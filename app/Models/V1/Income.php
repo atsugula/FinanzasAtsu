@@ -41,6 +41,7 @@ class Income extends Model
    * @var array
    */
   protected $fillable = [
+    'partner_id',
     'created_by',
     'amount',
     'source',
