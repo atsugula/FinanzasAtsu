@@ -7,7 +7,7 @@
 @section('content')
 
     {{-- Navbar template --}}
-    @include('layouts.navbars.auth.topnav', ['title' => __('Income')])
+    @include('layouts.navbars.auth.topnav', ['title' => __('Update Expense')])
 
     <section class="content container-fluid">
         <div class="">
@@ -30,11 +30,11 @@
                     <span class="card-separator"></span>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('expenses.update', $expense->id) }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('payment-expenses.update', $expense->id) }}"  role="form" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf
 
-                            @include('expense.form')
+                            @include('payment-expense.form')
 
                         </form>
                     </div>
@@ -46,4 +46,8 @@
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
 
+@endsection
+
+@section('js')
+    <script src="{{ asset('assets/js/calculation.js') }}"></script>
 @endsection
