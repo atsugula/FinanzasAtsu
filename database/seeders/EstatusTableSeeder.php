@@ -25,6 +25,7 @@ class EstatusTableSeeder extends Seeder
             ['name' => 'Programado', 'description' => 'Se ha programado un ingreso para un período futuro.'],
             ['name' => 'Rechazado', 'description' => 'El ingreso ha sido revisado y no se ha aprobado por algún motivo.'],
             ['name' => 'Deuda', 'description' => 'Es cuando se hacen prestamos de dinero.'],
+            ['name' => 'Proceso de pago', 'description' => 'Para cuando se esta realizando abonos a una deuda.'],
         ]);
     }
 }

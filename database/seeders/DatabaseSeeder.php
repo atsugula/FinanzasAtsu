@@ -15,6 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
+        $this->call([
+            /* CategoriaSeeder::class, */
+            EstatusTableSeeder::class,
+            TypeDocumentSeeder::class,
+        ]);
+
         DB::table('users')->insert([
             'username' => 'admin',
             'firstname' => 'Admin',
