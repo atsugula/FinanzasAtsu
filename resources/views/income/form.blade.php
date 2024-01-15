@@ -2,6 +2,13 @@
     <div class="box-body">
 
         <div class="row">
+            <div class="col-12 col-md-12">
+                <div class="form-group">
+                    {{ Form::label('partner_id',__('Partner')) }}
+                    {{ Form::select('partner_id', $partners, $income->partner_id, ['class' => 'form-control select2' . ($errors->has('partner_id') ? ' is-invalid' : ''), 'placeholder' => __('Select the partner')]) }}
+                    {!! $errors->first('partner_id', '<div class="invalid-feedback">:message</div>') !!}
+                </div>
+            </div>
             <div class="col-12 col-md-6">
                 <div class="form-group">
                     {{ Form::label('date', __('Date')) }}

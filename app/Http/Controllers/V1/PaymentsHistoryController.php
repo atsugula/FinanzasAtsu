@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Traits\Template;
+use App\Models\V1\Status;
+use App\Models\V1\Partner;
 use Illuminate\Http\Request;
 use App\Models\V1\PaymentsHistory;
 use App\Http\Controllers\Controller;
-use App\Models\V1\Partner;
-use App\Models\V1\Status;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Auth;
  */
 class PaymentsHistoryController extends Controller
 {
+
+    use Template;
+
     /**
      * Display a listing of the resource.
      *
@@ -85,8 +89,10 @@ class PaymentsHistoryController extends Controller
     public function edit($id)
     {
         $paymentsHistory = PaymentsHistory::find($id);
+        $partners = Partner::pluck('company_name AS label', 'id as value');
+        $statuses = Status::pluck('name AS label', 'id as value');
 
-        return view('payments-history.edit', compact('paymentsHistory'));
+        return view('payments-history.edit', compact('paymentsHistory', 'partners', 'statuses'));
     }
 
     /**
@@ -102,6 +108,15 @@ class PaymentsHistoryController extends Controller
 
         $paymentsHistory->update($request->all());
 
+        $data['expense_id'] = $paymentsHistory->expense_id;
+
+        // Actualizamos los status
+        $balance = $this->payment_update($data);
+
+        // Volvemos a actualizar lo que se debe
+        $paymentsHistory->payable = $balance['balance_due'] ?? '';
+        $paymentsHistory->save();
+
         return redirect()->route('payments-histories.index')
             ->with('success', 'PaymentsHistory updated successfully');
     }
@@ -113,7 +128,14 @@ class PaymentsHistoryController extends Controller
      */
     public function destroy($id)
     {
-        $paymentsHistory = PaymentsHistory::find($id)->delete();
+        $paymentsHistory = PaymentsHistory::find($id);
+
+        $data['expense_id'] = $paymentsHistory->expense_id;
+
+        // Actualizamos los status
+        $balance = $this->payment_update($data);
+
+        $paymentsHistory->delete();
 
         return redirect()->route('payments-histories.index')
             ->with('success', 'PaymentsHistory deleted successfully');

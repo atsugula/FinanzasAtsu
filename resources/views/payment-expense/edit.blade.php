@@ -1,25 +1,25 @@
-@extends('layouts.app')
+@extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('template_title')
-    {{ __('Create Expense') }}
+    {{ __('Update Expense') }}
 @endsection
 
 @section('content')
 
     {{-- Navbar template --}}
-    @include('layouts.navbars.auth.topnav', ['title' => __('Income')])
+    @include('layouts.navbars.auth.topnav', ['title' => __('Update Expense')])
 
     <section class="content container-fluid">
-        <div class="row">
+        <div class="">
             <div class="col-md-12">
 
                 @includeif('partials.errors')
 
                 <div class="card card-default">
-
+                    
                     <div class="card-header">
                         <div class="float-left">
-                            <span class="card-title">{{ __('Create Expense') }} </span>
+                            <span class="card-title">{{ __('Update Expense') }} </span>
                         </div>
                         <div class="float-right">
                             <a class="btn btn-primary" href="{{ route('expenses.index') }}"> {{__('Back')}}</a>
@@ -30,10 +30,11 @@
                     <span class="card-separator"></span>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('expenses.store') }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('payment-expenses.update', $expense->id) }}"  role="form" enctype="multipart/form-data">
+                            {{ method_field('PATCH') }}
                             @csrf
 
-                            @include('expense.form')
+                            @include('payment-expense.form')
 
                         </form>
                     </div>
@@ -45,4 +46,8 @@
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
 
+@endsection
+
+@section('js')
+    <script src="{{ asset('assets/js/calculation.js') }}"></script>
 @endsection
