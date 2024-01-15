@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Models\User;
+use App\Traits\Template;
 use App\Models\V1\Status;
 use App\Models\V1\Expense;
 use Illuminate\Http\Request;
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Auth;
  */
 class ExpenseController extends Controller
 {
+
+    use Template;
+
     /**
      * Display a listing of the resource.
      *
@@ -112,9 +116,18 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, Expense $expense)
     {
+
         request()->validate(Expense::$rules);
 
-        $expense->update($request->all());
+        $data = $request->all();
+
+        $expense->update($data);
+        
+        $data['expense_id'] = $expense->id;
+        $data['status_origin'] = 'home';
+
+        /* Actualizamos el PaymentsHistory en caso de tener */
+        $balance = $this->payment_update($data);
 
         return redirect()->route('expenses.index')
             ->with('success', 'Expense updated successfully');

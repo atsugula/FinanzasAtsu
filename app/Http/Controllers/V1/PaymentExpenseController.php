@@ -5,11 +5,13 @@ namespace App\Http\Controllers\V1;
 use App\Models\User;
 use App\Models\V1\Status;
 use App\Models\V1\Expense;
+use App\Models\V1\Partner;
 use Illuminate\Http\Request;
+use App\Models\V1\PaymentsHistory;
 use App\Models\V1\ExpensesCategory;
 use App\Http\Controllers\Controller;
+use App\Traits\Template;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class PaymentExpenseController
@@ -17,6 +19,9 @@ use Illuminate\Support\Facades\Log;
  */
 class PaymentExpenseController extends Controller
 {
+
+    use Template;
+
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +33,7 @@ class PaymentExpenseController extends Controller
         /* Capturamos el ID del usuario logeado */
         $id_auth = Auth::id();
 
-        $expenses = Expense::where('created_by', $id_auth)->where('status', config('status.DED'))->paginate();
+        $expenses = Expense::where('created_by', $id_auth)->whereIn('status', [config('status.DED'), config('status.ENPROC')])->paginate();
 
         return view('payment-expense.index', compact('expenses'))
             ->with('i', (request()->input('page', 1) - 1) * $expenses->perPage());
@@ -57,12 +62,77 @@ class PaymentExpenseController extends Controller
     {
         $expense = Expense::find($id);
 
-        $users = User::pluck('firstname AS label', 'id as value');
-        $statuses = Status::whereIn('id', [config('status.APR'), config('status.CANC'), config('status.REC'), config('status.DED')])
-                ->pluck('name AS label', 'id as value');
-        $categories = ExpensesCategory::pluck('name AS label', 'id as value');
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = Auth::id();
 
-        return view('expense.edit', compact('expense', 'users', 'categories', 'statuses'));
+        $partners = Partner::where('created_by', $id_auth)->pluck('company_name AS label', 'id as value');
+
+        // Cargamos la data
+        $data['expense_id'] = $id;
+
+        // Actualizamos los status
+        $balance = $this->payment_update($data);
+
+        $paymentsHistory = new PaymentsHistory();
+        $users = User::pluck('firstname AS label', 'id as value');
+        $categories = ExpensesCategory::pluck('name AS label', 'id as value');
+        $statuses = Status::whereIn('id', [
+            config('status.APR'),
+            config('status.PROC')
+        ])->pluck('name AS label', 'id as value');
+
+        return view('payment-expense.edit', compact('expense', 'users', 'categories', 'statuses', 'partners', 'paymentsHistory', 'balance'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  Expense $expense
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Expense $expense)
+    {
+
+        request()->validate(PaymentsHistory::$rules);
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = Auth::id();
+
+        /* Guardamos toda la data en una variable */
+        $data = $request->all();
+
+        // Actualizamos los status
+        $balance = $this->payment_update($data);
+
+        // Verificamos que no se vaya a pagar de mas
+        if ($data['paid'] > $balance['count_payment'] && $balance['count_payment'] != 0) {
+            return redirect()->route('payment-expenses.index')
+                ->with('error', 'The amount deposited is greater than the outstanding balance, you owe ' . $balance['balance_due'] . ' and income ' . $data['paid']);
+        }
+
+        $payment_history = new PaymentsHistory();
+        $payment_history->paid = $data['paid'] ?? '';
+        $payment_history->payable = $balance['balance_due'] ?? '';
+        $payment_history->date = $data['date'] ?? '';
+        $payment_history->description = $data['description'] ?? '';
+        $payment_history->status = $data['status'] ?? '';
+        $payment_history->partner_id = $data['partner_id'] ?? '';
+        $payment_history->expense_id = $data['expense_id'] ?? '';
+        $payment_history->created_by = $id_auth;
+
+        $payment_history->save();
+
+        // Actualizamos los status
+        $balance = $this->payment_update($data);
+
+        // Volvemos a actualizar lo que se debe
+        $payment_history->payable = $balance['balance_due'] ?? '';
+        $payment_history->save();
+
+        return redirect()->route('payments-histories.index')
+            ->with('success', 'Payments created successfully.');
+
     }
 
     /**
@@ -72,9 +142,14 @@ class PaymentExpenseController extends Controller
      */
     public function destroy($id)
     {
-        $expense = Expense::find($id)->delete();
 
-        return redirect()->route('Pay payment-expenses.index')
-            ->with('success', 'Expense deleted successfully');
+        $data['expense_id'] = $id;
+
+        // Actualizamos los status
+        $balance = $this->payment_update($data);
+
+        return redirect()->route('payment-expenses.index')
+            ->with('success', 'Expense changed successfully');
     }
+
 }

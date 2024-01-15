@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use Illuminate\Http\Request;
 use App\Models\V1\ExpensesCategory;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ExpensesCategoryController
@@ -21,7 +22,7 @@ class ExpensesCategoryController extends Controller
     {
 
         /* Capturamos el ID del usuario logeado */
-        $id_auth = \Auth::id();
+        $id_auth = Auth::id();
         
         $expensesCategories = ExpensesCategory::where('created_by', $id_auth)->paginate();
 
@@ -51,7 +52,7 @@ class ExpensesCategoryController extends Controller
         request()->validate(ExpensesCategory::$rules);
 
         /* Capturamos el ID del usuario logeado */
-        $id_auth = \Auth::id();
+        $id_auth = Auth::id();
 
         $request['created_by'] = $id_auth;
 
