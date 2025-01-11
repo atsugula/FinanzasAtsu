@@ -13,7 +13,7 @@ class EstatusTableSeeder extends Seeder
     public function run(): void
     {
         // Borra los datos existentes en la tabla
-        DB::table('statuses')->truncate();
+        // DB::table('statuses')->truncate();
 
         // Inserta datos de ejemplo
         DB::table('statuses')->insert([
