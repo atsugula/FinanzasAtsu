@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // default columns string
+        Schema::defaultStringLength(191);
     }
 }
