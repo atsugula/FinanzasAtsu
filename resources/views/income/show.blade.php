@@ -30,7 +30,7 @@
 
                         <div class="form-group">
                             <strong>{{ __('User') }}:</strong>
-                            {{ $income->user }}
+                            {{ $income->user?->firstname }} {{ $income->user?->lastname }}
                         </div>
                         <div class="form-group">
                             <strong>{{ __('Amount') }}:</strong>

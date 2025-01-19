@@ -22,7 +22,7 @@ return [
     [
         'text' => 'Incomes',
         'route' => 'incomes.index',
-        'icon' => 'fa fa-money',
+        'icon' => 'fa fa-money-bill',
         'page' => 0, // Para saber si la ruta es por parametro post o no
     ],
     [
