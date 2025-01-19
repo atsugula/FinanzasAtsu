@@ -8,6 +8,12 @@ return [
         'page' => 0, // Para saber si la ruta es por parametro post o no
     ],
     [
+        'text' => 'Goals',
+        'route' => 'goals.index',
+        'icon' => 'fa fa-calendar',
+        'page' => 0, // Para saber si la ruta es por parametro post o no
+    ],
+    [
         'text' => 'Savings',
         'route' => 'savings.index',
         'icon' => 'fa fa-credit-card',

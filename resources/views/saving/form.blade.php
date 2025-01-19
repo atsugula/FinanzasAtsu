@@ -16,13 +16,20 @@
                     {!! $errors->first('amount', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>
-            <div class="col-12 col-md-12">
+            <div class="col-12 col-md-6">
                 <div class="form-group">
-                    {{ Form::label('goal',__('Goal')) }}
+                    {{ Form::label('goal',__('Goal Name')) }}
                     {{ Form::text('goal', $saving->goal, ['class' => 'form-control' . ($errors->has('goal') ? ' is-invalid' : ''), 'placeholder' => __('Goal')]) }}
                     {!! $errors->first('goal', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    {{ Form::label('goal_id', __('Goal')) }}
+                    {{ Form::select('goal_id', $goals, $saving->goal_id, ['class' => 'form-control select2' . ($errors->has('goal_id') ? ' is-invalid' : ''), 'placeholder' => __('Select the goal')]) }}
+                    {!! $errors->first('goal_id', '<div class="invalid-feedback">:message</div>') !!}
+                </div>
+            </div> 
             <div class="col-12 col-md-12">
                 <div class="form-group">
                     {{ Form::label('description',__('Description')) }}

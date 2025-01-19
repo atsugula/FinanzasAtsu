@@ -25,35 +25,39 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Saving extends Model
 {
-    use SoftDeletes;
+  use SoftDeletes;
 
-    static $rules = [
-      'amount' => 'required',
-      'goal' => 'required',
-    ];
+  static $rules = [
+    'amount' => 'required',
+    // 'goal' => 'required',
+  ];
 
-    protected $perPage = 20;
+  protected $perPage = 20;
 
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-      'created_by',
-      'amount',
-      'goal',
-      'description',
-      'date'
-    ];
+  /**
+   * Attributes that should be mass-assignable.
+   *
+   * @var array
+   */
+  protected $fillable = [
+    'created_by',
+    'amount',
+    'goal',
+    'description',
+    'date',
+    'goal_id'
+  ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function user()
-    {
-        return $this->hasOne(User::class, 'id', 'created_by');
-    }
-    
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasOne
+   */
+  public function user()
+  {
+    return $this->hasOne(User::class, 'id', 'created_by');
+  }
 
+  public function goal()
+  {
+    return $this->hasOne(Goal::class, 'id', 'goal_id');
+  }
 }
