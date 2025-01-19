@@ -28,31 +28,31 @@
                     <div class="card-body">
                         
                         <div class="form-group">
-                            <strong>{{ __('Show Paid') }}:</strong>
+                            <strong>{{ __('Paid') }}:</strong>
                             {{ $paymentsHistory->paid }}
                         </div>
                         <div class="form-group">
-                            <strong>{{ __('Show Payable') }}:</strong>
+                            <strong>{{ __('Payable') }}:</strong>
                             {{ $paymentsHistory->payable }}
                         </div>
                         <div class="form-group">
-                            <strong>{{ __('Show Date') }}:</strong>
+                            <strong>{{ __('Date') }}:</strong>
                             {{ $paymentsHistory->date }}
                         </div>
                         <div class="form-group">
-                            <strong>{{ __('Show Description') }}:</strong>
+                            <strong>{{ __('Description') }}:</strong>
                             {{ $paymentsHistory->description }}
                         </div>
                         <div class="form-group">
-                            <strong>{{ __('Show Status') }}:</strong>
+                            <strong>{{ __('Status') }}:</strong>
                             {{ $paymentsHistory->status }}
                         </div>
                         <div class="form-group">
-                            <strong>{{ __('Show Partner Id') }}:</strong>
+                            <strong>{{ __('Partner ID') }}:</strong>
                             {{ $paymentsHistory->partner_id }}
                         </div>
                         <div class="form-group">
-                            <strong>{{ __('Show Created By') }}:</strong>
+                            <strong>{{ __('Created By') }}:</strong>
                             {{ $paymentsHistory->created_by }}
                         </div>
 
@@ -61,7 +61,7 @@
             </div>
         </div>
     </section>
-    
+
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
 

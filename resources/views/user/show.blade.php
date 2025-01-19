@@ -16,10 +16,10 @@
 
                     <div class="card-header">
                         <div class="float-left">
-                            <span class="card-title">{{ __('Show User') }} </span>
+                            <span class="card-title">{{ __('Show User') }}</span>
                         </div>
                         <div class="float-right">
-                            <a class="btn btn-primary" href="{{ route('users.index') }}"> {{__('Back')}}</a>
+                            <a class="btn btn-primary" href="{{ route('users.index') }}">{{ __('Back') }}</a>
                         </div>
                     </div>
 
@@ -29,39 +29,39 @@
                     <div class="card-body">
                         
                         <div class="form-group">
-                            <strong>Username:</strong>
+                            <strong>{{ __('Username') }}:</strong>
                             {{ $user->username }}
                         </div>
                         <div class="form-group">
-                            <strong>Firstname:</strong>
+                            <strong>{{ __('Firstname') }}:</strong>
                             {{ $user->firstname }}
                         </div>
                         <div class="form-group">
-                            <strong>Lastname:</strong>
+                            <strong>{{ __('Lastname') }}:</strong>
                             {{ $user->lastname }}
                         </div>
                         <div class="form-group">
-                            <strong>Email:</strong>
+                            <strong>{{ __('Email') }}:</strong>
                             {{ $user->email }}
                         </div>
                         <div class="form-group">
-                            <strong>Address:</strong>
+                            <strong>{{ __('Address') }}:</strong>
                             {{ $user->address }}
                         </div>
                         <div class="form-group">
-                            <strong>City:</strong>
+                            <strong>{{ __('City') }}:</strong>
                             {{ $user->city }}
                         </div>
                         <div class="form-group">
-                            <strong>Country:</strong>
+                            <strong>{{ __('Country') }}:</strong>
                             {{ $user->country }}
                         </div>
                         <div class="form-group">
-                            <strong>Postal:</strong>
+                            <strong>{{ __('Postal Code') }}:</strong>
                             {{ $user->postal }}
                         </div>
                         <div class="form-group">
-                            <strong>About:</strong>
+                            <strong>{{ __('About') }}:</strong>
                             {{ $user->about }}
                         </div>
 

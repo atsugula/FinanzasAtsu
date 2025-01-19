@@ -21,7 +21,7 @@
                             </span>
 
                             <div class="float-right">
-                                <a href="{{ route('savings.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                <a href="{{ route('savings.create') }}" class="btn btn-primary btn-sm float-right" data-placement="left">
                                     {{ __('Create New') }}
                                 </a>
                             </div>
@@ -31,7 +31,7 @@
                     {{-- Separar card --}}
                     <span class="card-separator"></span>
 
-                    {{-- Plantilla mensajes--}}
+                    {{-- Plantilla mensajes --}}
                     @include('layouts.message')
 
                     <div class="card-body">
@@ -39,33 +39,36 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
-                                        <th>No</th>
-                                        
-										<th>User</th>
-										<th>Amount</th>
-										<th>Goal</th>
-										<th>Date</th>
-
-                                        <th>Actions</th>
+                                        <th>{{ __('No') }}</th>
+                                        <th>{{ __('User') }}</th>
+                                        <th>{{ __('Amount') }}</th>
+                                        <th>{{ __('Goal') }}</th>
+                                        <th>{{ __('Date') }}</th>
+                                        <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($savings as $saving)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-											<td>{{ $saving->user?->firstname }}</td>
-											<td>{{ $saving->amount }}</td>
-											<td>{{ $saving->goal }}</td>
-											<td>{{ $saving->date }}</td>
+                                            <td>{{ $saving->user?->firstname }}</td>
+                                            <td>{{ $saving->amount }}</td>
+                                            <td>{{ $saving->goal }}</td>
+                                            <td>{{ $saving->date }}</td>
 
                                             <td>
-                                                <form action="{{ route('savings.destroy',$saving->id) }}" method="POST" class="form-delete">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('savings.show',$saving->id) }}"><i class="fa fa-fw fa-eye"></i>{{--  {{ __('Show') }} --}}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('savings.edit',$saving->id) }}"><i class="fa fa-fw fa-edit"></i>{{--  {{ __('Edit') }} --}}</a>
+                                                <form action="{{ route('savings.destroy', $saving->id) }}" method="POST" class="form-delete">
+                                                    <a class="btn btn-sm btn-primary" href="{{ route('savings.show', $saving->id) }}">
+                                                        <i class="fa fa-fw fa-eye"></i> {{ __('Show') }}
+                                                    </a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('savings.edit', $saving->id) }}">
+                                                        <i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}
+                                                    </a>
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i>{{--  {{ __('Delete') }} --}}</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -88,6 +91,5 @@
 @section('js')
 
     <script src="{{ asset('assets/js/plugins/sweetalert.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/plugins/datatable.js') }}"></script> --}}
 
 @endsection

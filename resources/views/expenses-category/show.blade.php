@@ -19,7 +19,7 @@
                             <span class="card-title">{{ __('Show Expenses Category') }}</span>
                         </div>
                         <div class="float-right">
-                            <a class="btn btn-primary" href="{{ route('expenses-categories.index') }}"> {{ __('Back') }}</a>
+                            <a class="btn btn-primary" href="{{ route('expenses-categories.index') }}">{{ __('Back') }}</a>
                         </div>
                     </div>
 
@@ -29,7 +29,7 @@
                     <div class="card-body">
                         
                         <div class="form-group">
-                            <strong>Name:</strong>
+                            <strong>{{ __('Name') }}:</strong>
                             {{ $expensesCategory->name }}
                         </div>
 
@@ -37,21 +37,19 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
-                                        <th>No</th>
-                                        
+                                        <th>{{ __('No') }}</th>
                                         <th>{{ __('User') }}</th>
-										<th>{{ __('Amount') }}</th>
-										<th>{{ __('Date') }}</th>
+                                        <th>{{ __('Amount') }}</th>
+                                        <th>{{ __('Date') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($expensesCategory->expenses as $key => $expense)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            
-											<td>{{ $expense->user?->firstname }}</td>
-											<td>{{ $expense->amount }}</td>
-											<td>{{ $expense->date }}</td>
+                                            <td>{{ $expense->user?->firstname }}</td>
+                                            <td>{{ $expense->amount }}</td>
+                                            <td>{{ $expense->date }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

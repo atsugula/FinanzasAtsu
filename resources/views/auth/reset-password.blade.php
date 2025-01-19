@@ -16,19 +16,21 @@
                         <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
                             <div class="card card-plain">
                                 <div class="card-header pb-0 text-start">
-                                    <h4 class="font-weight-bolder">Reset your password</h4>
-                                    <p class="mb-0">Enter your email and please wait a few seconds</p>
+                                    <h4 class="font-weight-bolder">{{ __('Reset your password') }}</h4>
+                                    <p class="mb-0">{{ __('Enter your email and please wait a few seconds') }}</p>
                                 </div>
                                 <div class="card-body">
                                     <form role="form" method="POST" action="{{ route('reset.perform') }}">
                                         @csrf
                                         @method('post')
                                         <div class="flex flex-col mb-3">
-                                            <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" value="{{ old('email') }}" aria-label="Email">
-                                            @error('email') <p class="text-danger text-xs pt-1"> {{$message}} </p>@enderror
+                                            <input type="email" name="email" class="form-control form-control-lg" placeholder="{{ __('Email') }}" value="{{ old('email') }}" aria-label="{{ __('Email') }}">
+                                            @error('email') 
+                                                <p class="text-danger text-xs pt-1"> {{$message}} </p>
+                                            @enderror
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Send Reset Link</button>
+                                            <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">{{ __('Send Reset Link') }}</button>
                                         </div>
                                     </form>
                                 </div>
@@ -43,10 +45,8 @@
                                 style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg');
                                         background-size: cover;">
                                 <span class="mask bg-gradient-primary opacity-6"></span>
-                                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Attention is the new
-                                    currency"</h4>
-                                <p class="text-white position-relative">The more effortless the writing looks, the more
-                                    effort the writer actually put into the process.</p>
+                                <h4 class="mt-5 text-white font-weight-bolder position-relative">{{ __('"Attention is the new currency"') }}</h4>
+                                <p class="text-white position-relative">{{ __('The more effortless the writing looks, the more effort the writer actually put into the process.') }}</p>
                             </div>
                         </div>
                     </div>
