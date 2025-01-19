@@ -79,6 +79,9 @@
         });
         history.forward();
     </script>
+
+    @yield('js')
+
 </body>
 
 </html>

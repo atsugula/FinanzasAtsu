@@ -50,7 +50,7 @@
                                             <td>{{ ++$i }}</td>
                                             <td>{{ $expensesCategory->name }}</td>
                                             <td>
-                                                <form action="{{ route('expenses-categories.destroy', $expensesCategory->id) }}" method="POST">
+                                                <form action="{{ route('expenses-categories.destroy', $expensesCategory->id) }}" method="POST" class="form-delete">
                                                     <a class="btn btn-sm btn-primary" href="{{ route('expenses-categories.show', $expensesCategory->id) }}">
                                                         <i class="fa fa-fw fa-eye"></i> {{ __('Show') }}
                                                     </a>

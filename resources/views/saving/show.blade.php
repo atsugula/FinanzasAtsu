@@ -29,7 +29,7 @@
                         
                         <div class="form-group">
                             <strong>{{ __('User') }}:</strong>
-                            {{ $saving->user }}
+                            {{ $saving->user?->firstname }} {{ $saving->user?->lastname }}
                         </div>
                         <div class="form-group">
                             <strong>{{ __('Amount') }}:</strong>

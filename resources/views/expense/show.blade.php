@@ -29,11 +29,11 @@
                         
                         <div class="form-group">
                             <strong>{{ __('User') }}:</strong>
-                            {{ $expense->user }}
+                            {{ $expense->user?->firstname }} {{ $expense->user?->lastname }}
                         </div>
                         <div class="form-group">
                             <strong>{{ __('Category') }}:</strong>
-                            {{ $expense->expensesCategory }}
+                            {{ $expense->expensesCategory?->name }}
                         </div>
                         <div class="form-group">
                             <strong>{{ __('Amount') }}:</strong>

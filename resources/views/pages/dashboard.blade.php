@@ -14,10 +14,10 @@
                                     <h5 class="font-weight-bolder">
                                         ${{ number_format($count_expense, 1) }}
                                     </h5>
-                                    <p class="mb-0">
+                                    {{-- <p class="mb-0">
                                         <span class="text-success text-sm font-weight-bolder">+55%</span>
                                         {{ __('since yesterday') }}
-                                    </p>
+                                    </p> --}}
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -39,10 +39,10 @@
                                     <h5 class="font-weight-bolder">
                                         ${{ number_format($count_incomes, 1) }}
                                     </h5>
-                                    <p class="mb-0">
+                                    {{-- <p class="mb-0">
                                         <span class="text-success text-sm font-weight-bolder">+3%</span>
                                         {{ __('since last week') }}
-                                    </p>
+                                    </p> --}}
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -60,14 +60,14 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">{{ __("TODAY'S SAVING") }}</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">{{ __("Today's Saving") }}</p>
                                     <h5 class="font-weight-bolder">
                                         ${{ number_format($count_saving, 1) }}
                                     </h5>
-                                    <p class="mb-0">
+                                    {{-- <p class="mb-0">
                                         <span class="text-danger text-sm font-weight-bolder">-2%</span>
                                         {{ __('since last quarter') }}
-                                    </p>
+                                    </p> --}}
                                 </div>
                             </div>
                             <div class="col-4 text-end">
@@ -196,7 +196,7 @@
             </div>
         </div>
 
-        <div class="row mt-4">
+        {{-- <div class="row mt-4">
             <div class="col-lg-7 mb-lg-0 mb-4">
                 <div class="card z-index-2 h-100">
                     <div class="card-header pb-0 pt-3 bg-transparent">
@@ -262,7 +262,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         @include('layouts.footers.auth.footer')
     </div>
 @endsection
