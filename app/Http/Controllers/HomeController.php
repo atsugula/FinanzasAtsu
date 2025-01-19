@@ -9,6 +9,7 @@ use App\Models\V1\Income;
 use App\Models\V1\Expense;
 use Illuminate\Http\Request;
 use App\Models\V1\ExpensesCategory;
+use App\Models\V1\Goal;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -73,10 +74,17 @@ class HomeController extends Controller
             $count_expense_must += $expense_must->amount;
         }
 
-        $categories = ExpensesCategory::where('created_by', $id_auth)->latest()
-                                        ->take(5)
-                                        ->get();
+        // Categorias de gastos
+        $categories = ExpensesCategory::where('created_by', $id_auth)->latest()->take(5)->get();
 
-        return view('pages.dashboard', compact('count_incomes', 'count_expense', 'count_saving', 'categories', 'user', 'count_incomes_am_owed', 'count_expense_must'));
+        // Traemos los objetivos
+        $goals = Goal::where('created_by', $id_auth)->with('savings')->get();
+
+        foreach ($goals as $goal) {
+            $totalSavings = $goal?->savings->sum('amount'); // Sum 'amount' for each goal's savings
+            $goal->total_savings = $totalSavings; // Add it as a custom attribute
+        }
+
+        return view('pages.dashboard', compact('goals', 'count_incomes', 'count_expense', 'count_saving', 'categories', 'user', 'count_incomes_am_owed', 'count_expense_must'));
     }
 }
