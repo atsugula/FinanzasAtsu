@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Models\User;
+use App\Models\V1\Goal;
 use App\Models\V1\Saving;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -41,7 +42,9 @@ class SavingController extends Controller
 
         $users = User::pluck('firstname AS label', 'id as value');
 
-        return view('saving.create', compact('saving', 'users'));
+        $goals = Goal::pluck('name AS label', 'id as value');
+
+        return view('saving.create', compact('saving', 'users', 'goals'));
     }
 
     /**
@@ -90,7 +93,9 @@ class SavingController extends Controller
 
         $users = User::pluck('firstname AS label', 'id as value');
 
-        return view('saving.edit', compact('saving', 'users'));
+        $goals = Goal::pluck('name AS label', 'id as value');
+
+        return view('saving.edit', compact('saving', 'users', 'goals'));
     }
 
     /**

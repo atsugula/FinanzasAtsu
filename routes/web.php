@@ -10,6 +10,7 @@ use App\Http\Controllers\V1\SavingController;
 use App\Http\Controllers\V1\IncomeController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\V1\UserController;
+use App\Http\Controllers\V1\GoalController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
@@ -44,6 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('expenses-categories', ExpensesCategoryController::class)->names('expenses-categories');
 	Route::resource('expenses', ExpenseController::class)->names('expenses');
 	Route::resource('payment-expenses', PaymentExpenseController::class)->only('index', 'edit', 'update', 'destroy', 'show')->names('payment-expenses');
+	Route::resource('goals', GoalController::class)->names('goals');
 	Route::resource('savings', SavingController::class)->names('savings');
 	Route::resource('partners', PartnerController::class)->names('partners');
 	Route::resource('payments-histories', PaymentsHistoryController::class)->only('index', 'edit', 'update', 'destroy', 'show')->names('payments-histories');

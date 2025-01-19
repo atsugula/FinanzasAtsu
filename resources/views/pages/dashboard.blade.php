@@ -193,6 +193,40 @@
                         </ul>
                     </div>
                 </div>
+                <div class="card mt-3">
+                    <div class="card-header pb-0 p-3">
+                        <h6 class="mb-0">{{ __('Goals') }}</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <ul class="list-group">
+                            <p>{{ __('No data available.') }}</p>
+                            {{-- @forelse ($categories as $category)
+                                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
+                                            <i class="ni ni-tag text-white opacity-10"></i>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <h6 class="mb-1 text-dark text-sm">{{ $category->name }}</h6>
+                                            <span class="text-xs">
+                                                <span class="font-weight-bold">
+                                                    {{ count($category->expenses) }} {{ __('Expenses') }}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <a class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto" href="{{ route('expenses-categories.show',$category->id) }}">
+                                            <i class="ni ni-bold-right" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            @empty
+                                <p>{{ __('No data available.') }}</p>
+                            @endforelse --}}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 

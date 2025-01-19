@@ -1057,6 +1057,9 @@
     "Phone": "Teléfono",
     "Pay Expense": "Gastos de pago",
     "Payable": "A pagar",
+    "Goals": "Objetivos",
+    "Goal Name": "Nombre del objetivo",
+    "Select the goal": "Selecciona el objetivo",
 
     "Create Income": "Crear Ingreso",
     "Update Income": "Actualizar Ingreso",
@@ -1076,5 +1079,8 @@
     "Create Payment": "Crear pago",
     "Create Payments History": "Crear Historial de pagos",
     "Update Payments History": "Actualizar Historial de pagos",
-    "Show Payments History": "Ver Historial de pagos"
+    "Show Payments History": "Ver Historial de pagos",
+    "Create Goal": "Crear Objetivo",
+    "Update Goal": "Actualizar Objetivo",
+    "Show Goal": "Ver Objetivo"
 }
