@@ -43,4 +43,9 @@ class Goal extends Model
     'created_by',
     'date',
   ];
+
+  public function savings()
+  {
+    return $this->hasMany(Saving::class, 'goal_id', 'id');
+  }
 }
