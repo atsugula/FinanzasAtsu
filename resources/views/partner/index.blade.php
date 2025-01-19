@@ -31,7 +31,7 @@
                     {{-- Separar card --}}
                     <span class="card-separator"></span>
 
-                    {{-- Plantilla mensajes--}}
+                    {{-- Plantilla mensajes --}}
                     @include('layouts.message')
 
                     <div class="card-body">
@@ -39,15 +39,13 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
-                                        <th>No</th>
-                                        
-										<th>User</th>
-										<th>Company Name</th>
-										<th>Type Document</th>
-										<th>Document Number</th>
-										<th>Phone</th>
-										<th>Email</th>
-
+                                        <th>{{ __('No') }}</th>
+                                        <th>{{ __('User') }}</th>
+                                        <th>{{ __('Company Name') }}</th>
+                                        <th>{{ __('Type Document') }}</th>
+                                        <th>{{ __('Document Number') }}</th>
+                                        <th>{{ __('Phone') }}</th>
+                                        <th>{{ __('Email') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
@@ -55,21 +53,26 @@
                                     @foreach ($partners as $partner)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-											<td>{{ $partner->user?->firstname }}</td>
-											<td>{{ $partner->company_name }}</td>
-											<td>{{ $partner->typeDocument?->name }}</td>
-											<td>{{ $partner->document_number }}</td>
-											<td>{{ $partner->phone }}</td>
-											<td>{{ $partner->email }}</td>
+                                            <td>{{ $partner->user?->firstname }}</td>
+                                            <td>{{ $partner->company_name }}</td>
+                                            <td>{{ $partner->typeDocument?->name }}</td>
+                                            <td>{{ $partner->document_number }}</td>
+                                            <td>{{ $partner->phone }}</td>
+                                            <td>{{ $partner->email }}</td>
 
                                             <td>
-                                                <form action="{{ route('partners.destroy',$partner->id) }}" method="POST" class="form-delete">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('partners.show',$partner->id) }}"><i class="fa fa-fw fa-eye"></i>{{--  {{ __('Show') }} --}}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('partners.edit',$partner->id) }}"><i class="fa fa-fw fa-edit"></i>{{--  {{ __('Edit') }} --}}</a>
+                                                <form action="{{ route('partners.destroy', $partner->id) }}" method="POST" class="form-delete">
+                                                    <a class="btn btn-sm btn-primary" href="{{ route('partners.show', $partner->id) }}">
+                                                        <i class="fa fa-fw fa-eye"></i> {{ __('Show') }}
+                                                    </a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('partners.edit', $partner->id) }}">
+                                                        <i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}
+                                                    </a>
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i>{{--  {{ __('Delete') }} --}}</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -83,15 +86,14 @@
             </div>
         </div>
     </div>
-    
+
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
-    
+
 @endsection
 
 @section('js')
 
     <script src="{{ asset('assets/js/plugins/sweetalert.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/plugins/datatable.js') }}"></script> --}}
 
 @endsection

@@ -15,7 +15,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="float-left">
-                            <span class="card-title">{{ __('Show') }} Expense</span>
+                            <span class="card-title">{{ __('Show') }} {{ __('Expense') }}</span>
                         </div>
                         <div class="float-right">
                             <a class="btn btn-primary" href="{{ route('expenses.index') }}"> {{ __('Back') }}</a>
@@ -28,27 +28,27 @@
                     <div class="card-body">
                         
                         <div class="form-group">
-                            <strong>User:</strong>
+                            <strong>{{ __('User') }}:</strong>
                             {{ $expense->user }}
                         </div>
                         <div class="form-group">
-                            <strong>Category:</strong>
+                            <strong>{{ __('Category') }}:</strong>
                             {{ $expense->expensesCategory }}
                         </div>
                         <div class="form-group">
-                            <strong>Amount:</strong>
+                            <strong>{{ __('Amount') }}:</strong>
                             {{ $expense->amount }}
                         </div>                        
                         <div class="form-group">
-                            <strong>Date:</strong>
+                            <strong>{{ __('Date') }}:</strong>
                             {{ $expense->date }}
                         </div>
                         <div class="form-group">
-                            <strong>Status:</strong>
+                            <strong>{{ __('Status') }}:</strong>
                             {{ $expense->statuse?->name }}
                         </div>
                         <div class="form-group">
-                            <strong>Description:</strong>
+                            <strong>{{ __('Description') }}:</strong>
                             {{ $expense->description }}
                         </div>
                     </div>

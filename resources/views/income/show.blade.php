@@ -16,10 +16,10 @@
 
                     <div class="card-header">
                         <div class="float-left">
-                            <span class="card-title">{{ __('Show Income') }} </span>
+                            <span class="card-title">{{ __('Show Income') }}</span>
                         </div>
                         <div class="float-right">
-                            <a class="btn btn-primary" href="{{ route('incomes.index') }}"> {{__('Back')}}</a>
+                            <a class="btn btn-primary" href="{{ route('incomes.index') }}">{{ __('Back') }}</a>
                         </div>
                     </div>
 
@@ -27,25 +27,25 @@
                     <span class="card-separator"></span>
 
                     <div class="card-body">
-                        
+
                         <div class="form-group">
-                            <strong>User:</strong>
+                            <strong>{{ __('User') }}:</strong>
                             {{ $income->user }}
                         </div>
                         <div class="form-group">
-                            <strong>Amount:</strong>
+                            <strong>{{ __('Amount') }}:</strong>
                             {{ $income->amount }}
                         </div>
                         <div class="form-group">
-                            <strong>Source:</strong>
+                            <strong>{{ __('Source') }}:</strong>
                             {{ $income->source }}
                         </div>
                         <div class="form-group">
-                            <strong>Date:</strong>
+                            <strong>{{ __('Date') }}:</strong>
                             {{ $income->date }}
                         </div>
                         <div class="form-group">
-                            <strong>Status:</strong>
+                            <strong>{{ __('Status') }}:</strong>
                             {{ $income->statuse?->name }}
                         </div>
                     </div>
@@ -53,7 +53,7 @@
             </div>
         </div>
     </section>
-    
+
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
 

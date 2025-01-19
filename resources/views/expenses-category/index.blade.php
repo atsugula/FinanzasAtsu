@@ -21,7 +21,7 @@
                             </span>
 
                             <div class="float-right">
-                                <a href="{{ route('expenses-categories.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                <a href="{{ route('expenses-categories.create') }}" class="btn btn-primary btn-sm float-right" data-placement="left">
                                     {{ __('Create New') }}
                                 </a>
                             </div>
@@ -31,7 +31,7 @@
                     {{-- Separar card --}}
                     <span class="card-separator"></span>
 
-                    {{-- Plantilla mensajes--}}
+                    {{-- Plantilla mensajes --}}
                     @include('layouts.message')
 
                     <div class="card-body">
@@ -39,10 +39,8 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
-                                        <th>No</th>
-                                        
-										<th>{{ __('Name') }}</th>
-
+                                        <th>{{ __('No') }}</th>
+                                        <th>{{ __('Name') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
@@ -50,16 +48,20 @@
                                     @foreach ($expensesCategories as $expensesCategory)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-											<td>{{ $expensesCategory->name }}</td>
-
+                                            <td>{{ $expensesCategory->name }}</td>
                                             <td>
-                                                <form action="{{ route('expenses-categories.destroy',$expensesCategory->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('expenses-categories.show',$expensesCategory->id) }}"><i class="fa fa-fw fa-eye"></i>{{--  {{ __('Show') }} --}}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('expenses-categories.edit',$expensesCategory->id) }}"><i class="fa fa-fw fa-edit"></i>{{--  {{ __('Edit') }} --}}</a>
+                                                <form action="{{ route('expenses-categories.destroy', $expensesCategory->id) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary" href="{{ route('expenses-categories.show', $expensesCategory->id) }}">
+                                                        <i class="fa fa-fw fa-eye"></i> {{ __('Show') }}
+                                                    </a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('expenses-categories.edit', $expensesCategory->id) }}">
+                                                        <i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}
+                                                    </a>
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i>{{--  {{ __('Delete') }} --}}</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -82,6 +84,5 @@
 @section('js')
 
     <script src="{{ asset('assets/js/plugins/sweetalert.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/plugins/datatable.js') }}"></script> --}}
 
 @endsection

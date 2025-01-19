@@ -17,40 +17,52 @@
                             <div class="card card-plain">
                                 <br>
                                 <div class="card-header pb-0 text-start">
-                                    <h4 class="font-weight-bolder">Sign In</h4>
-                                    <p class="mb-0">Enter your email and password to sign in</p>
+                                    <h4 class="font-weight-bolder">{{ __('Sign In') }}</h4>
+                                    <p class="mb-0">{{ __('Enter your email and password to sign in') }}</p>
                                 </div>
                                 <div class="card-body">
                                     <form role="form" method="POST" action="{{ route('login.perform') }}">
                                         @csrf
                                         @method('post')
                                         <div class="flex flex-col mb-3">
-                                            <input type="email" name="email" class="form-control form-control-lg" value="{{ old('email') ?? '' }}" aria-label="Email" placeholder="{{ __('Enter your email address') }}">
-                                            @error('email') <p class="text-danger text-xs pt-1"> {{$message}} </p>@enderror
+                                            <input type="email" name="email" class="form-control form-control-lg"
+                                                value="{{ old('email') ?? '' }}" aria-label="{{ __('Email') }}"
+                                                placeholder="{{ __('Enter your email address') }}">
+                                            @error('email')
+                                                <p class="text-danger text-xs pt-1"> {{ $message }} </p>
+                                            @enderror
                                         </div>
                                         <div class="flex flex-col mb-3">
-                                            <input type="password" name="password" class="form-control form-control-lg" aria-label="Password" value="" placeholder="********">
-                                            @error('password') <p class="text-danger text-xs pt-1"> {{$message}} </p>@enderror
+                                            <input type="password" name="password" class="form-control form-control-lg"
+                                                aria-label="{{ __('Password') }}" value=""
+                                                placeholder="{{ __('********') }}">
+                                            @error('password')
+                                                <p class="text-danger text-xs pt-1"> {{ $message }} </p>
+                                            @enderror
                                         </div>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" name="remember" type="checkbox" id="rememberMe">
-                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                                            <label class="form-check-label"
+                                                for="rememberMe">{{ __('Remember me') }}</label>
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
+                                            <button type="submit"
+                                                class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">{{ __('Sign in') }}</button>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                     <p class="mb-1 text-sm mx-auto">
-                                        Forgot you password? Reset your password
-                                        <a href="{{ route('reset-password') }}" class="text-primary text-gradient font-weight-bold">here</a>
+                                        {{ __('Forgot your password? Reset your password') }}
+                                        <a href="{{ route('reset-password') }}"
+                                            class="text-primary text-gradient font-weight-bold">{{ __('here') }}</a>
                                     </p>
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                     <p class="mb-4 text-sm mx-auto">
-                                        Don't have an account?
-                                        <a href="{{ route('register') }}" class="text-primary text-gradient font-weight-bold">Sign up</a>
+                                        {{ __("Don't have an account?") }}
+                                        <a href="{{ route('register') }}"
+                                            class="text-primary text-gradient font-weight-bold">{{ __('Sign up') }}</a>
                                     </p>
                                 </div>
                             </div>
@@ -61,10 +73,11 @@
                                 style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg');
               background-size: cover;">
                                 <span class="mask bg-gradient-primary opacity-6"></span>
-                                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Attention is the new
-                                    currency"</h4>
-                                <p class="text-white position-relative">The more effortless the writing looks, the more
-                                    effort the writer actually put into the process.</p>
+                                <h4 class="mt-5 text-white font-weight-bolder position-relative">
+                                    {{ __('"Attention is the new currency"') }}</h4>
+                                <p class="text-white position-relative">
+                                    {{ __('The more effortless the writing looks, the more effort the writer actually put into the process.') }}
+                                </p>
                             </div>
                         </div>
                     </div>

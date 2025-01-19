@@ -10,7 +10,7 @@ return [
     [
         'text' => 'Savings',
         'route' => 'savings.index',
-        'icon' => 'fa fa-paypal',
+        'icon' => 'fa fa-credit-card',
         'page' => 0, // Para saber si la ruta es por parametro post o no
     ],
     [

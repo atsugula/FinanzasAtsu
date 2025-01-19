@@ -21,7 +21,7 @@
                             </span>
 
                             <div class="float-right">
-                                <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm float-right" data-placement="left">
                                     {{ __('Create New') }}
                                 </a>
                             </div>
@@ -31,7 +31,7 @@
                     {{-- Separar card --}}
                     <span class="card-separator"></span>
 
-                    {{-- Plantilla mensajes--}}
+                    {{-- Plantilla mensajes --}}
                     @include('layouts.message')
 
                     <div class="card-body">
@@ -39,43 +39,46 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
-                                        <th>No</th>
-                                        
-										<th>Username</th>
-										<th>Firstname</th>
-										<th>Lastname</th>
-										<th>Email</th>
-										<th>Address</th>
-										<th>City</th>
-										<th>Country</th>
-										<th>Postal</th>
-										<th>About</th>
-
-                                        <th>Actions</th>
+                                        <th>{{ __('No') }}</th>
+                                        <th>{{ __('Username') }}</th>
+                                        <th>{{ __('Firstname') }}</th>
+                                        <th>{{ __('Lastname') }}</th>
+                                        <th>{{ __('Email') }}</th>
+                                        <th>{{ __('Address') }}</th>
+                                        <th>{{ __('City') }}</th>
+                                        <th>{{ __('Country') }}</th>
+                                        <th>{{ __('Postal Code') }}</th>
+                                        <th>{{ __('About') }}</th>
+                                        <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($users as $user)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-											<td>{{ $user->username }}</td>
-											<td>{{ $user->firstname }}</td>
-											<td>{{ $user->lastname }}</td>
-											<td>{{ $user->email }}</td>
-											<td>{{ $user->address }}</td>
-											<td>{{ $user->city }}</td>
-											<td>{{ $user->country }}</td>
-											<td>{{ $user->postal }}</td>
-											<td>{{ $user->about }}</td>
+                                            <td>{{ $user->username }}</td>
+                                            <td>{{ $user->firstname }}</td>
+                                            <td>{{ $user->lastname }}</td>
+                                            <td>{{ $user->email }}</td>
+                                            <td>{{ $user->address }}</td>
+                                            <td>{{ $user->city }}</td>
+                                            <td>{{ $user->country }}</td>
+                                            <td>{{ $user->postal }}</td>
+                                            <td>{{ $user->about }}</td>
 
                                             <td>
-                                                <form action="{{ route('users.destroy',$user->id) }}" method="POST" class="form-delete">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('users.show',$user->id) }}"><i class="fa fa-fw fa-eye"></i>{{--  {{ __('Show') }} --}}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('users.edit',$user->id) }}"><i class="fa fa-fw fa-edit"></i>{{--  {{ __('Edit') }} --}}</a>
+                                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="form-delete">
+                                                    <a class="btn btn-sm btn-primary" href="{{ route('users.show', $user->id) }}">
+                                                        <i class="fa fa-fw fa-eye"></i> {{ __('Show') }}
+                                                    </a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('users.edit', $user->id) }}">
+                                                        <i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}
+                                                    </a>
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i>{{--  {{ __('Delete') }} --}}</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -98,6 +101,5 @@
 @section('js')
 
     <script src="{{ asset('assets/js/plugins/sweetalert.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/plugins/datatable.js') }}"></script> --}}
 
 @endsection

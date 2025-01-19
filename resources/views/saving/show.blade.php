@@ -15,7 +15,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="float-left">
-                            <span class="card-title">{{ __('Show') }} Saving</span>
+                            <span class="card-title">{{ __('Show') }} {{ __('Saving') }}</span>
                         </div>
                         <div class="float-right">
                             <a class="btn btn-primary" href="{{ route('savings.index') }}"> {{ __('Back') }}</a>
@@ -28,23 +28,23 @@
                     <div class="card-body">
                         
                         <div class="form-group">
-                            <strong>User:</strong>
+                            <strong>{{ __('User') }}:</strong>
                             {{ $saving->user }}
                         </div>
                         <div class="form-group">
-                            <strong>Amount:</strong>
+                            <strong>{{ __('Amount') }}:</strong>
                             {{ $saving->amount }}
                         </div>
                         <div class="form-group">
-                            <strong>Goal:</strong>
+                            <strong>{{ __('Goal') }}:</strong>
                             {{ $saving->goal }}
                         </div>
                         <div class="form-group">
-                            <strong>Date:</strong>
+                            <strong>{{ __('Date') }}:</strong>
                             {{ $saving->date }}
                         </div>
                         <div class="form-group">
-                            <strong>Description:</strong>
+                            <strong>{{ __('Description') }}:</strong>
                             {{ $saving->description }}
                         </div>
 
@@ -53,4 +53,8 @@
             </div>
         </div>
     </section>
+
+    {{-- Footer template --}}
+    @include('layouts.footers.auth.footer')
+
 @endsection
