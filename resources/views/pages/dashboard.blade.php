@@ -86,7 +86,7 @@
             <div class="col-12 col-lg-12">
                 <div class="card">
                     <div class="card-header pb-0 p-3">
-                        <h6 class="mb-0">{{ __('Goals') }}</h6>
+                        <h6 class="mb-0">{{ __('Goals status') }}</h6>
                     </div>
                     <div class="card-body p-3">
                         <div class="row">
@@ -94,10 +94,38 @@
                                 <div class="col-lg-4">
                                     <div class="card">
                                         <div class="card-header pb-0 p-3">
-                                            <h6 class="mb-0">{{ $goal->name }}</h6>
+                                            <h6 class="mb-0 uppercase">{{ $goal->name }}</h6>
                                         </div>
                                         <div class="card-body p-3">
                                             <canvas id="goal_chart_{{ $key }}"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <p>{{ __('No data available.') }}</p>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header pb-0 p-3">
+                        <h6 class="mb-0">{{ __('Debt status') }}</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="row">
+                            @forelse ($incomes_owing as $key => $income_owing)
+                                <div class="col-lg-4">
+                                    <div class="card">
+                                        <div class="card-header pb-0 p-3">
+                                            <h6 class="mb-0 uppercase">{{ $income_owing?->expensesCategory?->name }}</h6>
+                                        </div>
+                                        <div class="card-body p-3">
+                                            <canvas id="income_owing_chart_{{ $key }}"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -236,61 +264,65 @@
 @section('js')
     <script src="./assets/js/plugins/chartjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
-        // Pass PHP data to JavaScript
         const goalsData = @json($goals);
+        const incomes_owingData = @json($incomes_owing);
     
-        // Custom Plugin to Add Styled Text in Center
         const centerTextPlugin = {
             id: 'centerText',
             beforeDraw(chart) {
-                const { width } = chart;
-                const { height } = chart;
+                const { width, height } = chart;
                 const ctx = chart.ctx;
     
-                // Calculate the total as goal.amount - goal.total_savings
+                // Identificar si es un gráfico de metas o de deudas
+                const isDebtChart = chart.data.labels.includes('Deuda');
+    
+                // Calcular el total restante
                 const total = chart.data.datasets[0].data[0] - chart.data.datasets[0].data[1];
     
-                // Format the total as currency
-                const formattedTotal = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD',
-                    minimumFractionDigits: 2,
-                }).format(total);
+                // Formato del total restante
+                const formattedTotal = isNaN(total) || total === null || total === undefined 
+                    ? (isDebtChart ? 'Nada pagado.' : 'Nada ahorrado.') 
+                    : new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                        minimumFractionDigits: 2,
+                    }).format(total);
     
-                // Adjust font size and style
-                const fontSize = (height / 20).toFixed(2); // Adjust font size dynamically
+                // Ajuste del tamaño de la fuente
+                const fontSize = (height / 20).toFixed(2);
                 ctx.save();
                 ctx.font = `bold ${fontSize}px sans-serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillStyle = '#333'; // Dark gray color for better visibility
+                ctx.fillStyle = '#333'; 
     
-                // Calculate X and Y positions for the text
+                // Posición del texto
                 const x = width / 2;
                 const y = height / 2;
     
-                // Draw the formatted total in the center
-                ctx.fillText(formattedTotal, x, y - 10); // Slightly move up (-10) for better positioning
+                // Dibujar el texto en el centro
+                ctx.fillText(formattedTotal, x, y - 10);
     
                 ctx.restore();
             }
         };
     
-        // Register the plugin globally
+        // Registrar el plugin globalmente
         Chart.register(centerTextPlugin);
     
-        // Loop through each goal and create a chart
-        goalsData.forEach((goal, index) => {
-            const ctx = document.getElementById(`goal_chart_${index}`).getContext('2d');
+        // Función para generar gráficos
+        function createChart(canvasId, labels, data, label, backgroundColor) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Meta', 'Logrado'],
+                    labels: labels,
                     datasets: [{
-                        label: goal.name,
-                        data: [goal.amount, goal.total_savings],
-                        backgroundColor: ['#36A2EB', '#FFCE56']
+                        label: label,
+                        data: data,
+                        backgroundColor: backgroundColor
                     }]
                 },
                 options: {
@@ -303,8 +335,30 @@
                     }
                 }
             });
+        }
+    
+        // Crear gráficos de metas
+        goalsData.forEach((goal, index) => {
+            createChart(
+                `goal_chart_${index}`,
+                ['Meta', 'Logrado'],
+                [goal.amount, goal.total_savings],
+                goal.name,
+                ['#36A2EB', '#FFCE56']
+            );
+        });
+    
+        // Crear gráficos de deudas
+        incomes_owingData.forEach((income_owing, index) => {
+            createChart(
+                `income_owing_chart_${index}`,
+                ['Deuda', 'Pagado'],
+                [income_owing.amount, income_owing.total_debt],
+                income_owing.name,
+                ['#f5365c', '#2dce89']
+            );
         });
     </script>
     
-    
+
 @endsection

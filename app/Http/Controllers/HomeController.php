@@ -85,6 +85,13 @@ class HomeController extends Controller
             $goal->total_savings = $totalSavings; // Add it as a custom attribute
         }
 
-        return view('pages.dashboard', compact('goals', 'count_incomes', 'count_expense', 'count_saving', 'categories', 'user', 'count_incomes_am_owed', 'count_expense_must'));
+        // Traemos las ingresos que estan como deudas
+        $incomes_owing = Expense::where('created_by', $id_auth)->whereIn('status', [config('status.DED'), config('status.ENPROC')])->with('payments', 'expensesCategory')->get();
+
+        foreach ($incomes_owing as $income_owing) {
+            $income_owing->total_debt = $income_owing?->payments->sum('paid');
+        }
+
+        return view('pages.dashboard', compact('incomes_owing', 'goals', 'count_incomes', 'count_expense', 'count_saving', 'categories', 'user', 'count_incomes_am_owed', 'count_expense_must'));
     }
 }

@@ -29,8 +29,8 @@ class Expense extends Model
     use SoftDeletes;
 
     static $rules = [
-		'category' => 'required',
-		'amount' => 'required',
+        'category' => 'required',
+        'amount' => 'required',
     ];
 
     protected $perPage = 20;
@@ -57,7 +57,7 @@ class Expense extends Model
     {
         return $this->hasOne(ExpensesCategory::class, 'id', 'category');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -65,7 +65,7 @@ class Expense extends Model
     {
         return $this->hasOne(User::class, 'id', 'created_by');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -74,4 +74,8 @@ class Expense extends Model
         return $this->hasOne(Status::class, 'id', 'status');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(PaymentsHistory::class, 'expense_id', 'id');
+    }
 }
