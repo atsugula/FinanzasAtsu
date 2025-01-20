@@ -26,7 +26,11 @@ class PaymentsHistoryController extends Controller
      */
     public function index()
     {
-        $paymentsHistories = PaymentsHistory::paginate();
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = Auth::id();
+
+        $paymentsHistories = PaymentsHistory::where('created_by', $id_auth)->paginate();
 
         return view('payments-history.index', compact('paymentsHistories'))
             ->with('i', (request()->input('page', 1) - 1) * $paymentsHistories->perPage());

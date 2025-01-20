@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\Models\V1\Goal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class GoalController
@@ -19,7 +20,11 @@ class GoalController extends Controller
      */
     public function index()
     {
-        $goals = Goal::paginate();
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = Auth::id();
+
+        $goals = Goal::where('created_by', $id_auth)->paginate();
 
         return view('goal.index', compact('goals'))
             ->with('i', (request()->input('page', 1) - 1) * $goals->perPage());
