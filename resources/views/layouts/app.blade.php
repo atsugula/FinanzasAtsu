@@ -19,6 +19,13 @@
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/select2.min.css') }}">
+
+    <style>
+        .uppercase {
+            text-transform: uppercase;
+        }
+    </style>
+    
 </head>
 
 <body class="{{ $class ?? '' }}">
