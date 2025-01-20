@@ -7,7 +7,7 @@
 @section('content')
 
 {{-- Navbar template --}}
-@include('layouts.navbars.auth.topnav', ['title' => __('Income')])
+@include('layouts.navbars.auth.topnav', ['title' => __('Expense')])
 
     <div class="container-fluid">
         <div class="row">
