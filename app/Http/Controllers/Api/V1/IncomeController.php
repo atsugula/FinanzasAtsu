@@ -20,7 +20,7 @@ class IncomeController extends Controller
     public function index()
     {
         $id_auth = Auth::id();
-        $incomes = Income::where('created_by', $id_auth)->paginate();
+        $incomes = Income::/* where('created_by', $id_auth)-> */paginate();
 
         return response()->json([
             'success' => true,
