@@ -1083,5 +1083,10 @@
     "Show Payments History": "Ver Historial de pagos",
     "Create Goal": "Crear Objetivo",
     "Update Goal": "Actualizar Objetivo",
-    "Show Goal": "Ver Objetivo"
+    "Show Goal": "Ver Objetivo",
+    "Transactions": "Transacciones",
+    "Create Transaction": "Crear Transacción",
+    "Update Transaction": "Actualizar Transacción",
+    "Show Transaction": "Ver Transacción",
+    "Transaction": "Transacción"
 }

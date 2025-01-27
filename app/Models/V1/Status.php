@@ -2,6 +2,7 @@
 
 namespace App\Models\V1;
 
+use App\Models\V2\Transaction;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -46,6 +47,14 @@ class Status extends Model
   public function incomes()
   {
     return $this->hasMany(Status::class, 'status', 'id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function transactions()
+  {
+    return $this->hasMany(Transaction::class, 'status', 'id');
   }
 
 }

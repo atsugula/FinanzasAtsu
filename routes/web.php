@@ -3,6 +3,7 @@
 use App\Http\Controllers\V1\ExpensesCategoryController;
 use App\Http\Controllers\V1\PaymentsHistoryController;
 use App\Http\Controllers\V1\PaymentExpenseController;
+use App\Http\Controllers\V1\TransactionController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\V1\ExpenseController;
 use App\Http\Controllers\V1\PartnerController;
@@ -41,6 +42,7 @@ Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middle
 Route::group(['middleware' => 'auth'], function () {
 	/* Modulos software */
 	Route::resource('users', UserController::class)->names('users');
+	Route::resource('transactions', TransactionController::class)->names('transactions');
 	Route::resource('incomes', IncomeController::class)->names('incomes');
 	Route::resource('expenses-categories', ExpensesCategoryController::class)->names('expenses-categories');
 	Route::resource('expenses', ExpenseController::class)->names('expenses');
