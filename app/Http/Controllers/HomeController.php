@@ -94,11 +94,11 @@ class HomeController extends Controller
         $categories = ExpensesCategory::where('created_by', $id_auth)->latest()->take(5)->get();
 
         // Traemos los objetivos
-        $goals = Goal::where('created_by', $id_auth)->with('savings')->get();
+        $goals = Goal::where('created_by', $id_auth)->with('transactions')->get();
 
         foreach ($goals as $goal) {
-            $totalSavings = $goal?->savings->sum('amount'); // Sum 'amount' for each goal's savings
-            $goal->total_savings = $totalSavings; // Add it as a custom attribute
+            $totalTransactions = $goal?->transactions->sum('amount'); // Sum 'amount' for each goal's transactions
+            $goal->total_savings = $totalTransactions; // Add it as a custom attribute
         }
 
         // Traemos las egresos que estan como deudas

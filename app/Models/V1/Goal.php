@@ -44,6 +44,11 @@ class Goal extends Model
     'date',
   ];
 
+  public function transactions()
+  {
+    return $this->hasMany(Transaction::class, 'goal_id', 'id');
+  }
+
   public function savings()
   {
     return $this->hasMany(Saving::class, 'goal_id', 'id');
