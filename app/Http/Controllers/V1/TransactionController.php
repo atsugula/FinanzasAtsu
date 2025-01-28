@@ -24,7 +24,11 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::with('expensesCategory', 'goalRelation', 'status', 'user')->paginate();
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = \Auth::id();
+
+        $transactions = Transaction::where('created_by', $id_auth)->with('expensesCategory', 'goalRelation', 'status', 'user', 'payments')->paginate();
 
         return view('transaction.index', compact('transactions'))
             ->with('i', (request()->input('page', 1) - 1) * $transactions->perPage());
