@@ -22,5 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function () {
     Route::apiResource('incomes', IncomeController::class);
-    Route::get('getPartner', [HomeController::class, 'getPartner']);
+    Route::get('getData', [HomeController::class, 'getDataSelects']);
 });
