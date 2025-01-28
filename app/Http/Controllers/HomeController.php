@@ -99,10 +99,10 @@ class HomeController extends Controller
     function getDataSelects(Request $request)
     {
         // Obtiene los nombres de las tablas desde el request
-        $tables = $request->input('fields', []);
+        $fields = json_decode($request->query('fields', '[]'), true);
 
         // Verifica que se haya enviado al menos una tabla
-        if (!is_array($tables) || empty($tables)) {
+        if (!is_array($fields) || empty($fields)) {
             return response()->json([
                 'success' => false,
                 'message' => 'No se enviaron tablas para consultar.'
@@ -111,7 +111,7 @@ class HomeController extends Controller
 
         $data = [];
 
-        foreach ($tables as $table) {
+        foreach ($fields as $table) {
             // Verifica si la tabla existe en la base de datos
             if (!Schema::hasTable($table)) {
                 return response()->json([
