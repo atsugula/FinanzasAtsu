@@ -99,7 +99,10 @@ class HomeController extends Controller
     function getPartner()
     {
         $partners = Partner::pluck('company_name AS label', 'id as value');
-        return response()->json($partners);
+        return response()->json([
+            'success' => true,
+            'data' => $partners
+        ]);
     }
 
 }
