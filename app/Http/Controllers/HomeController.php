@@ -10,6 +10,7 @@ use App\Models\V1\Expense;
 use Illuminate\Http\Request;
 use App\Models\V1\ExpensesCategory;
 use App\Models\V1\Goal;
+use App\Models\V1\Partner;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -94,4 +95,11 @@ class HomeController extends Controller
 
         return view('pages.dashboard', compact('incomes_owing', 'goals', 'count_incomes', 'count_expense', 'count_saving', 'categories', 'user', 'count_incomes_am_owed', 'count_expense_must'));
     }
+
+    function getPartner()
+    {
+        $partners = Partner::pluck('company_name AS label', 'id as value');
+        return response()->json($partners);
+    }
+
 }

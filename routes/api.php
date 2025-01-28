@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\V1\IncomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Api\V1\IncomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function () {
     Route::apiResource('incomes', IncomeController::class);
+    Route::get('getPartner', [HomeController::class, 'getPartner']);
 });

@@ -52,12 +52,17 @@ class Transaction extends Model
         'date',
         'description',
         'source',
+        'partner_id',
         'category',
         'goal_id',
         'goal',
         'status_id'
     ];
 
+    public function partner()
+    {
+        return $this->hasOne(Partner::class, 'id', 'partner_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
