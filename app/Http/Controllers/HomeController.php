@@ -46,7 +46,7 @@ class HomeController extends Controller
         // Calculamos los incomes o ingresos por acá
         $incomes = Transaction::where('created_by', $id_auth)
             ->where('type', 'I')
-            ->whereNotIn('status', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
+            ->whereNotIn('status_id', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
             ->get();
 
         foreach ($incomes as $key => $income) {
@@ -55,7 +55,7 @@ class HomeController extends Controller
         // Calculamos los expense por acá
         $expenses = Transaction::where('created_by', $id_auth)
                         ->where('type', 'E')
-                        ->whereNotIn('status', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
+                        ->whereNotIn('status_id', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
                         ->get();
         
         foreach ($expenses as $key => $expense) {
@@ -73,7 +73,7 @@ class HomeController extends Controller
         // Me deben esto
         $incomes_am_owed = Transaction::where('created_by', $id_auth)
                         ->where('type', 'I')
-                        ->where('status', [config('status.PEN')])
+                        ->where('status_id', [config('status.PEN')])
                         ->get();
         // Calculamos los incomes_am_owed por acá
         foreach ($incomes_am_owed as $key => $income_am_owed) {
@@ -83,7 +83,7 @@ class HomeController extends Controller
         // Debo lo siguiente
         $expenses_must = Transaction::where('created_by', $id_auth)
                         ->where('type', 'E')
-                        ->where('status', [config('status.DED')])
+                        ->where('status_id', [config('status.DED')])
                         ->get();
         // Calculamos los expenses_must por acá
         foreach ($expenses_must as $key => $expense_must) {
@@ -104,7 +104,7 @@ class HomeController extends Controller
         // Traemos las egresos que estan como deudas
         $incomes_owing = Transaction::where('created_by', $id_auth)
                         ->where('type', 'E')
-                        ->where('status', [config('status.DED'), config('status.ENPROC')])
+                        ->where('status_id', [config('status.DED'), config('status.ENPROC')])
                         ->with('payments', 'expensesCategory')
                         ->get();
 
