@@ -95,4 +95,9 @@ class Transaction extends Model
     {
         return $this->hasOne(User::class, 'id', 'created_by');
     }
+
+    public function payments()
+    {
+        return $this->hasMany(PaymentsHistory::class, 'expense_id', 'id');
+    }
 }
