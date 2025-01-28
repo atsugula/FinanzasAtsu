@@ -43,12 +43,12 @@ Route::group(['middleware' => 'auth'], function () {
 	/* Modulos software */
 	Route::resource('users', UserController::class)->names('users');
 	Route::resource('transactions', TransactionController::class)->names('transactions');
-	Route::resource('incomes', IncomeController::class)->names('incomes');
+	// Route::resource('incomes', IncomeController::class)->names('incomes');
 	Route::resource('expenses-categories', ExpensesCategoryController::class)->names('expenses-categories');
-	Route::resource('expenses', ExpenseController::class)->names('expenses');
+	// Route::resource('expenses', ExpenseController::class)->names('expenses');
 	Route::resource('payment-expenses', PaymentExpenseController::class)->only('index', 'edit', 'update', 'destroy', 'show')->names('payment-expenses');
 	Route::resource('goals', GoalController::class)->names('goals');
-	Route::resource('savings', SavingController::class)->names('savings');
+	// Route::resource('savings', SavingController::class)->names('savings');
 	Route::resource('partners', PartnerController::class)->names('partners');
 	Route::resource('payments-histories', PaymentsHistoryController::class)->only('index', 'edit', 'update', 'destroy', 'show')->names('payments-histories');
 	/* Paginas de la plantilla */
