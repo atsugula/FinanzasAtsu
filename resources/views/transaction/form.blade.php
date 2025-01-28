@@ -8,7 +8,7 @@
                         'class' => 'form-control select2' . ($errors->has('type') ? ' is-invalid' : ''),
                         'id' => 'typeTransaction',
                         'onchange' => 'viewForms()',
-                        'placeholder' => __('Select the goal')
+                        'placeholder' => __('Select the type')
                     ]) }}
                     {!! $errors->first('type', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
