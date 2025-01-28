@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-        /**
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -42,13 +42,13 @@ class HomeController extends Controller
 
         $today = Carbon::now()->toDateString(); // Obtener la fecha actual en formato 'Y-m-d'
         $incomes = Income::where('created_by', $id_auth)
-            ->whereNotIn('status',[config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])->get();
+            ->whereNotIn('status', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])->get();
         // Calculamos los incomes por acá
         foreach ($incomes as $key => $income) {
             $count_incomes += $income->amount;
         }
         $expenses = Expense::where('created_by', $id_auth)
-            ->whereNotIn('status',[config('status.CANC'), config('status.REC'), config('status.DED')])->get();
+            ->whereNotIn('status', [config('status.CANC'), config('status.REC'), config('status.DED')])->get();
         // Calculamos los expense por acá
         foreach ($expenses as $key => $expense) {
             $count_expense += $expense->amount;
@@ -61,7 +61,7 @@ class HomeController extends Controller
 
         // Me deben esto
         $incomes_am_owed = Income::where('created_by', $id_auth)
-            ->where('status',[config('status.PEN')])->get();
+            ->where('status', [config('status.PEN')])->get();
         // Calculamos los incomes_am_owed por acá
         foreach ($incomes_am_owed as $key => $income_am_owed) {
             $count_incomes_am_owed += $income_am_owed->amount;
@@ -69,7 +69,7 @@ class HomeController extends Controller
 
         // Debo lo siguiente
         $expenses_must = Expense::where('created_by', $id_auth)
-            ->where('status',[config('status.DED')])->get();
+            ->where('status', [config('status.DED')])->get();
         // Calculamos los expense por acá
         foreach ($expenses_must as $key => $expense_must) {
             $count_expense_must += $expense_must->amount;
@@ -98,11 +98,10 @@ class HomeController extends Controller
 
     function getPartner()
     {
-        $partners = Partner::pluck('company_name AS label', 'id as value');
+        $partners = Partner::select('id', 'company_name AS name')->get();
         return response()->json([
             'success' => true,
             'data' => $partners
         ]);
     }
-
 }
