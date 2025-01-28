@@ -121,7 +121,7 @@ class HomeController extends Controller
             }
 
             switch ($table) {
-                case 'expenses_categories':
+                case 'partners':
                     // Obtiene los registros con id y nombre genérico
                     $records = DB::table($table)->select('id', DB::raw('company_name AS label'))->get();
                     break;
