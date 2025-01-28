@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\User;
+use App\Models\V1\Goal;
 use App\Models\V1\Saving;
 use App\Models\V1\Income;
 use App\Models\V1\Expense;
 use Illuminate\Http\Request;
 use App\Models\V1\ExpensesCategory;
-use App\Models\V1\Goal;
-use App\Models\V1\Partner;
 use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class HomeController extends Controller
 {
@@ -96,12 +96,47 @@ class HomeController extends Controller
         return view('pages.dashboard', compact('incomes_owing', 'goals', 'count_incomes', 'count_expense', 'count_saving', 'categories', 'user', 'count_incomes_am_owed', 'count_expense_must'));
     }
 
-    function getPartner()
+    function getDataSelects(Request $request)
     {
-        $partners = Partner::select('id', 'company_name AS name')->get();
+        // Obtiene los nombres de las tablas desde el request
+        $tables = $request->input('fields', []);
+
+        // Verifica que se haya enviado al menos una tabla
+        if (!is_array($tables) || empty($tables)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se enviaron tablas para consultar.'
+            ], 400);
+        }
+
+        $data = [];
+
+        foreach ($tables as $table) {
+            // Verifica si la tabla existe en la base de datos
+            if (!Schema::hasTable($table)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "La tabla '$table' no existe."
+                ], 400);
+            }
+
+            switch ($table) {
+                case 'expenses_categories':
+                    // Obtiene los registros con id y nombre genérico
+                    $records = DB::table($table)->select('id', DB::raw('company_name AS label'))->get();
+                    break;
+                default:
+                    // Obtiene los registros con id y nombre genérico
+                    $records = DB::table($table)->select('id', DB::raw('name AS label'))->get();
+                    break;
+            }
+
+            $data[$table] = $records;
+        }
+
         return response()->json([
             'success' => true,
-            'data' => $partners
+            'data' => $data
         ]);
     }
 }
