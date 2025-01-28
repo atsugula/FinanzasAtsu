@@ -9,6 +9,7 @@ use App\Models\V1\Income;
 use App\Models\V1\Expense;
 use Illuminate\Http\Request;
 use App\Models\V1\ExpensesCategory;
+use App\Models\V1\Transaction;
 use Illuminate\Support\Facades\Auth;
     use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -41,36 +42,50 @@ class HomeController extends Controller
         $id_auth = $user->id;
 
         $today = Carbon::now()->toDateString(); // Obtener la fecha actual en formato 'Y-m-d'
-        $incomes = Income::where('created_by', $id_auth)
-            ->whereNotIn('status', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])->get();
-        // Calculamos los incomes por acá
+
+        // Calculamos los incomes o ingresos por acá
+        $incomes = Transaction::where('created_by', $id_auth)
+            ->where('type', 'I')
+            ->whereNotIn('status', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
+            ->get();
+
         foreach ($incomes as $key => $income) {
             $count_incomes += $income->amount;
         }
-        $expenses = Expense::where('created_by', $id_auth)
-            ->whereNotIn('status', [config('status.CANC'), config('status.REC'), config('status.DED')])->get();
         // Calculamos los expense por acá
+        $expenses = Transaction::where('created_by', $id_auth)
+                        ->where('type', 'E')
+                        ->whereNotIn('status', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
+                        ->get();
+        
         foreach ($expenses as $key => $expense) {
             $count_expense += $expense->amount;
         }
-        $savings = Saving::where('created_by', $id_auth)->get();
+
         // Calculamos los saving por acá
+        $savings = Transaction::where('created_by', $id_auth)
+                        ->where('type', 'A')
+                        ->get();
         foreach ($savings as $key => $saving) {
             $count_saving += $saving->amount;
         }
 
         // Me deben esto
-        $incomes_am_owed = Income::where('created_by', $id_auth)
-            ->where('status', [config('status.PEN')])->get();
+        $incomes_am_owed = Transaction::where('created_by', $id_auth)
+                        ->where('type', 'I')
+                        ->where('status', [config('status.PEN')])
+                        ->get();
         // Calculamos los incomes_am_owed por acá
         foreach ($incomes_am_owed as $key => $income_am_owed) {
             $count_incomes_am_owed += $income_am_owed->amount;
         }
 
         // Debo lo siguiente
-        $expenses_must = Expense::where('created_by', $id_auth)
-            ->where('status', [config('status.DED')])->get();
-        // Calculamos los expense por acá
+        $expenses_must = Transaction::where('created_by', $id_auth)
+                        ->where('type', 'E')
+                        ->where('status', [config('status.DED')])
+                        ->get();
+        // Calculamos los expenses_must por acá
         foreach ($expenses_must as $key => $expense_must) {
             $count_expense_must += $expense_must->amount;
         }
@@ -86,8 +101,12 @@ class HomeController extends Controller
             $goal->total_savings = $totalSavings; // Add it as a custom attribute
         }
 
-        // Traemos las ingresos que estan como deudas
-        $incomes_owing = Expense::where('created_by', $id_auth)->whereIn('status', [config('status.DED'), config('status.ENPROC')])->with('payments', 'expensesCategory')->get();
+        // Traemos las egresos que estan como deudas
+        $incomes_owing = Transaction::where('created_by', $id_auth)
+                        ->where('type', 'E')
+                        ->where('status', [config('status.DED'), config('status.ENPROC')])
+                        ->with('payments', 'expensesCategory')
+                        ->get();
 
         foreach ($incomes_owing as $income_owing) {
             $income_owing->total_debt = $income_owing?->payments->sum('paid');
