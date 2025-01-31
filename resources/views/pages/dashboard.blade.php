@@ -236,7 +236,7 @@
                                             <h6 class="mb-1 text-dark text-sm">{{ $category->name }}</h6>
                                             <span class="text-xs">
                                                 <span class="font-weight-bold">
-                                                    {{ count($category->expenses) }} {{ __('Expenses') }}
+                                                    {{ count($category->transactions) }} {{ __('Expenses') }}
                                                 </span>
                                             </span>
                                         </div>
