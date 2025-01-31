@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\V1\ExpensesCategory;
 use App\Models\V1\Transaction;
 use Illuminate\Support\Facades\Auth;
-    use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class HomeController extends Controller
@@ -54,27 +54,27 @@ class HomeController extends Controller
         }
         // Calculamos los expense por acá
         $expenses = Transaction::where('created_by', $id_auth)
-                        ->where('type', 'E')
-                        ->whereNotIn('status_id', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
-                        ->get();
-        
+            ->where('type', 'E')
+            ->whereNotIn('status_id', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
+            ->get();
+
         foreach ($expenses as $key => $expense) {
             $count_expense += $expense->amount;
         }
 
         // Calculamos los saving por acá
         $savings = Transaction::where('created_by', $id_auth)
-                        ->where('type', 'A')
-                        ->get();
+            ->where('type', 'A')
+            ->get();
         foreach ($savings as $key => $saving) {
             $count_saving += $saving->amount;
         }
 
         // Me deben esto
         $incomes_am_owed = Transaction::where('created_by', $id_auth)
-                        ->where('type', 'I')
-                        ->whereIn('status_id', [config('status.PEN')])
-                        ->get();
+            ->where('type', 'I')
+            ->whereIn('status_id', [config('status.PEN')])
+            ->get();
         // Calculamos los incomes_am_owed por acá
         foreach ($incomes_am_owed as $key => $income_am_owed) {
             $count_incomes_am_owed += $income_am_owed->amount;
@@ -82,16 +82,20 @@ class HomeController extends Controller
 
         // Debo lo siguiente
         $expenses_must = Transaction::where('created_by', $id_auth)
-                        ->where('type', 'E')
-                        ->whereIn('status_id', [config('status.DED')])
-                        ->get();
+            ->where('type', 'E')
+            ->whereIn('status_id', [config('status.DED')])
+            ->get();
         // Calculamos los expenses_must por acá
         foreach ($expenses_must as $key => $expense_must) {
             $count_expense_must += $expense_must->amount;
         }
 
         // Categorias de gastos
-        $categories = ExpensesCategory::where('created_by', $id_auth)->latest()->take(5)->get();
+        $categories = ExpensesCategory::where('created_by', $id_auth)
+            ->withCount('transactions') // Contamos las transacciones relacionadas
+            ->orderByDesc('transactions_count') // Ordenamos por la cantidad de transacciones (de mayor a menor)
+            ->take(10)
+            ->get();
 
         // Traemos los objetivos
         $goals = Goal::where('created_by', $id_auth)->with('transactions')->get();
@@ -103,10 +107,10 @@ class HomeController extends Controller
 
         // Traemos las egresos que estan como deudas
         $incomes_owing = Transaction::where('created_by', $id_auth)
-                        ->where('type', 'E')
-                        ->whereIn('status_id', [config('status.DED'), config('status.ENPROC')])
-                        ->with('payments', 'expensesCategory')
-                        ->get();
+            ->where('type', 'E')
+            ->whereIn('status_id', [config('status.DED'), config('status.ENPROC')])
+            ->with('payments', 'expensesCategory')
+            ->get();
 
         foreach ($incomes_owing as $income_owing) {
             $income_owing->total_debt = $income_owing?->payments->sum('paid');
