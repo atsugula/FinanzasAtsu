@@ -31,7 +31,7 @@ class ExpenseController extends Controller
         /* Capturamos el ID del usuario logeado */
         $id_auth = Auth::id();
 
-        $expenses = Expense::where('created_by', $id_auth)->paginate();
+        $expenses = Expense::where('created_by', $id_auth)->orderBy('id', 'DESC')->paginate();
 
         return view('expense.index', compact('expenses'))
             ->with('i', (request()->input('page', 1) - 1) * $expenses->perPage());

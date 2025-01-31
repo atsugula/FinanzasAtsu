@@ -25,7 +25,7 @@ class PartnerController extends Controller
         /* Capturamos el ID del usuario logeado */
         $id_auth = Auth::id();
 
-        $partners = Partner::where('created_by', $id_auth)->paginate();
+        $partners = Partner::where('created_by', $id_auth)->orderBy('id', 'DESC')->paginate();
 
         return view('partner.index', compact('partners'))
             ->with('i', (request()->input('page', 1) - 1) * $partners->perPage());

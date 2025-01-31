@@ -38,6 +38,7 @@ class PaymentExpenseController extends Controller
                         ->where('type', 'E')
                         ->whereIn('status_id', [config('status.DED'), config('status.ENPROC')])
                         ->with('payments', 'expensesCategory')
+                        ->orderBy('id', 'DESC')
                         ->paginate();
 
         return view('payment-expense.index', compact('expenses'))

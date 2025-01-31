@@ -24,7 +24,7 @@ class ExpensesCategoryController extends Controller
         /* Capturamos el ID del usuario logeado */
         $id_auth = Auth::id();
         
-        $expensesCategories = ExpensesCategory::where('created_by', $id_auth)->paginate();
+        $expensesCategories = ExpensesCategory::where('created_by', $id_auth)->orderBy('id', 'DESC')->paginate();
 
         return view('expenses-category.index', compact('expensesCategories'))
             ->with('i', (request()->input('page', 1) - 1) * $expensesCategories->perPage());

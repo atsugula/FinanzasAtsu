@@ -24,7 +24,7 @@ class GoalController extends Controller
         /* Capturamos el ID del usuario logeado */
         $id_auth = Auth::id();
 
-        $goals = Goal::where('created_by', $id_auth)->paginate();
+        $goals = Goal::where('created_by', $id_auth)->orderBy('id', 'DESC')->paginate();
 
         return view('goal.index', compact('goals'))
             ->with('i', (request()->input('page', 1) - 1) * $goals->perPage());
