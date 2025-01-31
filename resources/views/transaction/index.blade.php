@@ -59,7 +59,7 @@
                                         @endphp
 
                                         <tr>
-                                            <td>{{ ++$i }}</td>
+                                            <td>{{ $transaction->id }}</td>
 
                                             <td>{{ $transaction->user?->firstname }}</td>
                                             <td>{{ $type }}</td>
