@@ -50,6 +50,14 @@ class ExpensesCategory extends Model
   }
 
   /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function transactions()
+  {
+    return $this->hasMany(Transaction::class, 'category', 'id');
+  }
+
+  /**
    * @return \Illuminate\Database\Eloquent\Relations\HasOne
    */
   public function user()

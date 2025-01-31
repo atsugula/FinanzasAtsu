@@ -44,7 +44,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($expensesCategory->expenses as $key => $expense)
+                                    @foreach ($expensesCategory->transactions as $key => $expense)
                                         <tr>
                                             <td>{{ ++$key }}</td>
                                             <td>{{ $expense->user?->firstname }}</td>
