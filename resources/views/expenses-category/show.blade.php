@@ -52,6 +52,14 @@
                                             <td>{{ $expense->date }}</td>
                                         </tr>
                                     @endforeach
+                                    <tr>
+                                        <td colspan="2">
+                                            TOTAL
+                                        </td>
+                                        <td colspan="2">
+                                            {{ $expensesCategory->transactions->sum('amount') }}
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
