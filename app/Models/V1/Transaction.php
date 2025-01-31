@@ -98,6 +98,6 @@ class Transaction extends Model
 
     public function payments()
     {
-        return $this->hasMany(PaymentsHistory::class, 'expense_id', 'id');
+        return $this->hasMany(PaymentsHistory::class, 'transaction_id', 'id');
     }
 }

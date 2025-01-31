@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\V1\PaymentsHistory;
 use App\Models\V1\ExpensesCategory;
 use App\Http\Controllers\Controller;
+use App\Models\V1\Transaction;
 use App\Traits\Template;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,7 +34,11 @@ class PaymentExpenseController extends Controller
         /* Capturamos el ID del usuario logeado */
         $id_auth = Auth::id();
 
-        $expenses = Expense::where('created_by', $id_auth)->whereIn('status', [config('status.DED'), config('status.ENPROC')])->paginate();
+        $expenses = Transaction::where('created_by', $id_auth)
+                        ->where('type', 'E')
+                        ->whereIn('status_id', [config('status.DED'), config('status.ENPROC')])
+                        ->with('payments', 'expensesCategory')
+                        ->paginate();
 
         return view('payment-expense.index', compact('expenses'))
             ->with('i', (request()->input('page', 1) - 1) * $expenses->perPage());
@@ -60,7 +65,7 @@ class PaymentExpenseController extends Controller
      */
     public function edit($id)
     {
-        $expense = Expense::find($id);
+        $expense = Transaction::find($id);
 
         /* Capturamos el ID del usuario logeado */
         $id_auth = Auth::id();
@@ -68,10 +73,10 @@ class PaymentExpenseController extends Controller
         $partners = Partner::where('created_by', $id_auth)->pluck('company_name AS label', 'id as value');
 
         // Cargamos la data
-        $data['expense_id'] = $id;
+        $data['transaction_id'] = $id;
 
         // Actualizamos los status
-        $balance = $this->payment_update($data);
+        $balance = $this->payment_transaction_update($data);
 
         $paymentsHistory = new PaymentsHistory();
         $users = User::pluck('firstname AS label', 'id as value');
@@ -103,7 +108,7 @@ class PaymentExpenseController extends Controller
         $data = $request->all();
 
         // Actualizamos los status
-        $balance = $this->payment_update($data);
+        $balance = $this->payment_transaction_update($data);
 
         // Verificamos que no se vaya a pagar de mas
         if ($data['paid'] > $balance['count_payment'] && $balance['count_payment'] != 0) {
@@ -118,13 +123,13 @@ class PaymentExpenseController extends Controller
         $payment_history->description = $data['description'] ?? '';
         $payment_history->status = $data['status'] ?? '';
         $payment_history->partner_id = $data['partner_id'] ?? '';
-        $payment_history->expense_id = $data['expense_id'] ?? '';
+        $payment_history->transaction_id = $data['transaction_id'] ?? '';
         $payment_history->created_by = $id_auth;
 
         $payment_history->save();
 
         // Actualizamos los status
-        $balance = $this->payment_update($data);
+        $balance = $this->payment_transaction_update($data);
 
         // Volvemos a actualizar lo que se debe
         $payment_history->payable = $balance['balance_due'] ?? '';
@@ -143,10 +148,10 @@ class PaymentExpenseController extends Controller
     public function destroy($id)
     {
 
-        $data['expense_id'] = $id;
+        $data['transaction_id'] = $id;
 
         // Actualizamos los status
-        $balance = $this->payment_update($data);
+        $balance = $this->payment_transaction_update($data);
 
         return redirect()->route('payment-expenses.index')
             ->with('success', 'Expense changed successfully');

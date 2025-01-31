@@ -103,7 +103,7 @@
         </div>
     </div>
 
-    {{ Form::text('expense_id', $expense->id, ['class' => 'form-control' . ($errors->has('payable') ? ' is-invalid' : ''), 'hidden' => 'hidden', 'placeholder' => __('Payable') ]) }}
+    {{ Form::text('transaction_id', $expense->id, ['class' => 'form-control' . ($errors->has('payable') ? ' is-invalid' : ''), 'hidden' => 'hidden', 'placeholder' => __('Payable') ]) }}
 
     {{-- Boton para todo --}}
     @include('layouts.btn-submit')

@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\User;
 use App\Models\V1\Expense;
 use Illuminate\Http\Request;
+use App\Models\V1\Transaction;
 use App\Models\V1\PaymentsHistory;
 
 trait Template
@@ -68,7 +69,7 @@ trait Template
         // Buscamos status del expense
         $expense = Expense::find($data['expense_id']);
         // Buscamos los pagos
-        $payments = PaymentsHistory::where('expense_id', $expense->id)->get();
+        $payments = PaymentsHistory::where('transaction_id', $expense->id)->get();
         // Monto pagado
         $count_payment = 0;
         // Sumamos todos los pagos
@@ -99,6 +100,45 @@ trait Template
             'balance_due' => $balance_due,
             'count_payment' => $count_payment,
             'expense_amount' => $expense->amount,
+        ];
+
+    }
+
+    public function payment_transaction_update($data){
+        // Buscamos status del expense
+        $transaction = Transaction::find($data['transaction_id']);
+        // Buscamos los pagos
+        $payments = PaymentsHistory::where('transaction_id', $transaction->id)->get();
+        // Monto pagado
+        $count_payment = 0;
+        // Sumamos todos los pagos
+        foreach ($payments as $key => $payment) {
+            $count_payment += $payment->paid;
+        }
+        // Restamos y hacemos cuanto se quedo debiendo
+        $balance_due = $transaction->amount - $count_payment;
+        // Si el monto es mayor, quiere decir que hay saldo pendiente por pagar, lo ponemos en proceso de pago
+        if ($transaction->amount > $balance_due) {
+            $transaction->status_id = config('status.ENPROC');
+            $transaction->save();
+        }
+        // Si el monto restante es menor, quiere decir que ya pagamos, lo ponemos en aprobado
+        if (($transaction->amount <= $balance_due || $balance_due == 0) && count($payments) > 0) {
+            $transaction->status_id = config('status.APR');
+            $transaction->save();
+        }
+        // Si se modifica desde el original y no hay pagos, dejamos el status por defecto
+        if (!empty($data['status_origin'])) {
+            if ($data['status_origin'] == 'home' && count($payments) == 0) {
+                $transaction->status_id = $data['status'];
+                $transaction->save();
+            }
+        }
+
+        return [
+            'balance_due' => $balance_due,
+            'count_payment' => $count_payment,
+            'expense_amount' => $transaction->amount,
         ];
 
     }
