@@ -73,7 +73,7 @@ class HomeController extends Controller
         // Me deben esto
         $incomes_am_owed = Transaction::where('created_by', $id_auth)
                         ->where('type', 'I')
-                        ->where('status_id', [config('status.PEN')])
+                        ->whereIn('status_id', [config('status.PEN')])
                         ->get();
         // Calculamos los incomes_am_owed por acá
         foreach ($incomes_am_owed as $key => $income_am_owed) {
@@ -83,7 +83,7 @@ class HomeController extends Controller
         // Debo lo siguiente
         $expenses_must = Transaction::where('created_by', $id_auth)
                         ->where('type', 'E')
-                        ->where('status_id', [config('status.DED')])
+                        ->whereIn('status_id', [config('status.DED')])
                         ->get();
         // Calculamos los expenses_must por acá
         foreach ($expenses_must as $key => $expense_must) {
@@ -104,7 +104,7 @@ class HomeController extends Controller
         // Traemos las egresos que estan como deudas
         $incomes_owing = Transaction::where('created_by', $id_auth)
                         ->where('type', 'E')
-                        ->where('status_id', [config('status.DED'), config('status.ENPROC')])
+                        ->whereIn('status_id', [config('status.DED'), config('status.ENPROC')])
                         ->with('payments', 'expensesCategory')
                         ->get();
 
