@@ -20,7 +20,7 @@
                             <span class="card-title">{{ __('Create Goal') }} </span>
                         </div>
                         <div class="float-right">
-                            <a class="btn btn-primary" href="{{ route('incomes.index') }}"> {{ __('Back') }}</a>
+                            <a class="btn btn-primary" href="{{ route('goals.index') }}"> {{ __('Back') }}</a>
                         </div>
                     </div>
 
