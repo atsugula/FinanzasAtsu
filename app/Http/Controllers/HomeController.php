@@ -33,7 +33,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
         /* Inicializamos variables */
         $count_incomes = $count_expense = $count_saving = $count_incomes_am_owed = $count_expense_must = 0;
 
@@ -41,83 +40,97 @@ class HomeController extends Controller
         $user = Auth::user();
         $id_auth = $user->id;
 
-        $today = Carbon::now()->toDateString(); // Obtener la fecha actual en formato 'Y-m-d'
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
 
-        // Calculamos los incomes o ingresos por acá
+        // Calculamos los incomes o ingresos del mes actual
         $incomes = Transaction::where('created_by', $id_auth)
             ->where('type', 'I')
             ->whereNotIn('status_id', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
             ->get();
 
-        foreach ($incomes as $key => $income) {
+        foreach ($incomes as $income) {
             $count_incomes += $income->amount;
         }
-        // Calculamos los expense por acá
+
+        // Calculamos los expense del mes actual
         $expenses = Transaction::where('created_by', $id_auth)
             ->where('type', 'E')
             ->whereNotIn('status_id', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
             ->get();
 
-        foreach ($expenses as $key => $expense) {
+        foreach ($expenses as $expense) {
             $count_expense += $expense->amount;
         }
 
-        // Calculamos los saving por acá
+        // Calculamos los savings del mes actual
         $savings = Transaction::where('created_by', $id_auth)
             ->where('type', 'A')
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
             ->get();
-        foreach ($savings as $key => $saving) {
+
+        foreach ($savings as $saving) {
             $count_saving += $saving->amount;
         }
 
-        // Me deben esto
+        // Me deben esto (solo de este mes)
         $incomes_am_owed = Transaction::where('created_by', $id_auth)
             ->where('type', 'I')
             ->whereIn('status_id', [config('status.PEN')])
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
             ->get();
-        // Calculamos los incomes_am_owed por acá
-        foreach ($incomes_am_owed as $key => $income_am_owed) {
+
+        foreach ($incomes_am_owed as $income_am_owed) {
             $count_incomes_am_owed += $income_am_owed->amount;
         }
 
-        // Debo lo siguiente
+        // Debo lo siguiente (solo de este mes)
         $expenses_must = Transaction::where('created_by', $id_auth)
             ->where('type', 'E')
             ->whereIn('status_id', [config('status.DED')])
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
             ->get();
-        // Calculamos los expenses_must por acá
-        foreach ($expenses_must as $key => $expense_must) {
+
+        foreach ($expenses_must as $expense_must) {
             $count_expense_must += $expense_must->amount;
         }
 
         // Categorias de gastos
         $categories = ExpensesCategory::where('created_by', $id_auth)
-            ->withCount('transactions') // Contamos las transacciones relacionadas
-            ->orderByDesc('transactions_count') // Ordenamos por la cantidad de transacciones (de mayor a menor)
+            ->withCount(['transactions' => function ($query) use ($startOfMonth, $endOfMonth) {
+                $query->whereBetween('created_at', [$startOfMonth, $endOfMonth]);
+            }])
+            ->orderByDesc('transactions_count')
             ->take(10)
             ->get();
 
         // Traemos los objetivos
-        $goals = Goal::where('created_by', $id_auth)->with('transactions')->get();
+        $goals = Goal::where('created_by', $id_auth)->with(['transactions' => function ($query) use ($startOfMonth, $endOfMonth) {
+            $query->whereBetween('created_at', [$startOfMonth, $endOfMonth]);
+        }])->get();
 
         foreach ($goals as $goal) {
-            $totalTransactions = $goal?->transactions->sum('amount'); // Sum 'amount' for each goal's transactions
-            $goal->total_savings = $totalTransactions; // Add it as a custom attribute
+            $totalTransactions = $goal->transactions->sum('amount');
+            $goal->total_savings = $totalTransactions;
         }
 
-        // Traemos las egresos que estan como deudas
+        // Traemos las egresos que están como deudas
         $incomes_owing = Transaction::where('created_by', $id_auth)
             ->where('type', 'E')
             ->whereIn('status_id', [config('status.DED'), config('status.ENPROC')])
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
             ->with('payments', 'expensesCategory')
             ->get();
 
         foreach ($incomes_owing as $income_owing) {
-            $income_owing->total_debt = $income_owing?->payments->sum('paid');
+            $income_owing->total_debt = $income_owing->payments->sum('paid');
         }
 
         return view('pages.dashboard', compact('incomes_owing', 'goals', 'count_incomes', 'count_expense', 'count_saving', 'categories', 'user', 'count_incomes_am_owed', 'count_expense_must'));
     }
+
 
     function getDataSelects(Request $request)
     {
