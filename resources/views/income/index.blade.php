@@ -77,10 +77,11 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <br>
+                            {{ $incomes->appends(request()->except('page'))->links('vendor.pagination.custom') }}
                         </div>
                     </div>
                 </div>
-                {!! $incomes->links() !!}
             </div>
         </div>
     </div>

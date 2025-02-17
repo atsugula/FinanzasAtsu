@@ -22218,7 +22218,22 @@ hr.horizontal.gray-light {
 .page-item.active .page-link {
   box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
 }
-.page-item .page-link,
+
+.page-item .page-link, .page-item span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8392ab;
+  padding: 0;
+  margin: 0 3px;
+  /* border-radius: 50% !important; */
+  width: auto;
+  height: 36px;
+  font-size: 0.875rem;
+  padding: 5px;
+}
+
+/* .page-item .page-link,
 .page-item span {
   display: flex;
   align-items: center;
@@ -22230,7 +22245,7 @@ hr.horizontal.gray-light {
   width: 36px;
   height: 36px;
   font-size: 0.875rem;
-}
+} */
 
 .pagination-lg .page-item .page-link,
 .pagination-lg .page-item span {

@@ -75,10 +75,11 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <br>
+                            {{ $savings->appends(request()->except('page'))->links('vendor.pagination.custom') }}
                         </div>
                     </div>
                 </div>
-                {!! $savings->links() !!}
             </div>
         </div>
     </div>

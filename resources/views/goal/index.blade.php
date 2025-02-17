@@ -73,10 +73,11 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <br>
+                            {{ $goals->appends(request()->except('page'))->links('vendor.pagination.custom') }}
                         </div>
                     </div>
                 </div>
-                {!! $goals->links() !!}
             </div>
         </div>
     </div>
