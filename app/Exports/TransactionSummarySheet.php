@@ -29,6 +29,8 @@ class TransactionSummarySheet implements WithHeadings, WithTitle, FromArray
             ['Egreso', '=SUMAR.SI.CONJUNTO(Transacciones!D:D, Transacciones!C:C, "E", Transacciones!L:L, 2)'],
             ['Ingreso', '=SUMAR.SI.CONJUNTO(Transacciones!D:D, Transacciones!C:C, "I", Transacciones!L:L, 2)'],
             ['Balance', '=B4-(B2+B3)'],
+            ['Dinero en efectivo', ''],
+            ['Dinero faltante', '=B5-B6'],
         ];
     }
 }
