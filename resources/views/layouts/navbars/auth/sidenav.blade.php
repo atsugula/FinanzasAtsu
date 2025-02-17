@@ -15,7 +15,8 @@
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link {{ Route::currentRouteName() == 'home' ? 'active' : '' }}" href="{{ route('home') }}">
+                <a class="nav-link {{ Route::currentRouteName() == 'home' ? 'active' : '' }}"
+                    href="{{ route('home') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-tv-2 text-dark text-sm opacity-10"></i>
@@ -26,7 +27,7 @@
 
             <hr class="horizontal dark mt-0">
 
-            @foreach ($menuItems as $menuItem)
+            {{-- @foreach ($menuItems as $menuItem)
                 @if ($menuItem['page'] == 1)
                     <li class="nav-item">
                         <a class="nav-link {{ str_contains(request()->url(), $menuItem['route']) ? 'active' : '' }}" href="{{ route('page', ['page' => $menuItem['route']]) }}">
@@ -48,7 +49,48 @@
                         </a>
                     </li>
                 @endif
+            @endforeach --}}
+            @foreach ($menuItems as $menuItem)
+                @if (isset($menuItem['submenu']))
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#submenu-{{ Str::slug($menuItem['text']) }}"
+                            role="button" aria-expanded="false"
+                            aria-controls="submenu-{{ Str::slug($menuItem['text']) }}">
+                            <div
+                                class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                                <i class="{{ $menuItem['icon'] }} text-dark text-sm opacity-10"></i>
+                            </div>
+                            <span class="nav-link-text ms-1">{{ __($menuItem['text']) }}</span>
+                        </a>
+                        <ul class="collapse list-unstyled ms-4" id="submenu-{{ Str::slug($menuItem['text']) }}">
+                            @foreach ($menuItem['submenu'] as $submenuItem)
+                                <li class="nav-item">
+                                    <a class="nav-link {{ Route::currentRouteName() == $submenuItem['route'] ? 'active' : '' }}"
+                                        href="{{ route($submenuItem['route']) }}">
+                                        <div
+                                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                                            <i class="{{ $submenuItem['icon'] }} text-dark text-sm opacity-10"></i>
+                                        </div>
+                                        <span class="nav-link-text ms-1">{{ __($submenuItem['text']) }}</span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link {{ Route::currentRouteName() == $menuItem['route'] ? 'active' : '' }}"
+                            href="{{ $menuItem['page'] == 1 ? route('page', ['page' => $menuItem['route']]) : route($menuItem['route']) }}">
+                            <div
+                                class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                                <i class="{{ $menuItem['icon'] }} text-dark text-sm opacity-10"></i>
+                            </div>
+                            <span class="nav-link-text ms-1">{{ __($menuItem['text']) }}</span>
+                        </a>
+                    </li>
+                @endif
             @endforeach
+
         </ul>
     </div>
 </aside>

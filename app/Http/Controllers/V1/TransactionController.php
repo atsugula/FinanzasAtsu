@@ -7,9 +7,12 @@ use App\Models\V1\Status;
 use App\Models\V1\Partner;
 use Illuminate\Http\Request;
 use App\Models\V1\Transaction;
+use App\Imports\TransactionImport;
+use App\Exports\TransactionExport;
 use App\Models\V1\ExpensesCategory;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class TransactionController
@@ -26,7 +29,7 @@ class TransactionController extends Controller
     {
 
         /* Capturamos el ID del usuario logeado */
-        $id_auth = \Auth::id();
+        $id_auth = Auth::id();
 
         $transactions = Transaction::where('created_by', $id_auth)->with('expensesCategory', 'goalRelation', 'status', 'user', 'payments')->orderBy('id', 'DESC')->paginate();
 
@@ -149,6 +152,31 @@ class TransactionController extends Controller
 
         return redirect()->route('transactions.index')
             ->with('success', 'Transaction deleted successfully');
+    }
+
+    // Metodos de importación
+    public function viewImport() {
+        return view('transaction.import');
+    }
+
+    public function import(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'file' => 'required|mimes:xlsx,csv'
+            ]);
+
+            $file = Excel::import(new TransactionImport, $request->file('file'));
+
+            return view('transaction.import')->with('success', 'Importación completada con éxito.');
+        }
+
+        return view('transaction.import')->with('error', 'Transaction import error');
+    }
+
+    public function export() {
+        $date = now();
+        return (new TransactionExport)->download("transactions_$date.xlsx");
     }
 
 }

@@ -43,6 +43,10 @@ Route::group(['middleware' => 'auth'], function () {
 	/* Modulos software */
 	Route::resource('users', UserController::class)->names('users');
 	Route::resource('transactions', TransactionController::class)->names('transactions');
+
+	Route::get('transactionsimport', [TransactionController::class, 'viewImport'])->name('transactions.import');
+	Route::get('transactionsexport', [TransactionController::class, 'export'])->name('transactions.export');
+	Route::post('transactionsimport', [TransactionController::class, 'import'])->name('transactions.importform');
 	// Route::resource('incomes', IncomeController::class)->names('incomes');
 	Route::resource('expenses-categories', ExpensesCategoryController::class)->names('expenses-categories');
 	// Route::resource('expenses', ExpenseController::class)->names('expenses');

@@ -14,11 +14,38 @@ return [
         'page' => 0, // Para saber si la ruta es por parametro post o no
     ],
     [
+        'text'    => 'Transactions',
+        'icon'    => 'fa fa-archive',
+        'submenu' => [
+            [
+                'text' => 'List',
+                'route' => 'transactions.index',
+                'icon' => 'fa fa-calendar',
+                'page' => 0, // Para saber si la ruta es por parametro post o no
+            ],
+            [
+                'text' => 'Create Transaction',
+                'route' => 'transactions.create',
+                'icon' => 'fa fa-plus-square',
+            ],
+            [
+                'text' => 'Import transactions',
+                'route' => 'transactions.import',
+                'icon' => 'fa fa-plus-circle',
+            ],
+            [
+                'text' => 'Export transactions',
+                'route' => 'transactions.export',
+                'icon' => 'fa fa-download',
+            ],
+        ],
+    ],
+    /* [
         'text' => 'Transactions',
         'route' => 'transactions.index',
         'icon' => 'fa fa-calendar',
         'page' => 0, // Para saber si la ruta es por parametro post o no
-    ],
+    ], */
     /* [
         'text' => 'Savings',
         'route' => 'savings.index',
