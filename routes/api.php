@@ -20,7 +20,7 @@ Route::prefix('v1/auth')->group(function () {
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+Route::middleware('api.auth')->prefix('v1')->group(function () {
     Route::get('/user', function (Request $request) {
         return response()->json(['user' => $request->user()]);
     });
