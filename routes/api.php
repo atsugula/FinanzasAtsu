@@ -17,7 +17,7 @@ use App\Http\Controllers\Api\V1\TransactionController;
 
 Route::prefix('v1/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
-    Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+    Route::middleware('api.auth')->post('/logout', [AuthController::class, 'logout']);
 });
 
 Route::middleware('api.auth')->prefix('v1')->group(function () {
