@@ -12,9 +12,9 @@ class ApiAuthMiddleware
     /**
      * Manejar una solicitud entrante.
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): JsonResponse
     {
-        if (!Auth::guard('api')->check()) {
+        if (!Auth::check()) {
             return response()->json([
                 'message' => 'No autenticado. Por favor, inicie sesión.',
                 'headers' => $request->headers->all(),
