@@ -44,6 +44,6 @@ class AuthController extends Controller
         // Revocar el token
         $request->user()->tokens()->delete();
 
-        return response()->json(['message' => 'Sesión cerrada exitosamente'], 200);
+        return response()->json(['message' => 'Sesión cerrada exitosamente'], 401);
     }
 }
