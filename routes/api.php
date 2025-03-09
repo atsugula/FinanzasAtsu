@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\TransactionController;
+use App\Http\Controllers\Api\V1\ExpensesCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ Route::middleware('api.auth')->prefix('v1')->group(function () {
         return response()->json(['user' => $request->user()]);
     });
     Route::apiResource('transactions', TransactionController::class);
+    Route::apiResource('expenses-categories', ExpensesCategoryController::class);
     Route::get('getData', [HomeController::class, 'getDataSelects']);
 });
 
