@@ -3,6 +3,7 @@
 namespace App\Models\V1;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -58,6 +59,11 @@ class Transaction extends Model
         'goal',
         'status_id'
     ];
+
+    public function scopeCreatedByUser($query)
+    {
+        return $query->where('created_by', Auth::id());
+    }
 
     public function partner()
     {

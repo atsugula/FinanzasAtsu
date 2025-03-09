@@ -16,7 +16,8 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::with('expensesCategory', 'goalRelation', 'status', 'user')
+
+        $transactions = Transaction::with('expensesCategory', 'goalRelation', 'status', 'user')->createdByUser()
             ->paginate();
 
         return response()->json($transactions);
@@ -49,13 +50,12 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-        $transaction = Transaction::find($id);
-
-        if (!$transaction) {
+        try {
+            $transaction = Transaction::where('id', $id)->createdByUser()->firstOrFail();
+            return response()->json($transaction);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['message' => 'Transaction not found'], 404);
         }
-
-        return response()->json($transaction);
     }
 
     /**
