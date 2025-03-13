@@ -121,6 +121,10 @@ class HomeController extends Controller
 
     function getDataSelects(Request $request)
     {
+
+        /* Capturamos el ID del usuario logeado */
+        $id_auth = Auth::id();
+
         // Obtiene los nombres de las tablas desde el request
         $fields = json_decode($request->query('fields', '[]'), true);
 
@@ -146,11 +150,11 @@ class HomeController extends Controller
             switch ($table) {
                 case 'partners':
                     // Obtiene los registros con id y nombre genérico
-                    $records = DB::table($table)->select('id', DB::raw('company_name AS label'))->get();
+                    $records = DB::table($table)->select('id', DB::raw('company_name AS label'))->where('created_by', $id_auth)->get();
                     break;
                 default:
                     // Obtiene los registros con id y nombre genérico
-                    $records = DB::table($table)->select('id', DB::raw('name AS label'))->get();
+                    $records = DB::table($table)->select('id', DB::raw('name AS label'))->where('created_by', $id_auth)->get();
                     break;
             }
 
