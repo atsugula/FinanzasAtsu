@@ -148,6 +148,10 @@ class HomeController extends Controller
             }
 
             switch ($table) {
+                case 'statuses':
+                    // Obtiene los registros con id y nombre genérico
+                    $records = DB::table($table)->select('id', DB::raw('name AS label'))->get();
+                    break;
                 case 'partners':
                     // Obtiene los registros con id y nombre genérico
                     $records = DB::table($table)->select('id', DB::raw('company_name AS label'))->where('created_by', $id_auth)->get();
