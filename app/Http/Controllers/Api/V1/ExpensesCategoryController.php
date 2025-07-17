@@ -28,18 +28,17 @@ class ExpensesCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        return response()->json($request->all());
         $request->validate(ExpensesCategory::$rules);
 
         $data = $request->all();
         $data['created_by'] = Auth::id();
 
         $expensesCategory = ExpensesCategory::create($data);
-
+        
         return response()->json([
-            'message' => 'Category created successfully.',
-            'data' => $expensesCategory
-        ], 201);
+                'message' => 'Category create successfully.',
+                'data' => $expensesCategory
+            ], 201);
     }
 
     /**
@@ -74,7 +73,7 @@ class ExpensesCategoryController extends Controller
             return response()->json([
                 'message' => 'Category updated successfully.',
                 'data' => $expensesCategory
-            ]);
+            ], 201);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Category not found'], 404);
         }
