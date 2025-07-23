@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\Api\V1\GoalController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\TransactionController;
 use App\Http\Controllers\Api\V1\ExpensesCategoryController;
@@ -27,6 +28,7 @@ Route::middleware('api.auth')->prefix('v1')->group(function () {
     Route::get('/user', function (Request $request) {
         return response()->json(['user' => $request->user()]);
     });
+    Route::apiResource('goals', GoalController::class);
     Route::apiResource('transactions', TransactionController::class);
     Route::apiResource('expenses-categories', ExpensesCategoryController::class);
     Route::get('getData', [HomeController::class, 'getDataSelects']);
