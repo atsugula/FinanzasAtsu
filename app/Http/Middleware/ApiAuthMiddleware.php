@@ -6,13 +6,14 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Laravel\Sanctum\PersonalAccessToken;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiAuthMiddleware
 {
     /**
      * Manejar una solicitud entrante.
      */
-    public function handle(Request $request, Closure $next): JsonResponse
+    public function handle(Request $request, Closure $next): Response
     {
         $token = $request->bearerToken(); // Obtiene el token del encabezado "Authorization"
 
