@@ -49,7 +49,7 @@ class Goal extends Model
   public function getTotalWithTransactionsAttribute()
   {
       $transactionsTotal = $this->transactions()
-          ->whereIn('status_id', [config('status.APR')]))
+          ->whereIn('status_id', [config('status.APR')])
           ->sum('amount');
 
       return $this->amount - $transactionsTotal;

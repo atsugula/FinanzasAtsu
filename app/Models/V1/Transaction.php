@@ -64,7 +64,7 @@ class Transaction extends Model
 	
 	public function getTotalDebtAttribute()
 	{
-		$transactionsTotal = $this->whereIn('status_id', [config('status.APR')]))
+		$transactionsTotal = $this->whereIn('status_id', [config('status.APR')])
 									->sum('amount');
 
 		return $this->amount - $transactionsTotal;
