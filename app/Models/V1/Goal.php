@@ -52,7 +52,7 @@ class Goal extends Model
           ->where('status_id', 2)
           ->sum('amount');
 
-      return $this->amount + $transactionsTotal;
+      return $this->amount - $transactionsTotal;
   }
 
   public function transactions()
