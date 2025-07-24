@@ -22,7 +22,7 @@
                         <div class="card-header text-center pt-4">
                             <h5>{{ __('Register with') }}</h5>
                         </div>
-                        <div class="row px-xl-5 px-sm-4 px-3">
+                        {{-- <div class="row px-xl-5 px-sm-4 px-3">
                             <!-- Social buttons -->
                             <div class="col-3 ms-auto px-1">
                                 <a class="btn btn-outline-light w-100" href="javascript:;">
@@ -46,7 +46,7 @@
                                     {{ __('or') }}
                                 </p>
                             </div>
-                        </div>
+                        </div> --}}
                         <!-- Registration Form -->
                         <div class="card-body">
                             <form method="POST" action="{{ route('register.perform') }}">
