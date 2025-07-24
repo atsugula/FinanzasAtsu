@@ -30,7 +30,7 @@
                                             @enderror
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">{{ __('Send Reset Link') }}</button>
+                                            <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">{{ __('Send Link') }}</button>
                                         </div>
                                     </form>
                                 </div>
