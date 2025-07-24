@@ -26,10 +26,7 @@ class GoalController extends Controller
                     ->orderBy('id', 'DESC')
                     ->paginate();
 
-        return response()->json([
-            'success' => true,
-            'data' => $goals
-        ]);
+        return response()->json($goals);
     }
 
     /**
