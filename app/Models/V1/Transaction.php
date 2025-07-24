@@ -59,6 +59,16 @@ class Transaction extends Model
         'goal',
         'status_id'
     ];
+	
+	protected $appends = ['total_debt'];
+	
+	public function getTotalDebtAttribute()
+	{
+		$transactionsTotal = $this->whereIn('status_id', [config('status.APR')]))
+									->sum('amount');
+
+		return $this->amount - $transactionsTotal;
+	}
 
     public function scopeCreatedByUser($query)
     {
