@@ -44,6 +44,17 @@ class Goal extends Model
     'date',
   ];
 
+  protected $appends = ['total_with_transactions'];
+
+  public function getTotalWithTransactionsAttribute()
+  {
+      $transactionsTotal = $this->transactions()
+          ->where('estatus_id', 2)
+          ->sum('amount');
+
+      return $this->amount + $transactionsTotal;
+  }
+
   public function transactions()
   {
     return $this->hasMany(Transaction::class, 'goal_id', 'id');
