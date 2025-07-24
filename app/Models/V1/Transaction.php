@@ -65,7 +65,7 @@ class Transaction extends Model
 	public function getTotalDebtAttribute()
 	{
 		$transactionsTotal = $this->payments()
-								->whereIn('status_id', [config('status.APR')])
+								->whereIn('status', [config('status.APR')])
 								->sum('payments_history.paid');
 
 		return $this->amount - $transactionsTotal;
