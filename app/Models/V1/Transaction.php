@@ -66,7 +66,7 @@ class Transaction extends Model
 	{
 		$transactionsTotal = $this->payments()
 								->whereIn('status_id', [config('status.APR')])
-								->sum('paid');
+								->sum('payments_history.paid');
 
 		return $this->amount - $transactionsTotal;
 	}
