@@ -31,11 +31,23 @@ Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
     }
 
     // Ejecutar script de despliegue
-    exec(env('GITHUB_WEBHOOK_SECRET', 'not_found'), $output);
+    $scriptPath = env('GITHUB_WEBHOOK_PATH', 'not_found');
 
-    Log::info('Despliegue ejecutado', $output);
+    if (!file_exists($scriptPath)) {
+        Log::error('Script de despliegue no encontrado');
+        return response('Script no encontrado', 500);
+    }
 
-    return response('OK', 200);
+    exec("$scriptPath 2>&1", $output, $exitCode);
+
+    Log::info('Despliegue ejecutado', [
+        'exit_code' => $exitCode,
+        'output' => $output,
+    ]);
+
+    if ($exitCode !== 0) {
+        return response('Error en el despliegue', 500);
+    }
 });
 
 Route::prefix('v1')->group(function () {
