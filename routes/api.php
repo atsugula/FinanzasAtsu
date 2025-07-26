@@ -54,7 +54,7 @@ Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
 Route::prefix('v1')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login']);
     Route::middleware('api.auth')->post('/auth/logout', [AuthController::class, 'logout']);
-    Route::post('/register', [AuthController::class, 'register'])->middleware('guest')->name('register.perform');
+    Route::post('/register', [AuthController::class, 'register'])->middleware('guest')->name('register.api');
 });
 
 Route::middleware('api.auth')->prefix('v1')->group(function () {
