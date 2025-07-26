@@ -55,6 +55,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login']);
     Route::middleware('api.auth')->post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/register', [AuthController::class, 'register'])->middleware('guest')->name('register.api');
+    Route::post('/reset-password', [AuthController::class, 'sendPasswordResetLink'])->middleware('guest')->name('reset.api');
 });
 
 Route::middleware('api.auth')->prefix('v1')->group(function () {
