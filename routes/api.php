@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\V1\ExpensesCategoryController;
 Route::prefix('v1')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login']);
     Route::middleware('api.auth')->post('/auth/logout', [AuthController::class, 'logout']);
-    Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
+    Route::post('/register', [AuthController::class, 'register'])->middleware('guest')->name('register.perform');
 });
 
 Route::middleware('api.auth')->prefix('v1')->group(function () {
@@ -33,11 +33,3 @@ Route::middleware('api.auth')->prefix('v1')->group(function () {
     Route::apiResource('expenses-categories', ExpensesCategoryController::class);
     Route::get('getData', [HomeController::class, 'getDataSelects']);
 });
-
-/* Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return response()->json(['user' => $request->user()]);
-    });
-    Route::apiResource('transactions', TransactionController::class);
-    Route::get('getData', [HomeController::class, 'getDataSelects']);
-}); */
