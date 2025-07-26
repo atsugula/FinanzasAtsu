@@ -30,7 +30,6 @@ Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
         abort(403, 'Unauthorized');
     }
 
-    // Ejecutar script de despliegue
     $scriptPath = env('GITHUB_WEBHOOK_PATH', 'not_found');
 
     if (!file_exists($scriptPath)) {
