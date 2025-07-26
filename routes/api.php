@@ -26,7 +26,7 @@ Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
     $hash = 'sha256=' . hash_hmac('sha256', $payload, $secret);
 
     if (!hash_equals($hash, $signature)) {
-        Log::warning('Firma de GitHub inválida');
+        Log::warning('Firma de GitHub inválida.' . $secret);
         abort(403, 'Unauthorized');
     }
 
