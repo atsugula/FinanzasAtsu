@@ -18,6 +18,26 @@ use App\Http\Controllers\Api\V1\ExpensesCategoryController;
 |--------------------------------------------------------------------------
 */
 
+Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
+    $signature = $request->header('X-Hub-Signature-256');
+    $payload = $request->getContent();
+
+    $secret = env('GITHUB_WEBHOOK_SECRET', 'not_found');
+    $hash = 'sha256=' . hash_hmac('sha256', $payload, $secret);
+
+    if (!hash_equals($hash, $signature)) {
+        Log::warning('Firma de GitHub inválida');
+        abort(403, 'Unauthorized');
+    }
+
+    // Ejecutar script de despliegue
+    exec(env('GITHUB_WEBHOOK_SECRET', 'not_found'), $output);
+
+    Log::info('Despliegue ejecutado', $output);
+
+    return response('OK', 200);
+});
+
 Route::prefix('v1')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login']);
     Route::middleware('api.auth')->post('/auth/logout', [AuthController::class, 'logout']);
