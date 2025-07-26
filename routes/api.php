@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\Api\V1\GoalController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\TransactionController;
@@ -22,7 +22,7 @@ Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
     $signature = $request->header('X-Hub-Signature-256');
     $payload = $request->getContent();
 
-    $secret = env('GITHUB_WEBHOOK_SECRET', 'not_found');
+    $secret = config('services.github.webhook_secret', 'not_found');
     $hash = 'sha256=' . hash_hmac('sha256', $payload, $secret);
 
     if (!hash_equals($hash, $signature)) {
@@ -30,7 +30,7 @@ Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
         abort(403, 'Unauthorized');
     }
 
-    $scriptPath = env('GITHUB_WEBHOOK_PATH', 'not_found');
+    $scriptPath = config('services.github.deploy_script_path', 'not_found');
 
     if (!file_exists($scriptPath)) {
         Log::error('Script de despliegue no encontrado');
