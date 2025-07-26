@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
 	use Notifiable;
+
+    public function routeNotificationForMail() {
+        return request()->email;
+    }
 	
     public function login(Request $request)
     {
