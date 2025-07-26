@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\ForgotPassword;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+	use Notifiable;
+	
     public function login(Request $request)
     {
         // Validación
