@@ -47,6 +47,8 @@ Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
     if ($exitCode !== 0) {
         return response('Error en el despliegue', 500);
     }
+	
+	return response('Despliegue OK', 200);
 });
 
 Route::prefix('v1')->group(function () {
