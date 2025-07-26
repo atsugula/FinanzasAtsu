@@ -46,4 +46,26 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Sesión cerrada exitosamente'], 401);
     }
+	
+	public function register(Request $request) {
+		$attributes = request()->validate([
+            'username' => 'required|max:255|min:2',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|min:5|max:255',
+            'terms' => 'required'
+        ]);
+
+        $user = User::create($attributes);
+        auth()->login($user);
+		
+		$token = $user->createToken('authToken')->plainTextToken;
+		
+		return response()->json([
+            'message' => 'Login exitoso',
+            'user' => $user,
+            'token' => $token,
+        ], 200);
+
+	}
+
 }
