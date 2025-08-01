@@ -55,7 +55,7 @@ class HomeController extends Controller
         // Calculamos los expense por acá
         $expenses = Transaction::where('created_by', $id_auth)
             ->where('type', 'E')
-            ->whereNotIn('status_id', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
+            ->whereNotIn('status_id', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED'), config('status.ENPROC')])
             ->get();
 
         foreach ($expenses as $key => $expense) {
