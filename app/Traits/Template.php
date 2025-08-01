@@ -68,6 +68,7 @@ trait Template
     public function payment_update($data){
         // Buscamos status del expense
         $expense = Expense::find($data['expense_id']);
+        dd($expense);
         // Buscamos los pagos
         $payments = PaymentsHistory::where('transaction_id', $expense->id)->get();
         // Monto pagado
