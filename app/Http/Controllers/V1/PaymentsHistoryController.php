@@ -96,8 +96,6 @@ class PaymentsHistoryController extends Controller
         $partners = Partner::pluck('company_name AS label', 'id as value');
         $statuses = Status::pluck('name AS label', 'id as value');
 
-        dd($paymentsHistory);
-
         return view('payments-history.edit', compact('paymentsHistory', 'partners', 'statuses'));
     }
 

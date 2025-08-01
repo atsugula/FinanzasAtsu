@@ -70,7 +70,7 @@ class PaymentsHistory extends Model
      */
     public function expense()
     {
-        return $this->hasOne(Expense::class, 'id', 'transaction_id');
+        return $this->hasOne(Transaction::class, 'id', 'transaction_id');
     }
     
     /**
