@@ -112,7 +112,7 @@ class PaymentsHistoryController extends Controller
 
         $paymentsHistory->update($request->all());
 
-        $data['expense_id'] = $paymentsHistory->transaction_id;
+        $data['transaction_id'] = $paymentsHistory->transaction_id;
 
         // Actualizamos los status
         $balance = $this->payment_transaction_update($data);
