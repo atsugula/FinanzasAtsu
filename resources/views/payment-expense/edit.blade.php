@@ -30,7 +30,7 @@
                     <span class="card-separator"></span>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('payment-expenses.update', $expense->id) }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('payment-expenses.update', $paymentsHistory) }}"  role="form" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf
 
