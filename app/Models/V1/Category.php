@@ -4,14 +4,13 @@ namespace App\Models\V1;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Goal extends Model
+class Category extends Model
 {
     protected $fillable = [
         'name',
-        'created_by',
-        'target_amount',
-        'current_amount',
-        'target_date',
+        'icon',
+        'type',
+        'created_by'
     ];
 
     public function transactions()

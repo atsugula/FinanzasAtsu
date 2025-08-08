@@ -1,43 +1,62 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
-@section('template_title')
-    {{ __('Create Transaction') }}
-@endsection
-
 @section('content')
-    {{-- Navbar template --}}
-    @include('layouts.navbars.auth.topnav', ['title' => __('User')])
+<div class="max-w-lg mx-auto bg-white p-6 rounded-xl shadow">
+    <h2 class="text-2xl font-bold mb-4">Agregar transacción</h2>
 
-    <section class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12">
+    <form method="POST" action="{{ route('transactions.store') }}">
+        @csrf
 
-                @includeif('partials.errors')
+        <!-- Tipo -->
+        <label class="block mb-2 font-medium">Tipo</label>
+        <select name="type" class="w-full border rounded p-2 mb-4" required>
+            <option value="expense">Gasto</option>
+            <option value="income">Ingreso</option>
+        </select>
 
-                <div class="card card-default">
-                    <div class="card-header">
-                        <div class="float-left">
-                            <span class="card-title">{{ __('Create Transaction') }} </span>
-                        </div>
-                        <div class="float-right">
-                            <a class="btn btn-primary" href="{{ route('transactions.index') }}"> {{ __('Back') }}</a>
-                        </div>
-                    </div>
+        <!-- Monto -->
+        <label class="block mb-2 font-medium">Monto</label>
+        <input type="number" step="0.01" name="amount" class="w-full border rounded p-2 mb-4" placeholder="Ej. 12000" required>
 
-                    {{-- Separar card --}}
-                    <span class="card-separator"></span>
+        <!-- Categoría -->
+        <label class="block mb-2 font-medium">Categoría</label>
+        <select name="category_id" class="w-full border rounded p-2 mb-4">
+            @foreach($categories as $c)
+                <option value="{{ $c->id }}">{{ $c->name }}</option>
+            @endforeach
+        </select>
 
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('transactions.store') }}" role="form"
-                            enctype="multipart/form-data">
-                            @csrf
+        <!-- Fecha -->
+        <label class="block mb-2 font-medium">Fecha</label>
+        <input type="date" name="date" value="{{ now()->toDateString() }}" class="w-full border rounded p-2 mb-4">
 
-                            @include('transaction.form')
+        <!-- Nota -->
+        <label class="block mb-2 font-medium">Nota (opcional)</label>
+        <input type="text" name="note" class="w-full border rounded p-2 mb-4" placeholder="Descripción breve">
 
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <!-- Opciones avanzadas -->
+        <button type="button" onclick="toggleAdvanced()" class="text-blue-600 mb-2">
+            Mostrar opciones avanzadas
+        </button>
+        <div id="advanced" class="hidden">
+            <label class="block mb-2 font-medium">¿Es recurrente?</label>
+            <input type="checkbox" name="is_recurring" value="1" class="mb-4">
+
+            <label class="block mb-2 font-medium">Intervalo de días (si recurrente)</label>
+            <input type="number" name="recurring_interval_days" class="w-full border rounded p-2 mb-4" placeholder="Ej. 30">
         </div>
-    </section>
+
+        <!-- Botón guardar -->
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+            Guardar transacción
+        </button>
+    </form>
+</div>
+
+<script>
+function toggleAdvanced() {
+    const adv = document.getElementById('advanced');
+    adv.classList.toggle('hidden');
+}
+</script>
 @endsection
