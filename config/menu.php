@@ -1,91 +1,78 @@
 <?php
 
+$userTransactionTypes = [
+    'income'    => true,
+    'expense'   => true,
+    'debt_in'   => true,
+    'debt_out'  => true,
+];
+
 return [
     [
         'text' => 'Profile',
         'route' => 'profile',
-        'icon' => 'ni ni-single-02',
-        'page' => 0, // Para saber si la ruta es por parametro post o no
+        'icon'  => 'ni ni-single-02',
+        'page'  => 0,
     ],
     [
         'text' => 'Goals',
         'route' => 'goals.index',
-        'icon' => 'fa fa-calendar',
-        'page' => 0, // Para saber si la ruta es por parametro post o no
+        'icon'  => 'fa fa-bullseye',
+        'page'  => 0,
+    ],
+    [
+        'text' => 'Categories',
+        'route' => 'categories.index',
+        'icon'  => 'fa fa-tags',
+        'page'  => 0,
     ],
     [
         'text'    => 'Transactions',
-        'icon'    => 'fa fa-archive',
-        'submenu' => [
-            [
-                'text' => 'List',
+        'icon'    => 'fa fa-exchange-alt',
+        'submenu' => array_filter([
+            $userTransactionTypes['income'] ? [
+                'text'  => 'Incomes',
                 'route' => 'transactions.index',
-                'icon' => 'fa fa-calendar',
-                'page' => 0, // Para saber si la ruta es por parametro post o no
-            ],
+                'params'=> ['type' => 'income'],
+                'icon'  => 'fa fa-arrow-down',
+                'page'  => 0,
+            ] : null,
+            $userTransactionTypes['expense'] ? [
+                'text'  => 'Expenses',
+                'route' => 'transactions.index',
+                'params'=> ['type' => 'expense'],
+                'icon'  => 'fa fa-arrow-up',
+                'page'  => 0,
+            ] : null,
+            $userTransactionTypes['debt_in'] ? [
+                'text'  => 'Debts Owed to Me',
+                'route' => 'transactions.index',
+                'params'=> ['type' => 'debt_in'],
+                'icon'  => 'fa fa-hand-holding-usd',
+                'page'  => 0,
+            ] : null,
+            $userTransactionTypes['debt_out'] ? [
+                'text'  => 'Debts I Owe',
+                'route' => 'transactions.index',
+                'params'=> ['type' => 'debt_out'],
+                'icon'  => 'fa fa-file-invoice-dollar',
+                'page'  => 0,
+            ] : null,
             [
-                'text' => 'Create Transaction',
+                'text'  => 'Add Transaction',
                 'route' => 'transactions.create',
-                'icon' => 'fa fa-plus-square',
+                'icon'  => 'fa fa-plus-circle',
             ],
             [
-                'text' => 'Import transactions',
+                'text'  => 'Import',
                 'route' => 'transactions.import',
-                'icon' => 'fa fa-plus-circle',
+                'icon'  => 'fa fa-file-import',
             ],
             [
-                'text' => 'Export transactions',
+                'text'  => 'Export',
                 'route' => 'transactions.export',
-                'icon' => 'fa fa-download',
+                'icon'  => 'fa fa-file-export',
             ],
-        ],
-    ],
-    /* [
-        'text' => 'Transactions',
-        'route' => 'transactions.index',
-        'icon' => 'fa fa-calendar',
-        'page' => 0, // Para saber si la ruta es por parametro post o no
-    ], */
-    /* [
-        'text' => 'Savings',
-        'route' => 'savings.index',
-        'icon' => 'fa fa-credit-card',
-        'page' => 0, // Para saber si la ruta es por parametro post o no
-    ], */
-    [
-        'text' => 'Partners',
-        'route' => 'partners.index',
-        'icon' => 'ni ni-badge',
-        'page' => 0, // Para saber si la ruta es por parametro post o no
-    ],
-    /* [
-        'text' => 'Incomes',
-        'route' => 'incomes.index',
-        'icon' => 'fa fa-money-bill',
-        'page' => 0, // Para saber si la ruta es por parametro post o no
-    ], */
-    [
-        'text' => 'Expenses Category',
-        'route' => 'expenses-categories.index',
-        'icon' => 'fa fa-th-large',
-        'page' => 0, // Para saber si la ruta es por parametro post o no
-    ],
-    /* [
-        'text' => 'Expenses',
-        'route' => 'expenses.index',
-        'icon' => 'fa fa-credit-card',
-        'page' => 0, // Para saber si la ruta es por parametro post o no
-    ], */
-    [
-        'text' => 'Pay expenses',
-        'route' => 'payment-expenses.index',
-        'icon' => 'ni ni-money-coins',
-        'page' => 0, // Para saber si la ruta es por parametro post o no
-    ],
-    [
-        'text' => 'Payments History',
-        'route' => 'payments-histories.index',
-        'icon' => 'fa fa-history',
-        'page' => 0, // Para saber si la ruta es por parametro post o no
+        ]),
     ],
 ];
