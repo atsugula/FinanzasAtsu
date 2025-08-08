@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\V1\Goal;
-use App\Models\V1\Saving;
-use App\Models\V1\Income;
-use App\Models\V1\Expense;
-use Illuminate\Http\Request;
-use App\Models\V1\ExpensesCategory;
 use App\Models\V1\Transaction;
+use App\Models\V1\Category;
+use App\Models\V1\Goal;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -17,118 +14,81 @@ use Illuminate\Support\Facades\Schema;
 class HomeController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\View\View
+     * Dashboard principal
      */
     public function index()
     {
+        $userId = Auth::id();
 
-        /* Inicializamos variables */
-        $count_incomes = $count_expense = $count_saving = $count_incomes_am_owed = $count_expense_must = 0;
+        // Totales generales
+        $count_incomes = Transaction::where('created_by', $userId)
+            ->where('type', 'income')
+            ->sum('amount');
 
-        /* Capturamos los datos del usuario logeado */
-        $user = Auth::user();
-        $id_auth = $user->id;
+        $count_expense = Transaction::where('created_by', $userId)
+            ->where('type', 'expense')
+            ->sum('amount');
 
-        $today = Carbon::now()->toDateString(); // Obtener la fecha actual en formato 'Y-m-d'
+        $count_saving = Transaction::where('created_by', $userId)
+            ->where('type', 'saving')
+            ->sum('amount');
 
-        // Calculamos los incomes o ingresos por acá
-        $incomes = Transaction::where('created_by', $id_auth)
-            ->where('type', 'I')
-            ->whereNotIn('status_id', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED')])
-            ->get();
+        // Total de deudas que tengo
+        $count_incomes_am_owed = Transaction::where('created_by', $userId)
+            ->where('type', 'debt_in')
+            ->sum('amount');
 
-        foreach ($incomes as $key => $income) {
-            $count_incomes += $income->amount;
-        }
-        // Calculamos los expense por acá
-        $expenses = Transaction::where('created_by', $id_auth)
-            ->where('type', 'E')
-            ->whereNotIn('status_id', [config('status.PEN'), config('status.CANC'), config('status.REC'), config('status.DED'), config('status.ENPROC')])
-            ->get();
+        // Total de deudas que debo pagar
+        $count_expense_must = Transaction::where('created_by', $userId)
+            ->where('type', 'debt_out')
+            ->sum('amount');
 
-        foreach ($expenses as $key => $expense) {
-            $count_expense += $expense->amount;
-        }
-
-        // Calculamos los saving por acá
-        $savings = Transaction::where('created_by', $id_auth)
-            ->where('type', 'A')
-            ->get();
-        foreach ($savings as $key => $saving) {
-            $count_saving += $saving->amount;
-        }
-
-        // Me deben esto
-        $incomes_am_owed = Transaction::where('created_by', $id_auth)
-            ->where('type', 'I')
-            ->whereIn('status_id', [config('status.PEN')])
-            ->get();
-        // Calculamos los incomes_am_owed por acá
-        foreach ($incomes_am_owed as $key => $income_am_owed) {
-            $count_incomes_am_owed += $income_am_owed->amount;
-        }
-
-        // Debo lo siguiente
-        $expenses_must = Transaction::where('created_by', $id_auth)
-            ->where('type', 'E')
-            ->whereIn('status_id', [config('status.DED')])
-            ->get();
-        // Calculamos los expenses_must por acá
-        foreach ($expenses_must as $key => $expense_must) {
-            $count_expense_must += $expense_must->amount;
-        }
-
-        // Categorias de gastos
-        $categories = ExpensesCategory::where('created_by', $id_auth)
-            ->withCount('transactions') // Contamos las transacciones relacionadas
-            ->orderByDesc('transactions_count') // Ordenamos por la cantidad de transacciones (de mayor a menor)
+        // Categorías más usadas (Top 10)
+        $categories = Category::where('created_by', $userId)
+            ->withCount('transactions')
+            ->orderByDesc('transactions_count')
             ->take(10)
             ->get();
 
-        // Traemos los objetivos
-        $goals = Goal::where('created_by', $id_auth)->with('transactions')->get();
-
-        foreach ($goals as $goal) {
-            $totalTransactions = $goal?->transactions->sum('amount'); // Sum 'amount' for each goal's transactions
-            $goal->total_savings = $totalTransactions; // Add it as a custom attribute
-        }
-
-        // Traemos las egresos que estan como deudas
-        $incomes_owing = Transaction::where('created_by', $id_auth)
-            ->where('type', 'E')
-            ->whereIn('status_id', [config('status.DED'), config('status.ENPROC')])
-            ->with('payments', 'expensesCategory')
+        // Metas con progreso
+        $goals = Goal::where('created_by', $userId)
+            ->withSum([
+                'transactions as total_savings' => function ($q) {
+                    $q->where('type', 'saving');
+                }
+            ], 'amount')
             ->get();
 
-        foreach ($incomes_owing as $income_owing) {
-            $income_owing->total_debt = $income_owing?->payments->sum('paid');
-        }
+        // Deudas individuales (para los gráficos de "Debt status")
+        $incomes_owing = Transaction::where('created_by', $userId)
+            ->where('type', 'debt_in')
+            ->withSum([
+                'payments as total_debt' => function ($q) {
+                    $q->where('status', 'paid');
+                }
+            ], 'amount')
+            ->get();
 
-        return view('pages.dashboard', compact('incomes_owing', 'goals', 'count_incomes', 'count_expense', 'count_saving', 'categories', 'user', 'count_incomes_am_owed', 'count_expense_must'));
+        return view('pages.dashboard', compact(
+            'count_incomes',
+            'count_expense',
+            'count_saving',
+            'count_incomes_am_owed',
+            'count_expense_must',
+            'categories',
+            'goals',
+            'incomes_owing'
+        ));
     }
 
-    function getDataSelects(Request $request)
+    /**
+     * Cargar datos para selects dinámicos en formularios
+     */
+    public function getDataSelects(Request $request)
     {
-
-        /* Capturamos el ID del usuario logeado */
-        $id_auth = Auth::id();
-
-        // Obtiene los nombres de las tablas desde el request
+        $userId = Auth::id();
         $fields = json_decode($request->query('fields', '[]'), true);
 
-        // Verifica que se haya enviado al menos una tabla
         if (!is_array($fields) || empty($fields)) {
             return response()->json([
                 'success' => false,
@@ -139,7 +99,6 @@ class HomeController extends Controller
         $data = [];
 
         foreach ($fields as $table) {
-            // Verifica si la tabla existe en la base de datos
             if (!Schema::hasTable($table)) {
                 return response()->json([
                     'success' => false,
@@ -147,20 +106,10 @@ class HomeController extends Controller
                 ], 400);
             }
 
-            switch ($table) {
-                case 'statuses':
-                    // Obtiene los registros con id y nombre genérico
-                    $records = DB::table($table)->select('id', DB::raw('name AS label'))->get();
-                    break;
-                case 'partners':
-                    // Obtiene los registros con id y nombre genérico
-                    $records = DB::table($table)->select('id', DB::raw('company_name AS label'))->where('created_by', $id_auth)->get();
-                    break;
-                default:
-                    // Obtiene los registros con id y nombre genérico
-                    $records = DB::table($table)->select('id', DB::raw('name AS label'))->where('created_by', $id_auth)->get();
-                    break;
-            }
+            $records = DB::table($table)
+                ->select('id', DB::raw('name AS label'))
+                ->where('created_by', $userId)
+                ->get();
 
             $data[$table] = $records;
         }
