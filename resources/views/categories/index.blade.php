@@ -1,13 +1,12 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('template_title')
-    {{ __('Expenses Category') }}
+    {{ __('Category') }}
 @endsection
 
 @section('content')
-
     {{-- Navbar template --}}
-    @include('layouts.navbars.auth.topnav', ['title' => __('Income')])
+    @include('layouts.navbars.auth.topnav', ['title' => __('Category')])
 
     <div class="container-fluid">
         <div class="row">
@@ -17,11 +16,12 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Expenses Category') }}
+                                {{ __('Category') }}
                             </span>
 
                             <div class="float-right">
-                                <a href="{{ route('expenses-categories.create') }}" class="btn btn-primary btn-sm float-right" data-placement="left">
+                                <a href="{{ route('categories.create') }}" class="btn btn-primary btn-sm float-right"
+                                    data-placement="left">
                                     {{ __('Create New') }}
                                 </a>
                             </div>
@@ -41,27 +41,31 @@
                                     <tr>
                                         <th>{{ __('No') }}</th>
                                         <th>{{ __('Name') }}</th>
+                                        <th>{{ __('Icon') }}</th>
+                                        <th>{{ __('Type') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($expensesCategories as $expensesCategory)
+                                    @foreach ($categories as $category)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            <td>{{ $expensesCategory->name }}</td>
+
+                                            <td>{{ $category->name }}</td>
+                                            <td>{{ $category->icon }}</td>
+                                            <td>{{ $category->type }}</td>
                                             <td>
-                                                <form action="{{ route('expenses-categories.destroy', $expensesCategory->id) }}" method="POST" class="form-delete">
-                                                    <a class="btn btn-sm btn-primary" href="{{ route('expenses-categories.show', $expensesCategory->id) }}">
-                                                        <i class="fa fa-fw fa-eye"></i> {{ __('Show') }}
-                                                    </a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('expenses-categories.edit', $expensesCategory->id) }}">
-                                                        <i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}
-                                                    </a>
+                                                <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="form-delete">
+                                                    <a class="btn btn-sm btn-primary "
+                                                        href="{{ route('categories.show', $category->id) }}"><i
+                                                            class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success"
+                                                        href="{{ route('categories.edit', $category->id) }}"><i
+                                                            class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">
-                                                        <i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}
-                                                    </button>
+                                                    <button type="submit" class="btn btn-danger btn-sm"><i
+                                                            class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -69,7 +73,7 @@
                                 </tbody>
                             </table>
                             <br>
-                            {{ $expensesCategories->appends(request()->except('page'))->links('vendor.pagination.custom') }}
+                            {{ $categories->appends(request()->except('page'))->links('vendor.pagination.custom') }}
                         </div>
                     </div>
                 </div>
@@ -79,11 +83,8 @@
 
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
-
 @endsection
 
 @section('js')
-
     <script src="{{ asset('assets/js/plugins/sweetalert.js') }}"></script>
-
 @endsection
