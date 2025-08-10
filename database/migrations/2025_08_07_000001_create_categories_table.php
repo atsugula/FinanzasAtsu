@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('icon')->nullable();
-            $table->enum('type', ['expense', 'income', 'saving'])->default('expense');
+            $table->enum('type', ['expense', 'income', 'saving', 'debt'])->default('expense');
             $table->unsignedBigInteger('created_by')->nullable();
 
             $table->foreign('created_by')
