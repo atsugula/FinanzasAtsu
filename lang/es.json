@@ -1105,5 +1105,7 @@
     "Target Date": "Fecha objetivo",
     "Debt": "Deuda",
     "Owe me": "Me deben",
-    "I must": "Debo"
+    "I must": "Debo",
+    "Debt in": "Deuda (Préstamos realizados)",
+    "Debt on": "Deuda (Préstamos recibidos)"
 }

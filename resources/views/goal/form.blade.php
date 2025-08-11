@@ -2,6 +2,24 @@
     <div class="box-body">
 
         <div class="row">
+            {{-- Tipo --}}
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    {{ Form::label('type', __('Type')) }}
+                    {{ Form::select(
+                        'type',
+                        [
+                            'saving' => __('Ahorro'),
+                            'debt_in' => __('Deuda (Préstamos realizados)'), // Ej: alguien me debe
+                            'debt_on' => __('Deuda (Préstamos recibidos)'), // Ej: yo debo
+                        ],
+                        $goal->type,
+                        ['class' => 'form-control select2' . ($errors->has('type') ? ' is-invalid' : '')],
+                    ) }}
+                    {!! $errors->first('type', '<div class="invalid-feedback">:message</div>') !!}
+                </div>
+            </div>
+
             {{-- Nombre --}}
             <div class="col-12 col-md-6">
                 <div class="form-group">
