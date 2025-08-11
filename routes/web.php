@@ -5,6 +5,7 @@ use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\V1\UserController;
+use App\Http\Controllers\V1\GoalController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('transactions', TransactionController::class);
 	Route::resource('categories', CategoryController::class)->names('categories');
+	Route::resource('goals', GoalController::class)->names('goals');
 
     // Transacciones especiales
     Route::get('transactions/import', [TransactionController::class, 'viewImport'])->name('transactions.import');
