@@ -1,13 +1,12 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('template_title')
-    {{ __('Transaction') }}
+    {{ __('Category') }}
 @endsection
 
 @section('content')
-
     {{-- Navbar template --}}
-    @include('layouts.navbars.auth.topnav', ['title' => __('Transaction')])
+    @include('layouts.navbars.auth.topnav', ['title' => __('Category')])
 
     <div class="container-fluid">
         <div class="row">
@@ -17,18 +16,18 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Transaction') }}
+                                {{ __('Category') }}
                             </span>
 
                             <div class="float-right">
-                                <a href="{{ route('transactions.create') }}" class="btn btn-primary btn-sm float-right"
+                                <a href="{{ route('categories.create') }}" class="btn btn-primary btn-sm float-right"
                                     data-placement="left">
                                     {{ __('Create New') }}
                                 </a>
                             </div>
                         </div>
                     </div>
-                    
+
                     {{-- Separar card --}}
                     <span class="card-separator"></span>
 
@@ -41,41 +40,27 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>{{ __('No') }}</th>
-
-                                        <th>{{ __('User') }}</th>
+                                        <th>{{ __('Name') }}</th>
+                                        <th>{{ __('Icon') }}</th>
                                         <th>{{ __('Type') }}</th>
-                                        <th>{{ __('Amount') }}</th>
-                                        <th>{{ __('Date') }}</th>
-                                        <th>{{ __('Source') }}</th>
-                                        <th>{{ __('Status') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($transactions as $transaction)
-
-                                        @php
-                                            $type = $transaction->type == 'I' ? __('Income') : ($transaction->type == 'E' ? __('Expense') : __('Saving'));
-                                        @endphp
-
+                                    @foreach ($categories as $category)
                                         <tr>
-                                            <td>{{ $transaction->id }}</td>
+                                            <td>{{ $category->id }}</td>
 
-                                            <td>{{ $transaction->creator?->firstname }}</td>
-                                            <td>{{ $type }}</td>
-                                            <td>{{ $transaction->amount }}</td>
-                                            <td>{{ $transaction->date }}</td>
-                                            <td>{{ $transaction->source ?? 'N/A' }}</td>
-                                            <td>{{ $transaction->status?->name }}</td>
-
+                                            <td>{{ $category->name }}</td>
+                                            <td>{{ $category->icon }}</td>
+                                            <td>{{ $category->type }}</td>
                                             <td>
-                                                <form action="{{ route('transactions.destroy', $transaction->id) }}"
-                                                    method="POST" class="form-delete">
+                                                <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="form-delete">
                                                     <a class="btn btn-sm btn-primary "
-                                                        href="{{ route('transactions.show', $transaction->id) }}"><i
+                                                        href="{{ route('categories.show', $category->id) }}"><i
                                                             class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
                                                     <a class="btn btn-sm btn-success"
-                                                        href="{{ route('transactions.edit', $transaction->id) }}"><i
+                                                        href="{{ route('categories.edit', $category->id) }}"><i
                                                             class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     @csrf
                                                     @method('DELETE')
@@ -88,7 +73,7 @@
                                 </tbody>
                             </table>
                             <br>
-                            {{ $transactions->appends(request()->except('page'))->links('vendor.pagination.custom') }}
+                            {{ $categories->appends(request()->except('page'))->links('vendor.pagination.custom') }}
                         </div>
                     </div>
                 </div>
@@ -98,11 +83,8 @@
 
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
-
 @endsection
 
 @section('js')
-
     <script src="{{ asset('assets/js/plugins/sweetalert.js') }}"></script>
-
 @endsection

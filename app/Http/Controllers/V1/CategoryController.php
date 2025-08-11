@@ -1,0 +1,120 @@
+<?php
+
+namespace App\Http\Controllers\V1;
+
+use App\Http\Controllers\Controller;
+use App\Models\V1\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class CategoryController extends Controller
+{
+
+    private $types = [
+        'income' => 'Ingreso',
+        'expense' => 'Gasto',
+        'saving' => 'Ahorro',
+        'debt' => 'Deuda'
+    ];
+
+    /**
+     * Mostrar listado de categorías del usuario.
+     */
+    public function index()
+    {
+        $categories = Category::where('created_by', Auth::id())
+            ->orderBy('id', 'DESC')->paginate();
+
+        return view('category.index', compact('categories'));
+    }
+
+    /**
+     * Formulario para crear categoría.
+     */
+    public function create()
+    {
+
+        $category = new Category();
+
+        $types = $this->types;
+
+        return view('category.create', compact('category', 'types'));
+    }
+
+    /**
+     * Guardar categoría.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
+            'type' => 'required|in:income,expense,saving,debt',
+        ]);
+
+        Category::create([
+            'name' => $request->name,
+            'icon' => $request->icon,
+            'type' => $request->type,
+            'created_by' => Auth::id(),
+        ]);
+
+        return redirect()->route('categories.index')->with('success', 'Categoría creada correctamente.');
+    }
+
+    /**
+     * Mostrar detalles de categoría.
+     */
+    public function show(Category $category)
+    {
+        $this->authorizeByCreator($category);
+        $types = $this->types;
+        return view('category.show', compact('category', 'types'));
+    }
+
+    /**
+     * Formulario para editar categoría.
+     */
+    public function edit(Category $category)
+    {
+        $this->authorizeByCreator($category);
+
+        $types = $this->types;
+
+        return view('category.edit', compact('category', 'types'));
+    }
+
+    /**
+     * Actualizar categoría.
+     */
+    public function update(Request $request, Category $category)
+    {
+        $this->authorizeByCreator($category);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
+            'type' => 'required|in:income,expense,saving,debt',
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'icon' => $request->icon,
+            'type' => $request->type,
+        ]);
+
+        return redirect()->route('categories.index')->with('success', 'Categoría actualizada correctamente.');
+    }
+
+    /**
+     * Eliminar categoría.
+     */
+    public function destroy(Category $category)
+    {
+        $this->authorizeByCreator($category);
+        $category->delete();
+
+        return redirect()->route('categories.index')->with('success', 'Categoría eliminada correctamente.');
+    }
+
+}
