@@ -14,13 +14,18 @@ use Illuminate\Support\Facades\Storage;
 class TransactionController extends Controller
 {
 
-    private $types = [
-        'income'   => __('Ingreso'),
-        'expense'  => __('Gasto'),
-        'saving'   => __('Ahorro'),
-        'debt_in'  => __('Deuda a mi favor'), // Ej: alguien me debe
-        'debt_on'  => __('Deuda en mi contra'), // Ej: yo debo
-    ];
+    private $types;
+
+    public function __construct()
+    {
+        $this->types = [
+            'income' => __('Ingreso'),
+            'expense' => __('Gasto'),
+            'saving' => __('Ahorro'),
+            'debt_in' => __('Deuda a mi favor'), // Ej: alguien me debe
+            'debt_on' => __('Deuda en mi contra'), // Ej: yo debo
+        ];
+    }
 
     /**
      * Listar todas las transacciones
