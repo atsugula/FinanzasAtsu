@@ -28,8 +28,11 @@
                     {{-- Separar card --}}
                     <span class="card-separator"></span>
 
+                    @include('layouts.message')
+
                     <div class="card-body">
-                        <form method="POST" action="{{ route('transactions.update', $transaction->id) }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('transactions.update', $transaction->id) }}" role="form"
+                            enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf
 

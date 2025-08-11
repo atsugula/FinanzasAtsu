@@ -81,7 +81,15 @@ class TransactionController extends Controller
         }
         $validated['files'] = $filePaths;
 
-        Transaction::create($validated);
+        $transaction = Transaction::create($validated);
+
+        // Si es tipo ahorro, sumar al current_amount
+        if ($transaction->type === 'saving' && $transaction->goal_id) {
+            $goal = Goal::find($transaction->goal_id);
+            if ($goal) {
+                $goal->increment('current_amount', $transaction->amount);
+            }
+        }
 
         return redirect()->route('transactions.index')
             ->with('success', 'Transacción creada correctamente');
@@ -116,7 +124,9 @@ class TransactionController extends Controller
 
         $statuses = Status::all();
 
-        return view('transaction.edit', compact('transaction', 'categories', 'types', 'statuses'));
+        $goals = Goal::where('created_by', auth()->id())->get()->all();
+
+        return view('transaction.edit', compact('transaction', 'categories', 'types', 'statuses', 'goals'));
     }
 
     /**
@@ -126,7 +136,7 @@ class TransactionController extends Controller
     {
 
         $validated = $request->validate([
-            'type' => 'required|in:expense,income',
+            'type' => 'required|in:expense,income,saving,debt',
             'amount' => 'required|numeric|min:0.01',
             'category_id' => 'nullable|exists:categories,id',
             'goal_id' => 'nullable|exists:goals,id',
@@ -136,9 +146,9 @@ class TransactionController extends Controller
             'is_recurring' => 'nullable',
             'recurring_interval_days' => 'nullable|integer|min:1',
             'files' => 'nullable',
-            'files.*' => 'file|max:20480|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip,rar',
+            'files.*' => 'nullable|file|max:20480|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip,rar',
             'delete_files' => 'nullable|array',
-            'delete_files.*' => 'string',
+            'delete_files.*' => 'nullable|string',
         ]);
 
         $validated['is_recurring'] = $request->has('is_recurring');
@@ -168,6 +178,15 @@ class TransactionController extends Controller
         }
 
         $validated['files'] = $existing;
+
+        // Ajuste de ahorro
+        if ($transaction->type === 'saving' && $transaction->goal_id) {
+            // revertir el monto anterior
+            $goal = Goal::find($transaction->goal_id);
+            if ($goal) {
+                $goal->decrement('current_amount', $transaction->amount);
+            }
+        }
 
         $transaction->update($validated);
 
