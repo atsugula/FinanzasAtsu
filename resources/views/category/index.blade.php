@@ -49,7 +49,7 @@
                                 <tbody>
                                     @foreach ($categories as $category)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
+                                            <td>{{ $category->id }}</td>
 
                                             <td>{{ $category->name }}</td>
                                             <td>{{ $category->icon }}</td>

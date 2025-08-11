@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
+
+    private $types = [
+        'income' => 'Ingreso',
+        'expense' => 'Gasto',
+        'saving' => 'Ahorro',
+        'debt' => 'Deuda'
+    ];
+
     /**
      * Mostrar listado de categorías del usuario.
      */
@@ -17,7 +25,7 @@ class CategoryController extends Controller
         $categories = Category::where('created_by', Auth::id())
             ->orderBy('id', 'DESC')->paginate();
 
-        return view('categories.index', compact('categories'));
+        return view('category.index', compact('categories'));
     }
 
     /**
@@ -25,7 +33,12 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('categories.create');
+
+        $category = new Category();
+
+        $types = $this->types;
+
+        return view('category.create', compact('category', 'types'));
     }
 
     /**
@@ -34,15 +47,15 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'  => 'required|string|max:255',
-            'icon'  => 'nullable|string|max:255',
-            'type'  => 'required|in:income,expense,saving,debt',
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
+            'type' => 'required|in:income,expense,saving,debt',
         ]);
 
         Category::create([
-            'name'       => $request->name,
-            'icon'       => $request->icon,
-            'type'       => $request->type,
+            'name' => $request->name,
+            'icon' => $request->icon,
+            'type' => $request->type,
             'created_by' => Auth::id(),
         ]);
 
@@ -55,7 +68,8 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $this->authorizeCategory($category);
-        return view('categories.show', compact('category'));
+        $types = $this->types;
+        return view('category.show', compact('category', 'types'));
     }
 
     /**
@@ -64,7 +78,10 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         $this->authorizeCategory($category);
-        return view('categories.edit', compact('category'));
+
+        $types = $this->types;
+
+        return view('category.edit', compact('category', 'types'));
     }
 
     /**
@@ -75,15 +92,15 @@ class CategoryController extends Controller
         $this->authorizeCategory($category);
 
         $request->validate([
-            'name'  => 'required|string|max:255',
-            'icon'  => 'nullable|string|max:255',
-            'type'  => 'required|in:income,expense,saving,debt',
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
+            'type' => 'required|in:income,expense,saving,debt',
         ]);
 
         $category->update([
-            'name'  => $request->name,
-            'icon'  => $request->icon,
-            'type'  => $request->type,
+            'name' => $request->name,
+            'icon' => $request->icon,
+            'type' => $request->type,
         ]);
 
         return redirect()->route('categories.index')->with('success', 'Categoría actualizada correctamente.');
