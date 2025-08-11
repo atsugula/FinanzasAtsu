@@ -37,27 +37,6 @@ return [
                 'icon'  => 'fa fa-arrow-down',
                 'page'  => 0,
             ] : null,
-            $userTransactionTypes['expense'] ? [
-                'text'  => 'Expenses',
-                'route' => 'transactions.index',
-                'params'=> ['type' => 'expense'],
-                'icon'  => 'fa fa-arrow-up',
-                'page'  => 0,
-            ] : null,
-            $userTransactionTypes['debt_in'] ? [
-                'text'  => 'Debts Owed to Me',
-                'route' => 'transactions.index',
-                'params'=> ['type' => 'debt_in'],
-                'icon'  => 'fa fa-hand-holding-usd',
-                'page'  => 0,
-            ] : null,
-            $userTransactionTypes['debt_out'] ? [
-                'text'  => 'Debts I Owe',
-                'route' => 'transactions.index',
-                'params'=> ['type' => 'debt_out'],
-                'icon'  => 'fa fa-file-invoice-dollar',
-                'page'  => 0,
-            ] : null,
             [
                 'text'  => 'Add Transaction',
                 'route' => 'transactions.create',
