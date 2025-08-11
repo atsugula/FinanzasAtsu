@@ -4,10 +4,12 @@ namespace App\Http\Controllers\V1;
 
 use App\Models\V1\Goal;
 use App\Models\V1\Status;
+use Illuminate\Support\Str;
 use App\Models\V1\Category;
 use Illuminate\Http\Request;
 use App\Models\V1\Transaction;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
 {
@@ -60,11 +62,24 @@ class TransactionController extends Controller
             'note' => 'nullable|string|max:255',
             'is_recurring' => 'nullable',
             'recurring_interval_days' => 'nullable|integer|min:1',
+            'files' => 'nullable',
+            'files.*' => 'file|max:20480|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip,rar',
         ]);
 
         $validated['is_recurring'] = $request->has('is_recurring');
 
         $validated['created_by'] = auth()->id();
+
+        // subir archivos (si hay)
+        $filePaths = [];
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                // guardamos en disco public/transactions
+                $path = $file->store('transactions', 'public');
+                $filePaths[] = $path;
+            }
+        }
+        $validated['files'] = $filePaths;
 
         Transaction::create($validated);
 
@@ -85,7 +100,7 @@ class TransactionController extends Controller
         $statuses = Status::all();
 
         $goals = Goal::where('created_by', auth()->id())->get()->all();
-        
+
         return view('transaction.show', compact('transaction', 'types', 'statuses'));
     }
 
@@ -109,6 +124,7 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
+
         $validated = $request->validate([
             'type' => 'required|in:expense,income',
             'amount' => 'required|numeric|min:0.01',
@@ -119,9 +135,39 @@ class TransactionController extends Controller
             'note' => 'nullable|string|max:255',
             'is_recurring' => 'nullable',
             'recurring_interval_days' => 'nullable|integer|min:1',
+            'files' => 'nullable',
+            'files.*' => 'file|max:20480|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip,rar',
+            'delete_files' => 'nullable|array',
+            'delete_files.*' => 'string',
         ]);
 
         $validated['is_recurring'] = $request->has('is_recurring');
+
+        // Archivos existentes (array)
+        $existing = $transaction->files ?? [];
+
+        // Eliminar archivos marcados en el formulario (delete_files[])
+        $toDelete = $request->input('delete_files', []);
+        if (!empty($toDelete)) {
+            foreach ($toDelete as $del) {
+                // seguridad: sólo borrar dentro de la carpeta transactions/
+                if (in_array($del, $existing) && Str::startsWith($del, 'transactions/')) {
+                    Storage::disk('public')->delete($del);
+                    // quitar del array existente
+                    $existing = array_values(array_diff($existing, [$del]));
+                }
+            }
+        }
+
+        // Subir nuevos archivos y anexarlos
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $path = $file->store('transactions', 'public');
+                $existing[] = $path;
+            }
+        }
+
+        $validated['files'] = $existing;
 
         $transaction->update($validated);
 
@@ -135,6 +181,15 @@ class TransactionController extends Controller
     public function destroy(Transaction $transaction)
     {
         $this->authorizeByCreator($transaction);
+
+        // eliminar archivos del disco antes de borrar registro
+        $files = $transaction->files ?? [];
+        foreach ($files as $f) {
+            if (Str::startsWith($f, 'transactions/')) {
+                Storage::disk('public')->delete($f);
+            }
+        }
+
         $transaction->delete();
 
         return redirect()->route('transactions.index')

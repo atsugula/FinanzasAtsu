@@ -18,6 +18,11 @@ class Transaction extends Model
         'note',
         'is_recurring',
         'recurring_interval_days',
+        'files',
+    ];
+
+    protected $casts = [
+        'files' => 'array',
     ];
 
     protected $with = [

@@ -92,6 +92,69 @@
                 <label for="note" class="form-label">Nota</label>
                 <textarea name="note" id="note" class="form-control" rows="1">{{ old('note', $transaction->note ?? '') }}</textarea>
             </div>
+
+            {{-- Upload --}}
+            <div class="col-12 mb-3">
+                <label for="files" class="form-label">Archivos (opcional)</label>
+                <input type="file" id="files" name="files[]" class="form-control" multiple
+                    accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.zip,.rar">
+                <small class="form-text text-muted">Puedes subir varios archivos. Máx 20 MB cada uno.</small>
+
+                {{-- Previews de archivos nuevos --}}
+                <div id="selected-file-previews" class="mt-2 row g-2"></div>
+            </div>
+
+            {{-- Archivos existentes --}}
+            @if (!empty($transaction->files) && count($transaction->files))
+                <div class="col-12 mb-3">
+                    <label class="form-label">Archivos existentes</label>
+
+                    <div id="existing-files" class="row g-2">
+                        @foreach ($transaction->files as $file)
+                            @php
+                                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                                $isImage = in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                $url = asset('storage/' . $file);
+                            @endphp
+
+                            <div class="col-auto text-center border rounded p-2 existing-file-item"
+                                data-file="{{ $file }}">
+                                @if ($isImage)
+                                    <a href="{{ $url }}" target="_blank" class="d-block mb-1">
+                                        <img src="{{ $url }}" alt="file" class="img-thumbnail"
+                                            style="width:80px; height:80px; object-fit:cover;">
+                                    </a>
+                                @else
+                                    <a href="{{ $url }}" target="_blank" class="d-block mb-1">
+                                        <i class="fa fa-file fa-3x"></i>
+                                    </a>
+                                @endif
+
+                                <div class="small text-truncate" style="max-width:80px;">
+                                    <a href="{{ $url }}" target="_blank"
+                                        title="{{ basename($file) }}">{{ basename($file) }}</a>
+                                </div>
+
+                                <div class="mt-1">
+                                    <button type="button"
+                                        class="btn btn-sm btn-outline-danger toggle-delete-existing"
+                                        data-file="{{ $file }}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    {{-- Aquí se agregan inputs hidden delete_files[] --}}
+                    <div id="delete-files-container"></div>
+
+                    <small class="form-text text-muted">
+                        Haz clic en el icono de basura para marcar archivo para eliminación (guarda para confirmar).
+                    </small>
+                </div>
+            @endif
+
         </div>
 
         <div class="row">

@@ -29,7 +29,7 @@
                     <span class="card-separator"></span>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('transactions.store') }}">
+                        <form method="POST" action="{{ route('transactions.store') }}" enctype="multipart/form-data">
                             @csrf
 
                             @include('transaction.form')
