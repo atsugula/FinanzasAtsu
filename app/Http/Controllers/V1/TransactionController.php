@@ -4,179 +4,214 @@ namespace App\Http\Controllers\V1;
 
 use App\Models\V1\Goal;
 use App\Models\V1\Status;
-use App\Models\V1\Partner;
+use Illuminate\Support\Str;
+use App\Models\V1\Category;
 use Illuminate\Http\Request;
 use App\Models\V1\Transaction;
-use App\Imports\TransactionImport;
-use App\Exports\TransactionExport;
-use App\Models\V1\ExpensesCategory;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
-/**
- * Class TransactionController
- * @package App\Http\Controllers
- */
 class TransactionController extends Controller
 {
+
+    private $types = [
+        'income' => 'Ingreso',
+        'expense' => 'Gasto',
+        'saving' => 'Ahorro',
+        'debt' => 'Deuda'
+    ];
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Listar todas las transacciones
      */
     public function index()
     {
-
-        /* Capturamos el ID del usuario logeado */
-        $id_auth = Auth::id();
-
-        $transactions = Transaction::where('created_by', $id_auth)->with('expensesCategory', 'goalRelation', 'status', 'user', 'payments')->orderBy('id', 'DESC')->paginate();
-
-        return view('transaction.index', compact('transactions'))
-            ->with('i', (request()->input('page', 1) - 1) * $transactions->perPage());
+        $transactions = Transaction::with(['category', 'goal', 'creator'])->latest()->paginate(10);
+        return view('transaction.index', compact('transactions'));
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Mostrar formulario de creación
      */
     public function create()
     {
+        $categories = Category::where('created_by', auth()->id())->get()->all();
 
-        /* Capturamos el ID del usuario logeado */
-        $id_auth = Auth::id();
+        $types = $this->types;
 
-        $partners = Partner::where('created_by', $id_auth)->pluck('company_name AS label', 'id as value');
-        $categories = ExpensesCategory::where('created_by', $id_auth)->pluck('name AS label', 'id as value');
-        $statuses = Status::pluck('name AS label', 'id as value');
-        $goals = Goal::where('created_by', $id_auth)->pluck('name AS label', 'id as value');
+        $statuses = Status::all();
 
-        $types = [
-            'I' => __('Income'),
-            'E' => __('Expense'),
-            'A' => __('Saving')
-        ];
+        $goals = Goal::where('created_by', auth()->id())->get()->all();
 
-        $transaction = new Transaction();
-        return view('transaction.create', compact('transaction', 'goals', 'statuses', 'partners', 'categories', 'types'));
+        return view('transaction.create', compact('categories', 'types', 'statuses', 'goals'));
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * Guardar una nueva transacción
      */
     public function store(Request $request)
     {
-        request()->validate(Transaction::$rules);
 
-        /* Capturamos el ID del usuario logeado */
-        $id_auth = Auth::id();
+        $validated = $request->validate([
+            'type' => 'required|in:expense,income,saving,debt',
+            'amount' => 'required|numeric|min:0.01',
+            'category_id' => 'nullable|exists:categories,id',
+            'goal_id' => 'nullable|exists:goals,id',
+            'status_id' => 'required|exists:statuses,id',
+            'date' => 'required|date',
+            'note' => 'nullable|string|max:255',
+            'is_recurring' => 'nullable',
+            'recurring_interval_days' => 'nullable|integer|min:1',
+            'files' => 'nullable',
+            'files.*' => 'file|max:20480|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip,rar',
+        ]);
 
-        $request['created_by'] = $id_auth;
+        $validated['is_recurring'] = $request->has('is_recurring');
 
-        $transaction = Transaction::create($request->all());
+        $validated['created_by'] = auth()->id();
+
+        // subir archivos (si hay)
+        $filePaths = [];
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                // guardamos en disco public/transactions
+                $path = $file->store('transactions', 'public');
+                $filePaths[] = $path;
+            }
+        }
+        $validated['files'] = $filePaths;
+
+        $transaction = Transaction::create($validated);
+
+        // Si es tipo ahorro, sumar al current_amount
+        if ($transaction->type === 'saving' && $transaction->goal_id) {
+            $goal = Goal::find($transaction->goal_id);
+            if ($goal) {
+                $goal->increment('current_amount', $transaction->amount);
+            }
+        }
 
         return redirect()->route('transactions.index')
-            ->with('success', 'Transaction created successfully.');
+            ->with('success', 'Transacción creada correctamente');
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * Mostrar una transacción
      */
-    public function show($id)
+    public function show(Transaction $transaction)
     {
-        $transaction = Transaction::find($id);
+        $this->authorizeByCreator($transaction);
+        $transaction->load(['category', 'goal', 'payments']);
 
-        return view('transaction.show', compact('transaction'));
+        $types = $this->types;
+
+        $statuses = Status::all();
+
+        $goals = Goal::where('created_by', auth()->id())->get()->all();
+
+        return view('transaction.show', compact('transaction', 'types', 'statuses'));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * Mostrar formulario de edición
      */
-    public function edit($id)
+    public function edit(Transaction $transaction)
     {
-        $transaction = Transaction::find($id);
+        $this->authorizeByCreator($transaction);
+        $categories = Category::all();
 
-        /* Capturamos el ID del usuario logeado */
-        $id_auth = Auth::id();
+        $types = $this->types;
 
-        $partners = Partner::where('created_by', $id_auth)->pluck('company_name AS label', 'id as value');
-        $categories = ExpensesCategory::where('created_by', $id_auth)->pluck('name AS label', 'id as value');
-        $statuses = Status::pluck('name AS label', 'id as value');
-        $goals = Goal::where('created_by', $id_auth)->pluck('name AS label', 'id as value');
+        $statuses = Status::all();
 
-        $types = [
-            'I' => __('Income'),
-            'E' => __('Expense'),
-            'A' => __('Saving')
-        ];
+        $goals = Goal::where('created_by', auth()->id())->get()->all();
 
-        return view('transaction.edit', compact('transaction', 'goals', 'statuses', 'partners', 'categories', 'types'));
+        return view('transaction.edit', compact('transaction', 'categories', 'types', 'statuses', 'goals'));
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  Transaction $transaction
-     * @return \Illuminate\Http\Response
+     * Actualizar una transacción
      */
     public function update(Request $request, Transaction $transaction)
     {
-        request()->validate(Transaction::$rules);
 
-        $transaction->update($request->all());
+        $validated = $request->validate([
+            'type' => 'required|in:expense,income,saving,debt',
+            'amount' => 'required|numeric|min:0.01',
+            'category_id' => 'nullable|exists:categories,id',
+            'goal_id' => 'nullable|exists:goals,id',
+            'status_id' => 'nullable|exists:statuses,id',
+            'date' => 'required|date',
+            'note' => 'nullable|string|max:255',
+            'is_recurring' => 'nullable',
+            'recurring_interval_days' => 'nullable|integer|min:1',
+            'files' => 'nullable',
+            'files.*' => 'nullable|file|max:20480|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip,rar',
+            'delete_files' => 'nullable|array',
+            'delete_files.*' => 'nullable|string',
+        ]);
+
+        $validated['is_recurring'] = $request->has('is_recurring');
+
+        // Archivos existentes (array)
+        $existing = $transaction->files ?? [];
+
+        // Eliminar archivos marcados en el formulario (delete_files[])
+        $toDelete = $request->input('delete_files', []);
+        if (!empty($toDelete)) {
+            foreach ($toDelete as $del) {
+                // seguridad: sólo borrar dentro de la carpeta transactions/
+                if (in_array($del, $existing) && Str::startsWith($del, 'transactions/')) {
+                    Storage::disk('public')->delete($del);
+                    // quitar del array existente
+                    $existing = array_values(array_diff($existing, [$del]));
+                }
+            }
+        }
+
+        // Subir nuevos archivos y anexarlos
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $path = $file->store('transactions', 'public');
+                $existing[] = $path;
+            }
+        }
+
+        $validated['files'] = $existing;
+
+        // Ajuste de ahorro
+        if ($transaction->type === 'saving' && $transaction->goal_id) {
+            // revertir el monto anterior
+            $goal = Goal::find($transaction->goal_id);
+            if ($goal) {
+                $goal->decrement('current_amount', $transaction->amount);
+            }
+        }
+
+        $transaction->update($validated);
 
         return redirect()->route('transactions.index')
-            ->with('success', 'Transaction updated successfully');
+            ->with('success', 'Transacción actualizada correctamente');
     }
 
     /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * Eliminar una transacción
      */
-    public function destroy($id)
+    public function destroy(Transaction $transaction)
     {
-        $transaction = Transaction::find($id)->delete();
+        $this->authorizeByCreator($transaction);
 
-        return redirect()->route('transactions.index')
-            ->with('success', 'Transaction deleted successfully');
-    }
-
-    // Metodos de importación
-    public function viewImport() {
-        return view('transaction.import');
-    }
-
-    public function import(Request $request)
-    {
-        if ($request->isMethod('post')) {
-            $request->validate([
-                'file' => 'required|mimes:xlsx,csv'
-            ]);
-
-            $file = Excel::import(new TransactionImport, $request->file('file'));
-
-            return view('transaction.import')->with('success', 'Importación completada con éxito.');
+        // eliminar archivos del disco antes de borrar registro
+        $files = $transaction->files ?? [];
+        foreach ($files as $f) {
+            if (Str::startsWith($f, 'transactions/')) {
+                Storage::disk('public')->delete($f);
+            }
         }
 
-        return view('transaction.import')->with('error', 'Transaction import error');
-    }
+        $transaction->delete();
 
-    public function export() {
-        $date = now();
-        return (new TransactionExport)->download("transactions_$date.xlsx");
+        return redirect()->route('transactions.index')
+            ->with('success', 'Transacción eliminada correctamente');
     }
-
 }

@@ -2,6 +2,7 @@
     <div class="box-body">
 
         <div class="row">
+            {{-- Nombre --}}
             <div class="col-12 col-md-6">
                 <div class="form-group">
                     {{ Form::label('name', __('Name')) }}
@@ -9,33 +10,36 @@
                     {!! $errors->first('name', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>
+
+            {{-- Monto objetivo --}}
             <div class="col-12 col-md-6">
                 <div class="form-group">
-                    {{ Form::label('amount', __('Amount')) }}
-                    {{ Form::number('amount', $goal->amount, ['class' => 'form-control' . ($errors->has('amount') ? ' is-invalid' : ''), 'placeholder' => __('Amount')]) }}
-                    {!! $errors->first('amount', '<div class="invalid-feedback">:message</div>') !!}
+                    {{ Form::label('target_amount', __('Target Amount')) }}
+                    {{ Form::number('target_amount', $goal->target_amount, ['class' => 'form-control' . ($errors->has('target_amount') ? ' is-invalid' : ''), 'placeholder' => __('Target Amount'), 'step' => '0.01']) }}
+                    {!! $errors->first('target_amount', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>
 
-            <div class="col-12 col-md-12">
+            {{-- Monto actual --}}
+            <div class="col-12 col-md-6">
                 <div class="form-group">
-                    {{ Form::label('date', __('Date')) }}
-                    {{ Form::date('date', $goal->date, ['class' => 'form-control' . ($errors->has('date') ? ' is-invalid' : ''), 'placeholder' => __('Date')]) }}
-                    {!! $errors->first('date', '<div class="invalid-feedback">:message</div>') !!}
+                    {{ Form::label('current_amount', __('Current Amount')) }}
+                    {{ Form::number('current_amount', $goal->current_amount, ['class' => 'form-control' . ($errors->has('current_amount') ? ' is-invalid' : ''), 'placeholder' => __('Current Amount'), 'step' => '0.01']) }}
+                    {!! $errors->first('current_amount', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>
 
-            <div class="col-12 col-md-12">
+            {{-- Fecha objetivo --}}
+            <div class="col-12 col-md-6">
                 <div class="form-group">
-                    {{ Form::label('description', __('Description')) }}
-                    {{ Form::textArea('description', $goal->description, ['class' => 'form-control' . ($errors->has('description') ? ' is-invalid' : ''), 'placeholder' => __('Description')]) }}
-                    {!! $errors->first('description', '<div class="invalid-feedback">:message</div>') !!}
+                    {{ Form::label('target_date', __('Target Date')) }}
+                    {{ Form::date('target_date', $goal->target_date, ['class' => 'form-control' . ($errors->has('target_date') ? ' is-invalid' : '')]) }}
+                    {!! $errors->first('target_date', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>
         </div>
     </div>
-    
+
     {{-- Botón para enviar --}}
     @include('layouts.btn-submit')
-
 </div>

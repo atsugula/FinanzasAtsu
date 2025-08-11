@@ -21,6 +21,11 @@
                                     <h4 class="font-weight-bolder">{{ __('Sign In') }}</h4>
                                     <p class="mb-0">{{ __('Enter your email and password to sign in') }}</p>
                                 </div>
+
+                                @if (session('error'))
+                                    <div class="alert alert-danger">{{ session('error') }}</div>
+                                @endif
+
                                 <div class="card-body">
                                     <form role="form" method="POST" action="{{ route('login.perform') }}">
                                         @csrf
