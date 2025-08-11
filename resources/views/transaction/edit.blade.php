@@ -42,3 +42,5 @@
         </div>
     </section>
 @endsection
+
+@include('transaction.format')

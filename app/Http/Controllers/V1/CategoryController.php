@@ -67,7 +67,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $this->authorizeCategory($category);
+        $this->authorizeByCreator($category);
         $types = $this->types;
         return view('category.show', compact('category', 'types'));
     }
@@ -77,7 +77,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        $this->authorizeCategory($category);
+        $this->authorizeByCreator($category);
 
         $types = $this->types;
 
@@ -89,7 +89,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $this->authorizeCategory($category);
+        $this->authorizeByCreator($category);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -111,19 +111,10 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $this->authorizeCategory($category);
+        $this->authorizeByCreator($category);
         $category->delete();
 
         return redirect()->route('categories.index')->with('success', 'Categoría eliminada correctamente.');
     }
 
-    /**
-     * Evitar que un usuario acceda a categorías ajenas.
-     */
-    protected function authorizeCategory(Category $category)
-    {
-        if ($category->created_by !== Auth::id()) {
-            abort(403, 'No tienes permiso para acceder a esta categoría.');
-        }
-    }
 }
