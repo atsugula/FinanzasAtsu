@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Goal extends Model
 {
     protected $fillable = [
+        'type',
         'name',
         'created_by',
         'target_amount',
@@ -15,6 +16,7 @@ class Goal extends Model
     ];
 
     public static $rules = [
+        'type'           => 'required|in:saving,debt_in,debt_on',
         'name'           => 'required|string|max:255',
         'target_amount'  => 'required|numeric|min:0',
         'current_amount' => 'nullable|numeric|min:0',

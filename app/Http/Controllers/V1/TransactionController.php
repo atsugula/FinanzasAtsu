@@ -22,8 +22,8 @@ class TransactionController extends Controller
             'income' => __('Ingreso'),
             'expense' => __('Gasto'),
             'saving' => __('Ahorro'),
-            'debt_in' => __('Deuda a mi favor'), // Ej: alguien me debe
-            'debt_on' => __('Deuda en mi contra'), // Ej: yo debo
+            'debt_in' => __('Deuda (Préstamos realizados)'), // Ej: alguien me debe
+            'debt_on' => __('Deuda (Préstamos recibidos)'), // Ej: yo debo
         ];
     }
 
