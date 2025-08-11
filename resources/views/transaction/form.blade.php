@@ -1,136 +1,118 @@
+@php
+    $rawAmount = old('amount', $transaction->amount ?? '');
+    // Mostrar como $ 1.234.567 (sin decimales, típico COP). JS refrescará si hace falta.
+    $displayAmount = $rawAmount !== '' ? '$ ' . number_format((float) $rawAmount, 0, ',', '.') : '';
+    $is_recurrent = old('is_recurring', $transaction->is_recurring ?? false);
+@endphp
+
 <div class="box box-info padding-1">
     <div class="box-body">
         <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    {{ Form::label('type', __('Type')) }}
-                    {{ Form::select('type', $types, old('type', $transaction->type), [
-                        'class' => 'form-control select2' . ($errors->has('type') ? ' is-invalid' : ''),
-                        'id' => 'typeTransaction',
-                        'onchange' => 'viewForms()',
-                        'placeholder' => __('Select the type')
-                    ]) }}
-                    {!! $errors->first('type', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
+            {{-- Tipo --}}
+            <div class="col-md-6 mb-3">
+                <label for="type" class="form-label">Tipo</label>
+                <select name="type" id="type" class="form-select select2" required>
+                    <option value="">-- Seleccione --</option>
+                    @foreach ($types as $key => $value)
+                        <option value="{{ $key }}"
+                            {{ old('type', $transaction->type ?? '') == $key ? 'selected' : '' }}>
+                            {{ $value }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    {{ Form::label('date', __('Date')) }}
-                    {{ Form::date('date', old('date', $transaction->date), [
-                        'class' => 'form-control' . ($errors->has('date') ? ' is-invalid' : ''),
-                        'placeholder' => __('Date')
-                    ]) }}
-                    {!! $errors->first('date', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    {{ Form::label('amount', __('Amount')) }}
-                    {{ Form::number('amount', old('amount', $transaction->amount), [
-                        'class' => 'form-control' . ($errors->has('amount') ? ' is-invalid' : ''),
-                        'placeholder' => __('Amount')
-                    ]) }}
-                    {!! $errors->first('amount', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
-        </div>
 
-        <div class="row dynamic-form" id="formexpense">
-            <div class="col-md-6">
-                <div class="form-group">
-                    {{ Form::label('category', __('Category')) }}
-                    {{ Form::select('category', $categories, old('category', $transaction->category), [
-                        'class' => 'form-control select2' . ($errors->has('category') ? ' is-invalid' : ''),
-                        'placeholder' => __('Select the category')
-                    ]) }}
-                    {!! $errors->first('category', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
-        </div>
+            {{-- Monto (visible formateado + hidden real) --}}
+            <div class="col-md-6 mb-3">
+                <label for="amount_display" class="form-label">Monto</label>
 
-        <div class="row dynamic-form" id="formincome">
-            <div class="col-md-6">
-                <div class="form-group">
-                    {{ Form::label('partner_id', __('Partner')) }}
-                    {{ Form::select('partner_id', $partners, old('partner_id', $transaction->partner_id), [
-                        'class' => 'form-control select2' . ($errors->has('partner_id') ? ' is-invalid' : ''),
-                        'placeholder' => __('Select the partner')
-                    ]) }}
-                    {!! $errors->first('partner_id', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    {{ Form::label('source', __('Source')) }}
-                    {{ Form::text('source', old('source', $transaction->source), [
-                        'class' => 'form-control' . ($errors->has('source') ? ' is-invalid' : ''),
-                        'placeholder' => __('Source')
-                    ]) }}
-                    {!! $errors->first('source', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
-        </div>
+                {{-- campo visible formateado --}}
+                <input type="text" id="amount_display" class="form-control" autocomplete="off"
+                    value="{{ $displayAmount }}" placeholder="$ 0" required>
 
-        <div class="row dynamic-form" id="formsaving">
-            <div class="col-md-6">
-                <div class="form-group">
-                    {{ Form::label('goal', __('Goal Name')) }}
-                    {{ Form::text('goal', old('goal', $transaction->goal), [
-                        'class' => 'form-control' . ($errors->has('goal') ? ' is-invalid' : ''),
-                        'placeholder' => __('Goal')
-                    ]) }}
-                    {!! $errors->first('goal', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    {{ Form::label('goal_id', __('Goal')) }}
-                    {{ Form::select('goal_id', $goals, old('goal_id', $transaction->goal_id), [
-                        'class' => 'form-control select2' . ($errors->has('goal_id') ? ' is-invalid' : ''),
-                        'placeholder' => __('Select the goal')
-                    ]) }}
-                    {!! $errors->first('goal_id', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
+                {{-- campo real enviado al servidor --}}
+                <input type="hidden" name="amount" id="amount" value="{{ $rawAmount }}" min="0">
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    {{ Form::label('status_id', __('Status')) }}
-                    {{ Form::select('status_id', $statuses, old('status_id', $transaction->status_id), [
-                        'class' => 'form-control select2' . ($errors->has('status_id') ? ' is-invalid' : ''),
-                        'placeholder' => __('Select the status')
-                    ]) }}
-                    {!! $errors->first('status_id', '<div class="invalid-feedback">:message</div>') !!}
-                </div>
+            {{-- Categoría --}}
+            <div class="col-md-6 mb-3">
+                <label for="category_id" class="form-label">Categoría</label>
+                <select name="category_id" id="category_id" class="form-select select2">
+                    <option value="">-- Ninguna --</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}"
+                            {{ old('category_id', $transaction->category_id ?? '') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Meta --}}
+            <div class="col-md-6 mb-3">
+                <label for="goal_id" class="form-label">Meta (opcional)</label>
+                <select name="goal_id" id="goal_id" class="form-select select2">
+                    <option value="">-- Ninguna --</option>
+                    @foreach ($goals ?? [] as $goal)
+                        <option value="{{ $goal->id }}"
+                            {{ old('goal_id', $transaction->goal_id ?? '') == $goal->id ? 'selected' : '' }}>
+                            {{ $goal->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Estado --}}
+            <div class="col-md-6 mb-3">
+                <label for="status_id" class="form-label">Estado</label>
+                <select name="status_id" id="status_id" class="form-select select2" required>
+                    <option value="">-- Seleccione --</option>
+                    @foreach ($statuses as $status)
+                        <option value="{{ $status->id }}"
+                            {{ old('status_id', $transaction->status_id ?? '') == $status->id ? 'selected' : '' }}>
+                            {{ $status->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Fecha --}}
+            <div class="col-md-6 mb-3">
+                <label for="date" class="form-label">Fecha</label>
+                <input type="date" name="date" id="date" class="form-control"
+                    value="{{ old('date', isset($transaction->date) ? \Carbon\Carbon::parse($transaction->date)->format('Y-m-d') : '') }}"
+                    required>
+            </div>
+
+            {{-- Nota --}}
+            <div class="col-md-6 mb-3">
+                <label for="note" class="form-label">Nota</label>
+                <textarea name="note" id="note" class="form-control" rows="1">{{ old('note', $transaction->note ?? '') }}</textarea>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    {{ Form::label('description', __('Description')) }}
-                    {{ Form::textarea('description', old('description', $transaction->description), [
-                        'class' => 'form-control' . ($errors->has('description') ? ' is-invalid' : ''),
-                        'placeholder' => __('Description')
-                    ]) }}
-                    {!! $errors->first('description', '<div class="invalid-feedback">:message</div>') !!}
+            {{-- Es recurrente --}}
+            <div class="col-md-6 mb-3">
+                <div class="form-check mt-4">
+                    <input type="checkbox" class="form-check-input" id="is_recurring" name="is_recurring"
+                        {{ $is_recurrent ? 'checked' : '' }}>
+                    <label class="form-check-label" for="is_recurring">¿Es recurrente?</label>
                 </div>
+            </div>
+
+            {{-- Intervalo de recurrencia --}}
+            <div class="col-md-6 mb-3 {{ $is_recurrent ? '' : 'd-none' }}" id="recurrence_interval_container">
+                <label for="recurring_interval_days" class="form-label">Intervalo de recurrencia (días)</label>
+                <input type="number" min="1" name="recurring_interval_days" id="recurring_interval_days"
+                    class="form-control"
+                    value="{{ old('recurring_interval_days', $transaction->recurring_interval_days ?? '') }}">
             </div>
         </div>
     </div>
 
+    {{-- Botón para enviar --}}
     @include('layouts.btn-submit')
 </div>
-
-<script>
-    function viewForms() {
-        document.querySelectorAll('.dynamic-form').forEach(form => form.style.display = 'none');
-        let type = document.getElementById('typeTransaction').value;
-        if (type === "A") document.getElementById('formsaving').style.display = 'flex';
-        if (type === "I") document.getElementById('formincome').style.display = 'flex';
-        if (type === "E") document.getElementById('formexpense').style.display = 'flex';
-    }
-    document.addEventListener('DOMContentLoaded', viewForms);
-</script>

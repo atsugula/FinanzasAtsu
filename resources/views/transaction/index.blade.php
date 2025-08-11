@@ -61,7 +61,7 @@
                                         <tr>
                                             <td>{{ $transaction->id }}</td>
 
-                                            <td>{{ $transaction->user?->firstname }}</td>
+                                            <td>{{ $transaction->creator?->firstname }}</td>
                                             <td>{{ $type }}</td>
                                             <td>{{ $transaction->amount }}</td>
                                             <td>{{ $transaction->date }}</td>
