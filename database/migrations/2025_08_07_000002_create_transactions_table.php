@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['expense', 'income', 'saving', 'debt'])->default('expense');
+            $table->enum('type', ['expense', 'income', 'saving', 'debt_in', 'debt_on'])->default('expense');
             $table->decimal('amount', 12, 2);
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();

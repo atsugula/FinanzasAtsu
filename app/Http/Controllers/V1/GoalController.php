@@ -32,6 +32,8 @@ class GoalController extends Controller
         $request->validate(Goal::$rules);
 
         $request['created_by'] = Auth::id();
+        
+        $request['current_amount'] = $request['target_amount'];
 
         Goal::create($request->all());
 

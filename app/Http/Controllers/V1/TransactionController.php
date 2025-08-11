@@ -15,10 +15,11 @@ class TransactionController extends Controller
 {
 
     private $types = [
-        'income' => 'Ingreso',
-        'expense' => 'Gasto',
-        'saving' => 'Ahorro',
-        'debt' => 'Deuda'
+        'income'   => __('Ingreso'),
+        'expense'  => __('Gasto'),
+        'saving'   => __('Ahorro'),
+        'debt_in'  => __('Deuda a mi favor'), // Ej: alguien me debe
+        'debt_on'  => __('Deuda en mi contra'), // Ej: yo debo
     ];
 
     /**
@@ -53,7 +54,7 @@ class TransactionController extends Controller
     {
 
         $validated = $request->validate([
-            'type' => 'required|in:expense,income,saving,debt',
+            'type' => 'required|in:expense,income,saving,debt_in,debt_on',
             'amount' => 'required|numeric|min:0.01',
             'category_id' => 'nullable|exists:categories,id',
             'goal_id' => 'nullable|exists:goals,id',
@@ -83,11 +84,20 @@ class TransactionController extends Controller
 
         $transaction = Transaction::create($validated);
 
-        // Si es tipo ahorro, sumar al current_amount
-        if ($transaction->type === 'saving' && $transaction->goal_id) {
+        if (in_array($transaction->type, ['saving', 'debt_in', 'debt_on']) && $transaction->goal_id) {
+            // Buscar la meta
             $goal = Goal::find($transaction->goal_id);
+
             if ($goal) {
-                $goal->increment('current_amount', $transaction->amount);
+                // Sumar todas las transacciones tipo "saving" de esa meta
+                $total = Transaction::where('goal_id', $transaction->goal_id)
+                    ->whereIn('type', ['saving', 'debt_in', 'debt_on'])
+                    ->sum('amount');
+
+                // Actualizar el campo current_amount
+                $goal->update([
+                    'current_amount' => $total
+                ]);
             }
         }
 
@@ -136,7 +146,7 @@ class TransactionController extends Controller
     {
 
         $validated = $request->validate([
-            'type' => 'required|in:expense,income,saving,debt',
+            'type' => 'required|in:expense,income,saving,debt_in,debt_on',
             'amount' => 'required|numeric|min:0.01',
             'category_id' => 'nullable|exists:categories,id',
             'goal_id' => 'nullable|exists:goals,id',
@@ -180,11 +190,20 @@ class TransactionController extends Controller
         $validated['files'] = $existing;
 
         // Ajuste de ahorro
-        if ($transaction->type === 'saving' && $transaction->goal_id) {
-            // revertir el monto anterior
+        if (in_array($transaction->type, ['saving', 'debt_in', 'debt_on']) && $transaction->goal_id) {
+            // Buscar la meta
             $goal = Goal::find($transaction->goal_id);
+
             if ($goal) {
-                $goal->decrement('current_amount', $transaction->amount);
+                // Sumar todas las transacciones tipo "saving" de esa meta
+                $total = Transaction::where('goal_id', $transaction->goal_id)
+                    ->whereIn('type', ['saving', 'debt_in', 'debt_on'])
+                    ->sum('amount');
+
+                // Actualizar el campo current_amount
+                $goal->update([
+                    'current_amount' => $total
+                ]);
             }
         }
 
