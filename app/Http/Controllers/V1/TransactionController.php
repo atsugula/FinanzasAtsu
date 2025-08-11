@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Models\V1\Goal;
 use App\Models\V1\Status;
 use App\Models\V1\Category;
 use Illuminate\Http\Request;
@@ -38,7 +39,9 @@ class TransactionController extends Controller
 
         $statuses = Status::all();
 
-        return view('transaction.create', compact('categories', 'types', 'statuses'));
+        $goals = Goal::where('created_by', auth()->id())->get()->all();
+
+        return view('transaction.create', compact('categories', 'types', 'statuses', 'goals'));
     }
 
     /**
@@ -81,6 +84,8 @@ class TransactionController extends Controller
 
         $statuses = Status::all();
 
+        $goals = Goal::where('created_by', auth()->id())->get()->all();
+        
         return view('transaction.show', compact('transaction', 'types', 'statuses'));
     }
 

@@ -2,6 +2,22 @@
     <script>
         (function($) {
             $(function() {
+                // --- Mostrar/Ocultar campo Goal según tipo ---
+                var $typeSelect = $('#type');
+                var $goalContainer = $('#goal_container');
+
+                function toggleGoalField() {
+                    if ($typeSelect.val() === 'saving') {
+                        $goalContainer.removeClass('d-none');
+                    } else {
+                        $goalContainer.addClass('d-none');
+                        // Limpiar selección si se oculta
+                        $('#goal_id').val('').trigger('change');
+                    }
+                }
+
+                $typeSelect.on('change', toggleGoalField);
+                toggleGoalField(); // Ejecutar al inicio
                 // --- Recurrence toggle (robusto) ---
                 var $isRecurring = $('#is_recurring');
                 var $recurrenceContainer = $('#recurrence_interval_container');

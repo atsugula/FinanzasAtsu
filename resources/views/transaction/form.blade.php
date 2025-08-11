@@ -50,8 +50,9 @@
                 </select>
             </div>
 
-            {{-- Meta --}}
-            <div class="col-md-6 mb-3">
+            {{-- Meta (opcional) --}}
+            <div class="col-md-6 mb-3 {{ old('type', $transaction->type ?? '') === 'saving' ? '' : 'd-none' }}"
+                id="goal_container">
                 <label for="goal_id" class="form-label">Meta (opcional)</label>
                 <select name="goal_id" id="goal_id" class="form-select select2">
                     <option value="">-- Ninguna --</option>
