@@ -40,9 +40,11 @@ class HomeController extends Controller
 
         // Total de deudas que debo pagar
         $count_expense_must = Goal::where('created_by', $userId)
-            ->whereHas('transactions', function ($query) {
-                $query->whereIn('type', ['debt_on']);
-            })->sum('current_amount');
+            ->with([
+                'transactions' => function ($query) {
+                    $query->whereIn('type', ['debt_on']);
+                }
+            ])->sum('current_amount');
 
         // Categorías más usadas (Top 10)
         $categories = Category::where('created_by', $userId)
@@ -53,15 +55,21 @@ class HomeController extends Controller
 
         // Metas con progreso
         $goals = Goal::where('created_by', $userId)
-            ->whereHas('transactions', function ($query) {
-                $query->where('type', 'saving');
-            })->get();
+            ->with([
+                'transactions' => function ($query) {
+                    $query->where('type', 'saving');
+                }
+            ])
+            ->get();
 
         // Deudas individuales (para los gráficos de "Debt status")
         $incomes_owing = Goal::where('created_by', $userId)
-            ->whereHas('transactions', function ($query) {
-                $query->whereIn('type', ['debt_on', 'debt_in']);
-            })->get();
+            ->with([
+                'transactions' => function ($query) {
+                    $query->whereIn('type', ['debt_on', 'debt_in']);
+                }
+            ])
+            ->get();
 
         return view('pages.dashboard', compact(
             'count_incomes',
