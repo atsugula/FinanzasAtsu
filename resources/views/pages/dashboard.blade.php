@@ -122,7 +122,7 @@
                                 <div class="col-lg-4">
                                     <div class="card">
                                         <div class="card-header pb-0 p-3">
-                                            <h6 class="mb-0 uppercase">{{ $income_owing?->expensesCategory?->name }}</h6>
+                                            <h6 class="mb-0 uppercase">{{ $income_owing?->name }}</h6>
                                         </div>
                                         <div class="card-body p-3">
                                             <canvas id="income_owing_chart_{{ $key }}"></canvas>
@@ -336,13 +336,13 @@
                 }
             });
         }
-    
+
         // Crear gráficos de metas
         goalsData.forEach((goal, index) => {
             createChart(
                 `goal_chart_${index}`,
                 ['Meta', 'Logrado'],
-                [goal.amount, goal.total_savings],
+                [goal.target_amount, goal.current_amount],
                 goal.name,
                 ['#36A2EB', '#FFCE56']
             );
@@ -353,7 +353,7 @@
             createChart(
                 `income_owing_chart_${index}`,
                 ['Deuda', 'Pagado'],
-                [income_owing.amount, income_owing.total_debt],
+                [income_owing.target_amount, income_owing.current_amount],
                 income_owing.name,
                 ['#f5365c', '#2dce89']
             );

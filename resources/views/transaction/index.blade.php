@@ -55,7 +55,8 @@
                                     @foreach ($transactions as $transaction)
 
                                         @php
-                                            $type = $transaction->type == 'I' ? __('Income') : ($transaction->type == 'E' ? __('Expense') : __('Saving'));
+                                            // 'expense','income','saving','debt'
+                                            $type = $transaction->type == 'income' ? __('Income') : ($transaction->type == 'expense' ? __('Expense') : ($transaction->type == 'saving' ? __('Saving') : __('Debt')));
                                         @endphp
 
                                         <tr>

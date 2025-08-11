@@ -88,7 +88,7 @@
                 var $goalContainer = $('#goal_container');
 
                 function toggleGoalField() {
-                    if ($typeSelect.val() === 'saving') {
+                    if ($typeSelect.val() === 'saving' || $typeSelect.val() === 'debt') {
                         $goalContainer.removeClass('d-none');
                     } else {
                         $goalContainer.addClass('d-none');

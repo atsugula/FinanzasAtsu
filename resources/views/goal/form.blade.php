@@ -24,7 +24,7 @@
             <div class="col-12 col-md-6">
                 <div class="form-group">
                     {{ Form::label('current_amount', __('Current Amount')) }}
-                    {{ Form::number('current_amount', $goal->current_amount, ['class' => 'form-control' . ($errors->has('current_amount') ? ' is-invalid' : ''), 'placeholder' => __('Current Amount'), 'step' => '0.01']) }}
+                    {{ Form::number('current_amount', $goal->current_amount, ['class' => 'form-control' . ($errors->has('current_amount') ? ' is-invalid' : ''), 'placeholder' => __('Current Amount'), 'step' => '0.01', 'disabled' => 'disabled']) }}
                     {!! $errors->first('current_amount', '<div class="invalid-feedback">:message</div>') !!}
                 </div>
             </div>

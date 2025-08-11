@@ -1102,5 +1102,8 @@
     "Add Transaction": "Agregar transacción",
     "Target Amount": "Monto objetivo",
     "Current Amount": "Monto actual",
-    "Target Date": "Fecha objetivo"
+    "Target Date": "Fecha objetivo",
+    "Debt": "Deuda",
+    "Owe me": "Me deben",
+    "I must": "Debo"
 }
