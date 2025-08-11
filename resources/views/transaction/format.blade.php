@@ -1,5 +1,86 @@
 @section('js')
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const fileInput = document.getElementById('files');
+            const previewContainer = document.getElementById('selected-file-previews');
+            const deleteFilesContainer = document.getElementById('delete-files-container');
+            let selectedFiles = [];
+
+            // Previsualización de nuevos archivos
+            fileInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                selectedFiles = selectedFiles.concat(files);
+                renderSelectedFiles();
+            });
+
+            // Renderizar archivos nuevos seleccionados
+            function renderSelectedFiles() {
+                previewContainer.innerHTML = '';
+                selectedFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const col = document.createElement('div');
+                        col.className = 'col-auto text-center border rounded p-2';
+                        col.innerHTML = `
+                    ${file.type.startsWith('image') ?
+                        `<img src="${e.target.result}" class="img-thumbnail" style="width:80px; height:80px; object-fit:cover;">`
+                        : `<i class="fa fa-file fa-3x"></i>`}
+                    <div class="small text-truncate" style="max-width:80px;">${file.name}</div>
+                    <div class="mt-1">
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-selected-file" data-index="${index}">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                        previewContainer.appendChild(col);
+                    };
+                    reader.readAsDataURL(file);
+                });
+
+                // Actualizar FileList real del input para enviar al backend
+                const dataTransfer = new DataTransfer();
+                selectedFiles.forEach(file => dataTransfer.items.add(file));
+                fileInput.files = dataTransfer.files;
+            }
+
+            // Eliminar un archivo nuevo antes de enviar
+            previewContainer.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-selected-file')) {
+                    const index = e.target.closest('.remove-selected-file').dataset.index;
+                    selectedFiles.splice(index, 1);
+                    renderSelectedFiles();
+                }
+            });
+
+            // Marcar/desmarcar archivos existentes para eliminar
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.toggle-delete-existing')) {
+                    const btn = e.target.closest('.toggle-delete-existing');
+                    const fileName = btn.dataset.file;
+                    const item = btn.closest('.existing-file-item');
+
+                    const existingInput = deleteFilesContainer.querySelector(`input[value="${fileName}"]`);
+
+                    if (existingInput) {
+                        // Quitar de la lista de eliminación
+                        existingInput.remove();
+                        item.classList.remove('border-danger', 'opacity-50');
+                    } else {
+                        // Agregar a la lista de eliminación
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'delete_files[]';
+                        input.value = fileName;
+                        deleteFilesContainer.appendChild(input);
+
+                        item.classList.add('border-danger', 'opacity-50');
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
         (function($) {
             $(function() {
                 // --- Mostrar/Ocultar campo Goal según tipo ---
