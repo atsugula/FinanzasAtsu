@@ -40,7 +40,8 @@ class HomeController extends Controller
                     $query->whereIn('type', ['debt_in']);
                 }
             ])->where('goals.type', 'debt_in')
-            ->sum('target_amount');
+            ->select(DB::raw('SUM(target_amount - current_amount) as total'))
+            ->value('total');
 
         // Total de deudas que debo pagar
         $count_expense_must = Goal::where('created_by', $userId)
@@ -49,7 +50,8 @@ class HomeController extends Controller
                     $query->whereIn('type', ['debt_on']);
                 }
             ])->where('goals.type', 'debt_on')
-            ->sum('target_amount');
+            ->select(DB::raw('SUM(target_amount - current_amount) as total'))
+            ->value('total');
 
         // Categorías más usadas (Top 10)
         $categories = Category::where('created_by', $userId)
