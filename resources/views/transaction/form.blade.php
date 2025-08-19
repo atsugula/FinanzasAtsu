@@ -51,7 +51,7 @@
             </div>
 
             {{-- Meta (opcional) --}}
-            <div class="col-md-6 mb-3 {{ in_array(old('type', $transaction->type ?? ''), ['saving', 'debt_in', 'debt_on']) ? '' : 'd-none' }}"
+            <div class="col-md-6 mb-3{{ in_array(old('type', $transaction->type ?? ''), ['saving', 'debt_in', 'debt_on']) ? '' : ' d-none' }}"
                 id="goal_container">
                 <label for="goal_id" class="form-label">Meta (opcional)</label>
                 <select name="goal_id" id="goal_id" class="form-select select2">
