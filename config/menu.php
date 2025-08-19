@@ -42,7 +42,7 @@ return [
                 'route' => 'transactions.create',
                 'icon'  => 'fa fa-plus-circle',
             ],
-            [
+            /* [
                 'text'  => 'Import',
                 'route' => 'transactions.import',
                 'icon'  => 'fa fa-file-import',
@@ -51,7 +51,7 @@ return [
                 'text'  => 'Export',
                 'route' => 'transactions.export',
                 'icon'  => 'fa fa-file-export',
-            ],
+            ], */
         ]),
     ],
 ];
