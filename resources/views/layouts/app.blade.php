@@ -10,13 +10,27 @@
     <title>
         @yield('template_title', env('APP_NAME', __('Argon Dashboard 2 by Creative Tim')))
     </title>
+    <!-- SEO básico -->
+    <meta name="description"
+        content="Plataforma para gestionar tus finanzas, transacciones, categorías y metas. Optimiza tu economía personal o empresarial.">
+    <meta name="keywords" content="finanzas, gestión financiera, transacciones, categorías, metas, NexusAts">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph para compartir en redes sociales -->
+    <meta property="og:title" content="Finanzas NexusAts">
+    <meta property="og:description" content="Gestiona tus finanzas de forma fácil y segura con NexusAts.">
+    <meta property="og:url" content="https://finanzas.nexusats.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://finanzas.nexusats.com/assets/img/logo.png">
     <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
     <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/select2.min.css') }}">
@@ -26,7 +40,7 @@
             text-transform: uppercase;
         }
     </style>
-    
+
 </head>
 
 <body class="{{ $class ?? '' }}">
@@ -36,7 +50,15 @@
     @endguest
 
     @auth
-        @if (in_array(request()->route()->getName(), ['sign-in-static', 'sign-up-static', 'login', 'register', 'recover-password', 'rtl', 'virtual-reality']))
+        @if (in_array(request()->route()->getName(), [
+                'sign-in-static',
+                'sign-up-static',
+                'login',
+                'register',
+                'recover-password',
+                'rtl',
+                'virtual-reality',
+            ]))
             @yield('content')
         @else
             @if (!in_array(request()->route()->getName(), ['profile', 'profile-static']))
