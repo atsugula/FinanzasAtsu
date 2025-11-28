@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Api\V1\GoalController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\TransactionController;
-use App\Http\Controllers\Api\V1\ExpensesCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,8 +47,8 @@ Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
     if ($exitCode !== 0) {
         return response('Error en el despliegue', 500);
     }
-	
-	return response('Despliegue OK', 200);
+
+    return response('Despliegue OK', 200);
 });
 
 Route::prefix('v1')->group(function () {
@@ -64,6 +64,6 @@ Route::middleware('api.auth')->prefix('v1')->group(function () {
     });
     Route::apiResource('goals', GoalController::class);
     Route::apiResource('transactions', TransactionController::class);
-    Route::apiResource('expenses-categories', ExpensesCategoryController::class);
+    Route::apiResource('expenses-categories', CategoryController::class);
     Route::get('getData', [HomeController::class, 'getDataSelects']);
 });
