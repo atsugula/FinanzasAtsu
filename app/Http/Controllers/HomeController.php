@@ -116,11 +116,13 @@ class HomeController extends Controller
             }
 
             $records = DB::table($table)
-                ->select('id', DB::raw('name AS label'))
-                ->where('created_by', $userId)
-                ->get();
+                ->select('id', DB::raw('name AS label'));
 
-            $data[$table] = $records;
+            if (Schema::hasColumn($table, 'created_by')) {
+                $records->where('created_by', $userId);
+            }
+
+            $data[$table] = $records->get();
         }
 
         return response()->json([
