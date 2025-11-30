@@ -7,30 +7,29 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-/**
- * Class GoalController
- * @package App\Http\Controllers\V1
- */
 class GoalController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the goals.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
         $id_auth = Auth::id();
-        $goals = Goal::where('created_by', $id_auth)
-                    ->with('transactions', 'savings')
-                    ->orderBy('id', 'DESC')
-                    ->paginate();
 
-        return response()->json($goals);
+        $goals = Goal::where('created_by', $id_auth)
+            ->orderBy('id', 'DESC')
+            ->paginate();
+
+        return response()->json([
+            'success' => true,
+            'data' => $goals
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created goal.
      *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -39,8 +38,7 @@ class GoalController extends Controller
     {
         $request->validate(Goal::$rules);
 
-        $id_auth = Auth::id();
-        $request['created_by'] = $id_auth;
+        $request['created_by'] = Auth::id();
 
         $goal = Goal::create($request->all());
 
@@ -52,7 +50,7 @@ class GoalController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified goal.
      *
      * @param  int $id
      * @return \Illuminate\Http\JsonResponse
@@ -75,7 +73,7 @@ class GoalController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified goal.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  int $id
@@ -104,7 +102,7 @@ class GoalController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified goal.
      *
      * @param  int $id
      * @return \Illuminate\Http\JsonResponse
