@@ -32,7 +32,9 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::with(['category', 'goal', 'creator'])->latest()->paginate(10);
+        $transactions = Transaction::with(['category', 'goal', 'creator'])
+                                ->where('created_by', Auth::id())
+                                ->latest()->paginate(10);
         return view('transaction.index', compact('transactions'));
     }
 
