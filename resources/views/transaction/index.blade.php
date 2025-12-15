@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-
     {{-- Navbar template --}}
     @include('layouts.navbars.auth.topnav', ['title' => __('Transaction')])
 
@@ -28,7 +27,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     {{-- Separar card --}}
                     <span class="card-separator"></span>
 
@@ -43,6 +42,7 @@
                                         <th>{{ __('No') }}</th>
 
                                         <th>{{ __('User') }}</th>
+                                        <th>{{ __('Goal') }}</th>
                                         <th>{{ __('Type') }}</th>
                                         <th>{{ __('Amount') }}</th>
                                         <th>{{ __('Date') }}</th>
@@ -53,16 +53,23 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($transactions as $transaction)
-
                                         @php
                                             // 'expense','income','saving','debt'
-                                            $type = $transaction->type == 'income' ? __('Income') : ($transaction->type == 'expense' ? __('Expense') : ($transaction->type == 'saving' ? __('Saving') : __('Debt')));
+                                            $type =
+                                                $transaction->type == 'income'
+                                                    ? __('Income')
+                                                    : ($transaction->type == 'expense'
+                                                        ? __('Expense')
+                                                        : ($transaction->type == 'saving'
+                                                            ? __('Saving')
+                                                            : __('Debt')));
                                         @endphp
 
                                         <tr>
                                             <td>{{ $transaction->id }}</td>
 
                                             <td>{{ $transaction->creator?->firstname }}</td>
+                                            <td>{{ $transaction->goal?->name ?? 'N/A' }}</td>
                                             <td>{{ $type }}</td>
                                             <td>{{ $transaction->amount }}</td>
                                             <td>{{ $transaction->date }}</td>
@@ -99,11 +106,8 @@
 
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
-
 @endsection
 
 @section('js')
-
     <script src="{{ asset('assets/js/plugins/sweetalert.js') }}"></script>
-
 @endsection
