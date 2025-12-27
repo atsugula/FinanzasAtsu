@@ -79,9 +79,9 @@
                             Limpiar
                         </a>
 
-                        <span class="ms-auto badge text-bg-light border">
+                        {{-- <span class="ms-auto badge text-bg-light border">
                             Cuotas calculadas: <span class="fw-semibold">{{ $periodos ?? '-' }}</span>
-                        </span>
+                        </span> --}}
                     </div>
                 </form>
             </div>
