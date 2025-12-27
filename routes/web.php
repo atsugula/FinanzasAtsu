@@ -1,73 +1,88 @@
 <?php
 
-use App\Http\Controllers\V1\CreditoSimuladorController;
-use App\Http\Controllers\V1\TransactionController;
-use App\Http\Controllers\V1\CategoryController;
-use App\Http\Controllers\UserProfileController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\V1\UserController;
-use App\Http\Controllers\V1\GoalController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\ChangePassword;
-use App\Http\Controllers\ResetPassword;
 use Illuminate\Support\Facades\Route;
 
-// Landing o redirección
-Route::get('/', fn() => redirect('/dashboard'))->middleware('auth');
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ResetPassword;
+use App\Http\Controllers\ChangePassword;
 
-// Auth
+use App\Http\Controllers\Web\AccountController;
+use App\Http\Controllers\Web\CategoryController;
+use App\Http\Controllers\Web\TransactionController;
+use App\Http\Controllers\Web\SettingsController;
+
+/*
+|--------------------------------------------------------------------------
+| Landing
+|--------------------------------------------------------------------------
+*/
+Route::get('/', fn() => redirect()->route('dashboard'))
+    ->middleware('auth');
+
+/*
+|--------------------------------------------------------------------------
+| Auth (web)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'create'])->name('register');
     Route::post('/register', [RegisterController::class, 'store'])->name('register.perform');
+
     Route::get('/login', [LoginController::class, 'show'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.perform');
+
     Route::get('/reset-password', [ResetPassword::class, 'show'])->name('reset-password');
     Route::post('/reset-password', [ResetPassword::class, 'send'])->name('reset.perform');
+
     Route::get('/change-password', [ChangePassword::class, 'show'])->name('change-password');
     Route::post('/change-password', [ChangePassword::class, 'update'])->name('change.perform');
 });
 
-// Dashboard
-Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
-
-// Rutas protegidas
+/*
+|--------------------------------------------------------------------------
+| App (protected)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
 
-    // CRUD principales
-    Route::resource('users', UserController::class);
-    Route::resource('transactions', TransactionController::class);
-    Route::resource('categories', CategoryController::class)->names('categories');
-    Route::resource('goals', GoalController::class)->names('goals');
+    // Dashboard (Inicio)
+    Route::get('/home', [HomeController::class, 'index'])
+        ->name('home');
 
-    // Transacciones especiales
-    Route::get('transactions/import', [TransactionController::class, 'viewImport'])->name('transactions.import');
-    Route::post('transactions/import', [TransactionController::class, 'import'])->name('transactions.import.submit');
-    Route::get('transactions/export', [TransactionController::class, 'export'])->name('transactions.export');
+    Route::get('/dashboard', [HomeController::class, 'index'])
+        ->name('dashboard');
 
-    // Perfil
-    Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
-    Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
+    // Movimientos (CRUD) + Import/Export
+    Route::resource('transactions', TransactionController::class)
+        ->names('transactions');
 
-    // Páginas estáticas
-    Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
-    Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
-    Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static');
-    Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');
-    Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static');
+    Route::get('transactions/import', [TransactionController::class, 'importView'])
+        ->name('transactions.import');
+
+    Route::post('transactions/import', [TransactionController::class, 'importStore'])
+        ->name('transactions.import.store');
+
+    Route::get('transactions/export', [TransactionController::class, 'export'])
+        ->name('transactions.export');
+
+    // Cuentas (CRUD) - en MVP yo archivaría en destroy
+    Route::resource('accounts', AccountController::class)
+        ->names('accounts');
+
+    // Categorías (CRUD) - opcional, pero lo dejamos
+    Route::resource('categories', CategoryController::class)
+        ->names('categories');
+
+    // Ajustes (moneda, mes inicial)
+    Route::get('/settings', [SettingsController::class, 'edit'])
+        ->name('settings.edit');
+
+    Route::put('/settings', [SettingsController::class, 'update'])
+        ->name('settings.update');
 
     // Logout
-    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-
-    // Catch-all de páginas, con restricción para no chocar con otras rutas
-    Route::get('/{page}', [PageController::class, 'index'])
-        ->where('page', '^[a-z0-9\-]+$')
-        ->name('page');
-});
-
-Route::prefix('simulador')->group(function () {
-    Route::get('/creditos', [CreditoSimuladorController::class, 'index'])->name('creditos.index');
-    Route::get('/creditos/export/pdf', [CreditoSimuladorController::class, 'exportPdf'])->name('creditos.export.pdf');
-    Route::get('/creditos/export/excel', [CreditoSimuladorController::class, 'exportExcel'])->name('creditos.export.excel');
+    Route::post('/logout', [LoginController::class, 'logout'])
+        ->name('logout');
 });

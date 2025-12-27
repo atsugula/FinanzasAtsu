@@ -15,6 +15,7 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:120'],
+            'icon' => ['sometimes', 'string', 'max:120'],
             'type' => ['sometimes', 'in:income,expense'],
             'is_archived' => ['sometimes', 'boolean'],
         ];

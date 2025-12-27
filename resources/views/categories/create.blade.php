@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-
     {{-- Navbar template --}}
     @include('layouts.navbars.auth.topnav', ['title' => __('Category')])
 
@@ -18,7 +17,7 @@
                 <div class="card card-default">
                     <div class="card-header">
                         <div class="float-left">
-                            <span class="card-title">{{ __('Update Category') }} </span>
+                            <span class="card-title">{{ __('Create Category') }} </span>
                         </div>
                         <div class="float-right">
                             <a class="btn btn-primary" href="{{ route('categories.index') }}"> {{ __('Back') }}</a>
@@ -29,10 +28,11 @@
                     <span class="card-separator"></span>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('categories.store') }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('categories.store') }}" role="form"
+                            enctype="multipart/form-data">
                             @csrf
 
-                            @include('category.form')
+                            @include('categories.form')
 
                         </form>
                     </div>
@@ -44,3 +44,18 @@
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
 @endsection
+
+{{-- @section('js')
+    <script>
+        (function() {
+            const input = document.getElementById('icon_input');
+            const iconPreview = document.getElementById('icon_preview_i');
+
+            if (input && iconPreview) {
+                const sync = () => iconPreview.textContent = (input.value || 'help').trim() || 'help';
+                input.addEventListener('input', sync);
+                sync();
+            }
+        })();
+    </script>
+@endsection --}}
