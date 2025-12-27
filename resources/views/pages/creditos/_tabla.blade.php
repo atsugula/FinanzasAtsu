@@ -21,7 +21,7 @@
             @empty
                 <tr>
                     <td colspan="5" class="text-center text-muted py-4">
-                        Ingresa los valores y dale <span class="fw-semibold">Simular</span>.
+                        Ingresa valores y dale <span class="fw-semibold">Simular</span>.
                     </td>
                 </tr>
             @endforelse

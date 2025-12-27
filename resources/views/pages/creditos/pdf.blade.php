@@ -43,11 +43,12 @@
 
 <body>
     <h2>Simulación de Crédito</h2>
+
     <p class="muted">
         Préstamo: ${{ number_format($prestamo, 0, ',', '.') }} ·
         Interés: {{ rtrim(rtrim(number_format($interes, 2, '.', ''), '0'), '.') }}% ·
         Abono: ${{ number_format($abono, 0, ',', '.') }} ·
-        Cuotas: {{ $periodos }}
+        Periodos: {{ $periodos }}
     </p>
 
     <table>
