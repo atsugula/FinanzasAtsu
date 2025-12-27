@@ -25,9 +25,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            CategorySeeder::class,
-            EstatusTableSeeder::class,
-            TypeDocumentSeeder::class,
+            DefaultUserDataSeeder::class,
         ]);
     }
 }

@@ -1,22 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Api\V1\GoalController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\SummaryController;
+use App\Http\Controllers\Api\V1\AccountController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\SettingsController;
 use App\Http\Controllers\Api\V1\TransactionController;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-| Aquí registramos todas las rutas de la API.
-| Estas rutas son cargadas por RouteServiceProvider y están bajo el prefijo "api".
-|--------------------------------------------------------------------------
-*/
 
 Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
     $signature = $request->header('X-Hub-Signature-256');
@@ -58,12 +49,33 @@ Route::prefix('v1')->group(function () {
     Route::post('/reset-password', [AuthController::class, 'sendPasswordResetLink'])->middleware('guest')->name('reset.api');
 });
 
-Route::middleware('api.auth')->prefix('v1')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return response()->json(['user' => $request->user()]);
+// Route::middleware('api.auth')->prefix('v1')->group(function () {
+//     Route::get('/user', function (Request $request) {
+//         return response()->json(['user' => $request->user()]);
+//     });
+//     Route::apiResource('goals', GoalController::class);
+//     Route::apiResource('transactions', TransactionController::class);
+//     Route::apiResource('expenses-categories', CategoryController::class);
+//     Route::get('getData', [HomeController::class, 'getDataSelects']);
+// });
+
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/me', [AuthController::class, 'me']);
     });
-    Route::apiResource('goals', GoalController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/summary', [SummaryController::class, 'show']);
+
+    Route::get('/settings', [SettingsController::class, 'show']);
+    Route::put('/settings', [SettingsController::class, 'update']);
+
+    Route::apiResource('accounts', AccountController::class);
+    Route::apiResource('categories', CategoryController::class);
     Route::apiResource('transactions', TransactionController::class);
-    Route::apiResource('expenses-categories', CategoryController::class);
-    Route::get('getData', [HomeController::class, 'getDataSelects']);
 });

@@ -6,40 +6,37 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Notifications\ForgotPassword;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-	use Notifiable;
-
-    public function routeNotificationForMail() {
-        return request()->email;
-    }
-	
     public function login(Request $request)
     {
-        // Validación
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
+            'device_name' => 'sometimes|string|max:120', // opcional, útil para móvil/web
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Intentar login
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Credenciales incorrectas'], 401);
         }
 
-        // Obtener usuario autenticado
+        /** @var User $user */
         $user = Auth::user();
 
-        // Crear token de acceso
-        $token = $user->createToken('authToken')->plainTextToken;
+        // (Opcional) si quieres 1 token por dispositivo:
+        // $deviceName = $request->input('device_name', 'authToken');
+        // $user->tokens()->where('name', $deviceName)->delete();
+
+        $tokenName = $request->input('device_name', 'authToken');
+        $token = $user->createToken($tokenName)->plainTextToken;
 
         return response()->json([
             'message' => 'Login exitoso',
@@ -50,42 +47,50 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Revocar el token
-        $request->user()->tokens()->delete();
+        // Revoca SOLO el token actual (recomendado)
+        $request->user()->currentAccessToken()?->delete();
 
-        return response()->json(['message' => 'Sesión cerrada exitosamente'], 401);
+        // Si quieres cerrar sesión en todos los dispositivos:
+        // $request->user()->tokens()->delete();
+
+        return response()->json(['message' => 'Sesión cerrada exitosamente'], 200);
     }
-	
-	public function register(Request $request) {
 
-        // Validación
+    public function register(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'username' => 'required|max:255|min:2',
             'email' => 'required|email|max:255|unique:users,email',
-            'password' => 'required|min:5|max:255',
+            'password' => 'required|min:5|max:255|confirmed', // agrega password_confirmation
+            'device_name' => 'sometimes|string|max:120',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = User::create($request->only('username', 'email', 'password'));
-        auth()->login($user);
-		
-		$token = $user->createToken('authToken')->plainTextToken;
-		
-		return response()->json([
+        $user = User::create([
+            'username' => $request->username,
+            'email' => mb_strtolower($request->email),
+            'password' => Hash::make($request->password), // clave
+        ]);
+
+        // No necesitas auth()->login($user) para emitir token,
+        // pero no hace daño si tu app lo usa.
+        // auth()->login($user);
+
+        $tokenName = $request->input('device_name', 'authToken');
+        $token = $user->createToken($tokenName)->plainTextToken;
+
+        return response()->json([
             'message' => 'Usuario registrado exitosamente',
             'user' => $user,
             'token' => $token,
-        ], 200);
-
-	}
+        ], 201);
+    }
 
     public function sendPasswordResetLink(Request $request)
     {
-
-        // Validación
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:255',
         ]);
@@ -94,18 +99,17 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', mb_strtolower($request->email))->first();
 
-        if ($user) {
-            $this->notify(new ForgotPassword($user->id));
-
-            return response()->json([
-                'message' => 'Correo enviado correctamente.',
-                'user' => $user,
-            ], 200);
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado.'], 404);
         }
 
-        return response()->json(['message' => 'Usuario no encontrado.'], 404);
-    }
+        // Notifica al usuario (lo correcto)
+        $user->notify(new ForgotPassword($user->id));
 
+        return response()->json([
+            'message' => 'Correo enviado correctamente.',
+        ], 200);
+    }
 }
