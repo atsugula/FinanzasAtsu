@@ -15,6 +15,7 @@ return new class extends Migration {
                 ->cascadeOnDelete();
 
             $table->string('name');
+            $table->string('icon')->nullable();
             $table->enum('type', ['income', 'expense']);
             $table->boolean('is_archived')->default(false);
 

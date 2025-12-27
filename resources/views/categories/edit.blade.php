@@ -33,7 +33,7 @@
                             {{ method_field('PATCH') }}
                             @csrf
 
-                            @include('category.form')
+                            @include('categories.form')
 
                         </form>
                     </div>
@@ -45,3 +45,18 @@
     {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
 @endsection
+
+{{-- @section('js')
+    <script>
+        (function() {
+            const input = document.getElementById('icon_input');
+            const iconPreview = document.getElementById('icon_preview_i');
+
+            if (input && iconPreview) {
+                const sync = () => iconPreview.textContent = (input.value || 'help').trim() || 'help';
+                input.addEventListener('input', sync);
+                sync();
+            }
+        })();
+    </script>
+@endsection --}}
