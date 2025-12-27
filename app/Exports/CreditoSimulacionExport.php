@@ -18,7 +18,7 @@ class CreditoSimulacionExport implements FromView
 
     public function view(): View
     {
-        return view('creditos.excel', [
+        return view('pages.creditos.excel', [
             'prestamo' => $this->prestamo,
             'interes' => $this->interes,
             'abono' => $this->abono,
