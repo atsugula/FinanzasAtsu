@@ -16,14 +16,14 @@ class CreditoSimuladorController extends Controller
     {
         [$prestamo, $interes, $abono, $periodos, $tabla] = $this->build($request);
 
-        return view('creditos.simulador', compact('prestamo', 'interes', 'abono', 'periodos', 'tabla'));
+        return view('pages.creditos.simulador', compact('prestamo', 'interes', 'abono', 'periodos', 'tabla'));
     }
 
     public function exportPdf(Request $request)
     {
         [$prestamo, $interes, $abono, $periodos, $tabla] = $this->build($request);
 
-        $pdf = Pdf::loadView('creditos.pdf', compact('prestamo', 'interes', 'abono', 'periodos', 'tabla'));
+        $pdf = Pdf::loadView('pages.creditos.pdf', compact('prestamo', 'interes', 'abono', 'periodos', 'tabla'));
         return $pdf->download('simulacion_credito.pdf');
     }
 
