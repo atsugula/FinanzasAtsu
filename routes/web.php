@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\CreditoSimuladorController;
 use App\Http\Controllers\V1\TransactionController;
 use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\UserProfileController;
@@ -37,8 +38,8 @@ Route::middleware('auth')->group(function () {
     // CRUD principales
     Route::resource('users', UserController::class);
     Route::resource('transactions', TransactionController::class);
-	Route::resource('categories', CategoryController::class)->names('categories');
-	Route::resource('goals', GoalController::class)->names('goals');
+    Route::resource('categories', CategoryController::class)->names('categories');
+    Route::resource('goals', GoalController::class)->names('goals');
 
     // Transacciones especiales
     Route::get('transactions/import', [TransactionController::class, 'viewImport'])->name('transactions.import');
@@ -52,9 +53,9 @@ Route::middleware('auth')->group(function () {
     // Páginas estáticas
     Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
     Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
-    Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static'); 
+    Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static');
     Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');
-    Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static'); 
+    Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static');
 
     // Logout
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
@@ -63,4 +64,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/{page}', [PageController::class, 'index'])
         ->where('page', '^[a-z0-9\-]+$')
         ->name('page');
+});
+
+Route::prefix('simulador')->group(function () {
+    Route::get('/creditos', [CreditoSimuladorController::class, 'index'])->name('creditos.index');
+    Route::get('/creditos/export/pdf', [CreditoSimuladorController::class, 'exportPdf'])->name('creditos.export.pdf');
+    Route::get('/creditos/export/excel', [CreditoSimuladorController::class, 'exportExcel'])->name('creditos.export.excel');
 });
