@@ -88,7 +88,7 @@
                     @endif
                 </div>
 
-                @include('creditos._tabla', ['tabla' => $tabla ?? []])
+                @include('pages.creditos._tabla', ['tabla' => $tabla ?? []])
             </div>
         </div>
 
