@@ -78,12 +78,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class)
         ->names('categories');
 
-    // Ajustes (moneda, mes inicial)
-    Route::get('/settings', [SettingsController::class, 'edit'])
-        ->name('settings.edit');
-
-    Route::put('/settings', [SettingsController::class, 'update'])
-        ->name('settings.update');
+    // Ajustes (moneda, mes inicial) + CSV
+    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    Route::get('/settings/export/csv', [SettingsController::class, 'exportCsv'])->name('settings.export.csv');
+    Route::post('/settings/import/csv', [SettingsController::class, 'importCsv'])->name('settings.import.csv');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])
