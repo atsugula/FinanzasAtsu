@@ -72,8 +72,8 @@ class TransactionController extends Controller
             'note' => ['nullable', 'string', 'max:500'],
 
             // opcional, varias imágenes
-            'attachments' => ['nullable', 'array', 'max:5'],
-            'attachments.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'attachment_ids' => ['nullable', 'array', 'max:5'],
+            'attachment_ids.*' => ['integer'],
         ]);
 
         $account = Account::query()
@@ -98,18 +98,31 @@ class TransactionController extends Controller
         ]);
 
         // Guardar adjuntos (si vienen)
-        if ($request->hasFile('attachments')) {
-            foreach ($request->file('attachments') as $file) {
-                if (!$file || !$file->isValid())
-                    continue;
+        // IDs de adjuntos temporales
+        $attachmentIds = $request->input('attachment_ids', []);
+        if (!is_array($attachmentIds))
+            $attachmentIds = [];
 
-                $path = $file->store("transactions/{$user->id}/{$transaction->id}", 'public');
+        $attachments = TransactionAttachment::query()
+            ->where('user_id', $user->id)
+            ->whereIn('id', $attachmentIds)
+            ->where('is_temp', true)
+            ->whereNull('transaction_id')
+            ->get();
 
-                TransactionAttachment::create([
-                    'user_id' => $user->id,
+        foreach ($attachments as $att) {
+            // mover a carpeta final
+            $newPath = "transactions/{$user->id}/{$transaction->id}/" . basename($att->path);
+            if (Storage::disk('public')->exists($att->path)) {
+                Storage::disk('public')->move($att->path, $newPath);
+                $att->update([
+                    'path' => $newPath,
                     'transaction_id' => $transaction->id,
-                    'path' => $path,
+                    'is_temp' => false,
                 ]);
+            } else {
+                // si por alguna razón el archivo no existe, lo eliminamos del registro
+                $att->delete();
             }
         }
 
@@ -158,8 +171,8 @@ class TransactionController extends Controller
             'note' => ['nullable', 'string', 'max:500'],
 
             // opcional, varias imágenes
-            'attachments' => ['nullable', 'array', 'max:5'],
-            'attachments.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'attachment_ids' => ['nullable', 'array', 'max:5'],
+            'attachment_ids.*' => ['integer'],
         ]);
 
         $account = Account::query()
@@ -183,18 +196,31 @@ class TransactionController extends Controller
         ]);
 
         // Guardar adjuntos (si vienen)
-        if ($request->hasFile('attachments')) {
-            foreach ($request->file('attachments') as $file) {
-                if (!$file || !$file->isValid())
-                    continue;
+        // IDs de adjuntos temporales
+        $attachmentIds = $request->input('attachment_ids', []);
+        if (!is_array($attachmentIds))
+            $attachmentIds = [];
 
-                $path = $file->store("transactions/{$user->id}/{$transaction->id}", 'public');
+        $attachments = TransactionAttachment::query()
+            ->where('user_id', $user->id)
+            ->whereIn('id', $attachmentIds)
+            ->where('is_temp', true)
+            ->whereNull('transaction_id')
+            ->get();
 
-                TransactionAttachment::create([
-                    'user_id' => $user->id,
+        foreach ($attachments as $att) {
+            // mover a carpeta final
+            $newPath = "transactions/{$user->id}/{$transaction->id}/" . basename($att->path);
+            if (Storage::disk('public')->exists($att->path)) {
+                Storage::disk('public')->move($att->path, $newPath);
+                $att->update([
+                    'path' => $newPath,
                     'transaction_id' => $transaction->id,
-                    'path' => $path,
+                    'is_temp' => false,
                 ]);
+            } else {
+                // si por alguna razón el archivo no existe, lo eliminamos del registro
+                $att->delete();
             }
         }
 

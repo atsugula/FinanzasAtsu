@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TransactionAttachment extends Model
 {
@@ -11,9 +10,10 @@ class TransactionAttachment extends Model
         'user_id',
         'transaction_id',
         'path',
+        'is_temp',
     ];
 
-    public function transaction(): BelongsTo
+    public function transaction()
     {
         return $this->belongsTo(Transaction::class);
     }

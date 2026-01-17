@@ -9,16 +9,14 @@ return new class extends Migration {
     {
         Schema::create('transaction_attachments', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('transaction_id')->constrained('transactions')->cascadeOnDelete();
-
-            // Ruta relativa en storage (public disk)
+            $table->foreignId('transaction_id')->nullable()->constrained('transactions')->cascadeOnDelete();
             $table->string('path');
-
+            $table->boolean('is_temp')->default(true);
             $table->timestamps();
 
-            $table->index(['user_id', 'transaction_id']);
+            $table->index(['user_id', 'is_temp']);
+            $table->index(['transaction_id']);
         });
     }
 

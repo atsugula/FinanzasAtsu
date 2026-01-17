@@ -2,16 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ResetPassword;
+use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\ResetPassword;
-use App\Http\Controllers\ChangePassword;
 
 use App\Http\Controllers\Web\AccountController;
 use App\Http\Controllers\Web\CategoryController;
-use App\Http\Controllers\Web\TransactionController;
 use App\Http\Controllers\Web\SettingsController;
+use App\Http\Controllers\Web\TransactionController;
+use App\Http\Controllers\Web\TransactionAttachmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +84,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
     Route::get('/settings/export/csv', [SettingsController::class, 'exportCsv'])->name('settings.export.csv');
     Route::post('/settings/import/csv', [SettingsController::class, 'importCsv'])->name('settings.import.csv');
+
+    Route::post('transactions/attachments/tmp', [TransactionAttachmentController::class, 'storeTmp'])
+        ->name('transactions.attachments.tmp.store');
+
+    Route::delete('transactions/attachments/tmp/{id}', [TransactionAttachmentController::class, 'destroyTmp'])
+        ->name('transactions.attachments.tmp.destroy');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])
