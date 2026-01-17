@@ -2,67 +2,68 @@
 
 namespace App\Observers;
 
+use App\Models\User;
 use App\Models\Account;
 use App\Models\Category;
-use App\Models\User;
 use App\Models\UserSetting;
-use Illuminate\Support\Facades\DB;
 
 class UserObserver
 {
     public function created(User $user): void
     {
-        DB::transaction(function () use ($user) {
+        // Settings
+        UserSetting::create([
+            'user_id' => $user->id,
+            'currency' => 'COP',
+            'month_start_day' => 1,
+        ]);
 
-            // Settings (1:1)
-            UserSetting::firstOrCreate(
-                ['user_id' => $user->id],
-                ['currency' => 'COP', 'month_start_day' => 1]
-            );
+        // Accounts
+        $defaultAccounts = ['Efectivo', 'Banco', 'Billetera'];
 
-            // Cuentas por defecto
-            $defaultAccounts = [
-                ['name' => 'Efectivo', 'initial_balance' => 0],
-                ['name' => 'Banco', 'initial_balance' => 0],
-                ['name' => 'Billetera', 'initial_balance' => 0],
-            ];
+        foreach ($defaultAccounts as $name) {
+            Account::create([
+                'user_id' => $user->id,
+                'name' => $name,
+                'initial_balance' => 0,
+                'is_archived' => false,
+            ]);
+        }
 
-            foreach ($defaultAccounts as $acc) {
-                Account::firstOrCreate(
-                    ['user_id' => $user->id, 'name' => $acc['name']],
-                    ['initial_balance' => $acc['initial_balance'], 'is_archived' => false]
-                );
-            }
+        // Categories
+        $income = ['Salario', 'Ventas', 'Regalo', 'Préstamo recibido', 'Otros ingresos'];
+        $expense = [
+            'Arriendo/Hipoteca',
+            'Servicios',
+            'Mercado',
+            'Transporte',
+            'Salud',
+            'Educación',
+            'Entretenimiento',
+            'Restaurantes',
+            'Ahorro',
+            'Pago préstamo',
+            'Otros gastos'
+        ];
 
-            // Categorías por defecto
-            $defaultCategories = [
-                // income
-                ['type' => 'income', 'name' => 'Salario'],
-                ['type' => 'income', 'name' => 'Ventas'],
-                ['type' => 'income', 'name' => 'Regalo'],
-                ['type' => 'income', 'name' => 'Préstamo recibido'],
-                ['type' => 'income', 'name' => 'Otros ingresos'],
+        foreach ($income as $name) {
+            Category::create([
+                'user_id' => $user->id,
+                'name' => $name,
+                'type' => 'income',
+                'icon' => null,
+                'is_archived' => false,
+            ]);
+        }
 
-                // expense
-                ['type' => 'expense', 'name' => 'Arriendo/Hipoteca'],
-                ['type' => 'expense', 'name' => 'Servicios'],
-                ['type' => 'expense', 'name' => 'Mercado'],
-                ['type' => 'expense', 'name' => 'Transporte'],
-                ['type' => 'expense', 'name' => 'Salud'],
-                ['type' => 'expense', 'name' => 'Educación'],
-                ['type' => 'expense', 'name' => 'Entretenimiento'],
-                ['type' => 'expense', 'name' => 'Restaurantes'],
-                ['type' => 'expense', 'name' => 'Ahorro'],
-                ['type' => 'expense', 'name' => 'Pago préstamo'],
-                ['type' => 'expense', 'name' => 'Otros gastos'],
-            ];
-
-            foreach ($defaultCategories as $cat) {
-                Category::firstOrCreate(
-                    ['user_id' => $user->id, 'type' => $cat['type'], 'name' => $cat['name']],
-                    ['is_archived' => false]
-                );
-            }
-        });
+        foreach ($expense as $name) {
+            Category::create([
+                'user_id' => $user->id,
+                'name' => $name,
+                'type' => 'expense',
+                'icon' => null,
+                'is_archived' => false,
+            ]);
+        }
     }
 }
