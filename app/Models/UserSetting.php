@@ -7,7 +7,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserSetting extends Model
 {
-    protected $fillable = ['user_id', 'currency', 'month_start_day'];
+    protected $table = 'user_settings';
+
+    protected $fillable = [
+        'user_id',
+        'currency',
+        'month_start_day',
+    ];
+
+    protected $casts = [
+        'month_start_day' => 'integer',
+    ];
 
     public function user(): BelongsTo
     {

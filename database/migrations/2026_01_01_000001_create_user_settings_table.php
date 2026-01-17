@@ -9,16 +9,10 @@ return new class extends Migration {
     {
         Schema::create('user_settings', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('user_id')->unique()
-                ->constrained()
-                ->cascadeOnDelete();
-
-            $table->char('currency', 3)->default('COP'); // ISO 4217
-            $table->unsignedTinyInteger('month_start_day')->default(1); // 1..28 recomendado
+            $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
+            $table->string('currency', 8)->default('COP');
+            $table->unsignedTinyInteger('month_start_day')->default(1);
             $table->timestamps();
-
-            $table->index(['user_id']);
         });
     }
 

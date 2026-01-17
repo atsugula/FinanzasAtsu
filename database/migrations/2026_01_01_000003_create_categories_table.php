@@ -9,20 +9,14 @@ return new class extends Migration {
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('user_id')
-                ->constrained()
-                ->cascadeOnDelete();
-
-            $table->string('name');
-            $table->string('icon')->nullable();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('name', 80);
             $table->enum('type', ['income', 'expense']);
+            $table->string('icon', 80)->nullable();
             $table->boolean('is_archived')->default(false);
-
             $table->timestamps();
 
             $table->index(['user_id', 'type', 'is_archived']);
-            $table->unique(['user_id', 'type', 'name']); // mismo nombre permitido si cambia type
         });
     }
 

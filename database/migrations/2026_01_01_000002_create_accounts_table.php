@@ -9,19 +9,13 @@ return new class extends Migration {
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('user_id')
-                ->constrained()
-                ->cascadeOnDelete();
-
-            $table->string('name');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('name', 80);
             $table->decimal('initial_balance', 15, 2)->default(0);
             $table->boolean('is_archived')->default(false);
-
             $table->timestamps();
 
             $table->index(['user_id', 'is_archived']);
-            $table->unique(['user_id', 'name']); // evita duplicados por usuario
         });
     }
 
