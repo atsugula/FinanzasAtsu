@@ -1,12 +1,12 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('template_title')
-    {{ __('Transaction') }}
+    {{ __('Movements') }}
 @endsection
 
 @section('content')
     {{-- Navbar template --}}
-    @include('layouts.navbars.auth.topnav', ['title' => __('Transaction')])
+    @include('layouts.navbars.auth.topnav', ['title' => __('Movements')])
 
     <div class="container-fluid">
         <div class="row">
@@ -16,7 +16,7 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Transaction') }}
+                                {{ __('Movements') }}
                             </span>
 
                             <div class="float-right">
@@ -40,55 +40,39 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>{{ __('No') }}</th>
-
-                                        <th>{{ __('User') }}</th>
-                                        <th>{{ __('Goal') }}</th>
-                                        <th>{{ __('Type') }}</th>
-                                        <th>{{ __('Amount') }}</th>
                                         <th>{{ __('Date') }}</th>
-                                        <th>{{ __('Source') }}</th>
-                                        <th>{{ __('Status') }}</th>
+                                        <th>{{ __('Type') }}</th>
+                                        <th>{{ __('Category') }}</th>
+                                        <th>{{ __('Account') }}</th>
+                                        <th>{{ __('Amount') }}</th>
+                                        {{-- <th>{{ __('Note') }}</th> --}}
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($transactions as $transaction)
-                                        @php
-                                            // 'expense','income','saving','debt'
-                                            $type =
-                                                $transaction->type == 'income'
-                                                    ? __('Income')
-                                                    : ($transaction->type == 'expense'
-                                                        ? __('Expense')
-                                                        : ($transaction->type == 'saving'
-                                                            ? __('Saving')
-                                                            : __('Debt')));
-                                        @endphp
-
                                         <tr>
                                             <td>{{ $transaction->id }}</td>
-
-                                            <td>{{ $transaction->creator?->firstname }}</td>
-                                            <td>{{ $transaction->goal?->name ?? 'N/A' }}</td>
-                                            <td>{{ $type }}</td>
+                                            <td>{{ optional($transaction->date)->format('Y-m-d') }}</td>
+                                            <td>{{ $transaction->type }}</td>
+                                            <td>{{ $transaction->category?->name }}</td>
+                                            <td>{{ $transaction->account?->name }}</td>
                                             <td>{{ $transaction->amount }}</td>
-                                            <td>{{ $transaction->date }}</td>
-                                            <td>{{ $transaction->source ?? 'N/A' }}</td>
-                                            <td>{{ $transaction->status?->name }}</td>
+                                            {{-- <td>{{ $transaction->note }}</td> --}}
 
                                             <td>
                                                 <form action="{{ route('transactions.destroy', $transaction->id) }}"
                                                     method="POST" class="form-delete">
-                                                    <a class="btn btn-sm btn-primary "
-                                                        href="{{ route('transactions.show', $transaction->id) }}"><i
-                                                            class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
                                                     <a class="btn btn-sm btn-success"
-                                                        href="{{ route('transactions.edit', $transaction->id) }}"><i
-                                                            class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                        href="{{ route('transactions.edit', $transaction->id) }}">
+                                                        <i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}
+                                                    </a>
+
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i
-                                                            class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>

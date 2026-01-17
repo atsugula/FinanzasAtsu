@@ -71,6 +71,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('accounts', AccountController::class)
         ->names('accounts');
 
+    Route::put('accounts/archive/{id}', [AccountController::class, 'archive'])
+        ->name('accounts.archive');
+
     // Categorías (CRUD) - opcional, pero lo dejamos
     Route::resource('categories', CategoryController::class)
         ->names('categories');

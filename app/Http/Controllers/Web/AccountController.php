@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Http\Controllers\Controller;
 use App\Models\Account;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 
 class AccountController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $accounts = Account::query()
-            ->where('user_id', auth()->id())
+            ->where('user_id', $request->user()->id)
             ->orderBy('is_archived')
             ->orderBy('name')
-            ->paginate(20);
+            ->paginate(25);
 
         return view('accounts.index', compact('accounts'));
     }
@@ -27,74 +26,61 @@ class AccountController extends Controller
 
     public function store(Request $request)
     {
+        $user = $request->user();
+
         $data = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:120',
-                Rule::unique('accounts', 'name')->where('user_id', auth()->id()),
-            ],
-            'initial_balance' => ['nullable', 'numeric'],
+            'name' => ['required', 'string', 'max:80'],
+            'initial_balance' => ['required', 'numeric'],
         ]);
 
         Account::create([
-            'user_id' => auth()->id(),
+            'user_id' => $user->id,
             'name' => $data['name'],
-            'initial_balance' => $data['initial_balance'] ?? 0,
+            'initial_balance' => $data['initial_balance'],
             'is_archived' => false,
         ]);
 
-        return redirect()->route('accounts.index')
-            ->with('success', 'Cuenta creada.');
+        return redirect()->route('accounts.index')->with('success', 'Cuenta creada.');
     }
 
-    public function show(int $id)
+    public function edit(Request $request, Account $account)
     {
-        $account = Account::where('user_id', auth()->id())->findOrFail($id);
-        return view('accounts.show', compact('account'));
-    }
-
-    public function edit(int $id)
-    {
-        $account = Account::where('user_id', auth()->id())->findOrFail($id);
+        $account = $this->ownedAccount($request->user()->id, $account->id);
         return view('accounts.edit', compact('account'));
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, Account $account)
     {
-        $account = Account::where('user_id', auth()->id())->findOrFail($id);
+        $account = $this->ownedAccount($request->user()->id, $account->id);
 
         $data = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:120',
-                Rule::unique('accounts', 'name')
-                    ->where('user_id', auth()->id())
-                    ->ignore($account->id),
-            ],
-            'initial_balance' => ['nullable', 'numeric'],
+            'name' => ['required', 'string', 'max:80'],
+            'initial_balance' => ['required', 'numeric'],
             'is_archived' => ['nullable', 'boolean'],
         ]);
 
         $account->update([
             'name' => $data['name'],
-            'initial_balance' => $data['initial_balance'] ?? $account->initial_balance,
+            'initial_balance' => $data['initial_balance'],
             'is_archived' => (bool) ($data['is_archived'] ?? $account->is_archived),
         ]);
 
-        return redirect()->route('accounts.index')
-            ->with('success', 'Cuenta actualizada.');
+        return redirect()->route('accounts.index')->with('success', 'Cuenta actualizada.');
     }
 
-    public function destroy(int $id)
+    public function archive(Request $request, $account_id)
     {
-        $account = Account::where('user_id', auth()->id())->findOrFail($id);
+        $account = $this->ownedAccount($request->user()->id, $account_id);
 
-        // MVP: archivamos, no borramos
         $account->update(['is_archived' => true]);
 
-        return redirect()->route('accounts.index')
-            ->with('success', 'Cuenta archivada.');
+        return back()->with('success', 'Cuenta archivada.');
+    }
+
+    private function ownedAccount(int $userId, int $id): Account
+    {
+        return Account::query()
+            ->where('user_id', $userId)
+            ->findOrFail($id);
     }
 }

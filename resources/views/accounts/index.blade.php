@@ -1,91 +1,96 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
+@section('template_title')
+    {{ __('Accounts') }}
+@endsection
+
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => __('Cuentas')])
+    {{-- Navbar template --}}
+    @include('layouts.navbars.auth.topnav', ['title' => __('Accounts')])
 
-    <div class="container-fluid py-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
 
-        @if (session('success'))
-            <div class="alert alert-success text-white">{{ session('success') }}</div>
-        @endif
+                            <span id="card_title">
+                                {{ __('Accounts') }}
+                            </span>
 
-        @if ($errors->any())
-            <div class="alert alert-danger text-white">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $e)
-                        <li>{{ $e }}</li>
-                    @endforeach
-                </ul>
+                            <div class="float-right">
+                                <a href="{{ route('accounts.create') }}" class="btn btn-primary btn-sm float-right"
+                                    data-placement="left">
+                                    {{ __('Create New') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Separar card --}}
+                    <span class="card-separator"></span>
+
+                    {{-- Plantilla mensajes --}}
+                    @include('layouts.message')
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th>{{ __('No') }}</th>
+                                        <th>{{ __('Name') }}</th>
+                                        <th>{{ __('Initial Balance') }}</th>
+                                        <th>{{ __('Status') }}</th>
+                                        <th>{{ __('Actions') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($accounts as $account)
+                                        <tr>
+                                            <td>{{ $account->id }}</td>
+
+                                            <td>{{ $account->name }}</td>
+                                            <td>{{ $account->initial_balance }}</td>
+                                            <td>
+                                                {{ $account->is_archived ? __('Archived') : __('Active') }}
+                                            </td>
+
+                                            <td>
+                                                <form action="{{ route('accounts.archive', $account->id) }}"
+                                                    method="POST">
+                                                    <a class="btn btn-sm btn-success"
+                                                        href="{{ route('accounts.edit', $account->id) }}">
+                                                        <i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}
+                                                    </a>
+
+                                                    @csrf
+                                                    @method('PUT')
+                                                    @if (!$account->is_archived)
+                                                        <button type="submit" class="btn btn-warning btn-sm">
+                                                            <i class="fa fa-fw fa-archive"></i> {{ __('Archive') }}
+                                                        </button>
+                                                    @endif
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <br>
+                            {{ $accounts->appends(request()->except('page'))->links('vendor.pagination.custom') }}
+                        </div>
+                    </div>
+                </div>
             </div>
-        @endif
-
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="mb-0">{{ __('Mis cuentas') }}</h6>
-            <a href="{{ route('accounts.create') }}" class="btn btn-primary btn-sm">
-                <i class="fa fa-plus-circle me-1"></i> {{ __('Nueva cuenta') }}
-            </a>
-        </div>
-
-        <div class="card">
-            <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                    <thead>
-                        <tr>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                {{ __('Nombre') }}</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-end">
-                                {{ __('Saldo inicial') }}</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                                {{ __('Estado') }}</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-end">
-                                {{ __('Acciones') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($accounts as $acc)
-                            <tr>
-                                <td class="text-sm">{{ $acc->name }}</td>
-                                <td class="text-sm text-end">${{ number_format($acc->initial_balance, 2) }}</td>
-                                <td class="text-center">
-                                    @if ($acc->is_archived)
-                                        <span class="badge bg-secondary">{{ __('Archivada') }}</span>
-                                    @else
-                                        <span class="badge bg-success">{{ __('Activa') }}</span>
-                                    @endif
-                                </td>
-                                <td class="text-end">
-                                    <a href="{{ route('accounts.edit', $acc->id) }}"
-                                        class="btn btn-link text-dark btn-sm mb-0">
-                                        <i class="fa fa-edit me-1"></i>{{ __('Editar') }}
-                                    </a>
-
-                                    @if (!$acc->is_archived)
-                                        <form action="{{ route('accounts.destroy', $acc->id) }}" method="POST"
-                                            class="d-inline"
-                                            onsubmit="return confirm('{{ __('¿Archivar esta cuenta?') }}')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-link text-danger btn-sm mb-0">
-                                                <i class="fa fa-archive me-1"></i>{{ __('Archivar') }}
-                                            </button>
-                                        </form>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center text-sm py-4">{{ __('No tienes cuentas aún.') }}</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="mt-3">
-            {{ $accounts->links() }}
         </div>
     </div>
 
+    {{-- Footer template --}}
     @include('layouts.footers.auth.footer')
+@endsection
+
+@section('js')
+    <script src="{{ asset('assets/js/plugins/sweetalert.js') }}"></script>
 @endsection
