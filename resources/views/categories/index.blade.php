@@ -43,6 +43,7 @@
                                         <th>{{ __('Name') }}</th>
                                         <th>{{ __('Icon') }}</th>
                                         <th>{{ __('Type') }}</th>
+                                        <th>{{ __('Status') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
@@ -54,19 +55,11 @@
                                             <td>{{ $category->name }}</td>
                                             <td>{{ $category->icon }}</td>
                                             <td>{{ $category->type }}</td>
+                                            <td>{{ $category->is_archived ? __('Archived') : __('Active') }}</td>
                                             <td>
-                                                <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="form-delete">
-                                                    <a class="btn btn-sm btn-primary "
-                                                        href="{{ route('categories.show', $category->id) }}"><i
-                                                            class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success"
-                                                        href="{{ route('categories.edit', $category->id) }}"><i
-                                                            class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i
-                                                            class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
-                                                </form>
+                                                <a class="btn btn-sm btn-success"
+                                                    href="{{ route('categories.edit', $category->id) }}"><i
+                                                        class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                             </td>
                                         </tr>
                                     @endforeach
