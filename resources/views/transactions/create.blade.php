@@ -1,16 +1,15 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('template_title')
-    {{ __('Update Transaction') }}
+    {{ __('Create Movement') }}
 @endsection
 
 @section('content')
-
     {{-- Navbar template --}}
-    @include('layouts.navbars.auth.topnav', ['title' => __('Transaction')])
+    @include('layouts.navbars.auth.topnav', ['title' => __('Movements')])
 
     <section class="content container-fluid">
-        <div class="">
+        <div class="row">
             <div class="col-md-12">
 
                 @includeif('partials.errors')
@@ -18,7 +17,7 @@
                 <div class="card card-default">
                     <div class="card-header">
                         <div class="float-left">
-                            <span class="card-title">{{ __('Update Transaction') }} </span>
+                            <span class="card-title">{{ __('Create Movement') }} </span>
                         </div>
                         <div class="float-right">
                             <a class="btn btn-primary" href="{{ route('transactions.index') }}"> {{ __('Back') }}</a>
@@ -29,10 +28,11 @@
                     <span class="card-separator"></span>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('transactions.store') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('transactions.store') }}" role="form"
+                            enctype="multipart/form-data">
                             @csrf
 
-                            @include('transaction.form')
+                            @include('transactions.form')
 
                         </form>
                     </div>
@@ -40,6 +40,7 @@
             </div>
         </div>
     </section>
-@endsection
 
-@include('transaction.format')
+    {{-- Footer template --}}
+    @include('layouts.footers.auth.footer')
+@endsection
