@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\TransactionAttachment;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
 {
@@ -68,9 +70,12 @@ class TransactionController extends Controller
             'account_id' => ['required', 'integer'],
             'date' => ['required', 'date'],
             'note' => ['nullable', 'string', 'max:500'],
+
+            // opcional, varias imágenes
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        // Asegurar pertenencia al usuario (sin confianza en el front)
         $account = Account::query()
             ->where('user_id', $user->id)
             ->where('is_archived', false)
@@ -82,15 +87,31 @@ class TransactionController extends Controller
             ->where('type', $data['type'])
             ->findOrFail($data['category_id']);
 
-        Transaction::create([
+        $transaction = Transaction::create([
             'user_id' => $user->id,
             'date' => $data['date'],
             'type' => $data['type'],
-            'amount' => $data['amount'], // siempre positivo
+            'amount' => $data['amount'],
             'account_id' => $account->id,
             'category_id' => $category->id,
             'note' => $data['note'] ?? null,
         ]);
+
+        // Guardar adjuntos (si vienen)
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                if (!$file || !$file->isValid())
+                    continue;
+
+                $path = $file->store("transactions/{$user->id}/{$transaction->id}", 'public');
+
+                TransactionAttachment::create([
+                    'user_id' => $user->id,
+                    'transaction_id' => $transaction->id,
+                    'path' => $path,
+                ]);
+            }
+        }
 
         return redirect()->route('transactions.index')->with('success', 'Movimiento guardado.');
     }
@@ -135,6 +156,10 @@ class TransactionController extends Controller
             'account_id' => ['required', 'integer'],
             'date' => ['required', 'date'],
             'note' => ['nullable', 'string', 'max:500'],
+
+            // opcional, varias imágenes
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
         $account = Account::query()
@@ -157,6 +182,22 @@ class TransactionController extends Controller
             'note' => $data['note'] ?? null,
         ]);
 
+        // Guardar adjuntos (si vienen)
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                if (!$file || !$file->isValid())
+                    continue;
+
+                $path = $file->store("transactions/{$user->id}/{$transaction->id}", 'public');
+
+                TransactionAttachment::create([
+                    'user_id' => $user->id,
+                    'transaction_id' => $transaction->id,
+                    'path' => $path,
+                ]);
+            }
+        }
+
         return redirect()->route('transactions.index')->with('success', 'Movimiento actualizado.');
     }
 
@@ -174,7 +215,11 @@ class TransactionController extends Controller
     {
         return Transaction::query()
             ->where('user_id', $userId)
-            ->with(['account:id,name', 'category:id,name,type'])
+            ->with([
+                'account:id,name',
+                'category:id,name,type',
+                'attachments:id,user_id,transaction_id,path',
+            ])
             ->findOrFail($id);
     }
 

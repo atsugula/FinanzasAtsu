@@ -137,6 +137,38 @@
                 </div>
             </div>
 
+            {{-- Comprobantes (opcional) --}}
+            <div class="col-md-12">
+                <div class="form-group">
+                    {{ Form::label('attachments', __('Receipts (optional)')) }}
+                    <input type="file" name="attachments[]"
+                        class="form-control {{ $errors->has('attachments') ? 'is-invalid' : '' }}" accept="image/*"
+                        multiple>
+
+                    <small class="form-text text-muted">
+                        {{ __('You can attach up to 5 images. Max 2MB each (jpg, png, webp).') }}
+                    </small>
+
+                    {!! $errors->first('attachments', '<div class="invalid-feedback d-block">:message</div>') !!}
+                    {!! $errors->first('attachments.*', '<div class="invalid-feedback d-block">:message</div>') !!}
+                </div>
+            </div>
+
+            {{-- Mostrar adjuntos existentes (solo en edit) --}}
+            @if (!empty($transaction->id) && isset($transaction->attachments) && $transaction->attachments->count())
+                <div class="col-md-12">
+                    <label class="form-label">{{ __('Current receipts') }}</label>
+                    <div class="d-flex flex-wrap" style="gap:10px;">
+                        @foreach ($transaction->attachments as $att)
+                            <a href="{{ asset('storage/' . $att->path) }}" target="_blank" class="border rounded p-1">
+                                <img src="{{ asset('storage/' . $att->path) }}" alt="receipt"
+                                    style="height:80px; width:auto; display:block;">
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
         </div>
     </div>
 
