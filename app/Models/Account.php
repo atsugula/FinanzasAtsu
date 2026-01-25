@@ -21,7 +21,8 @@ class Account extends Model
     ];
 
     protected $appends = [
-        'current_balance'
+        'current_balance',
+        'current_balance_formatted',
     ];
 
     public function user(): BelongsTo
@@ -36,6 +37,12 @@ class Account extends Model
 
     public function getCurrentBalanceAttribute(): float
     {
-        return $this->transactions()->sum('amount');
+        return (float) ($this->transactions()->sum('amount') ?? 0);
     }
+
+    public function getCurrentBalanceFormattedAttribute(): string
+    {
+        return number_format($this->current_balance, 2, '.', ',');
+    }
+
 }
