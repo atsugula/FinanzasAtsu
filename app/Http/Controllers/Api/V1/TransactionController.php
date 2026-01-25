@@ -17,7 +17,8 @@ class TransactionController extends Controller
         $user = $request->user();
         $month = $request->query('month', now()->format('Y-m'));
 
-        [$start, $end] = $this->monthRangeFromString($month, (int) $user->settings->month_start_day);
+        $monthStartDay = (int) ($user->settings->month_start_day ?? 1);
+        [$start, $end] = $this->monthRangeFromString($month, $monthStartDay);
 
         $transactions = Transaction::query()
             ->where('user_id', $user->id)
