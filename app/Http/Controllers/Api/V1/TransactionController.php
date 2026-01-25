@@ -133,7 +133,7 @@ class TransactionController extends Controller
             'success' => true,
             'message' => 'Movimiento guardado.',
             'data' => $transaction,
-        ], 201);
+        ], 200);
     }
 
     public function update(Request $request, Transaction $transaction)
