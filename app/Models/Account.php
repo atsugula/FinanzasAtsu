@@ -20,6 +20,10 @@ class Account extends Model
         'is_archived' => 'boolean',
     ];
 
+    protected $appends = [
+        'current_balance'
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -28,5 +32,10 @@ class Account extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function getCurrentBalanceAttribute(): float
+    {
+        return $this->transactions()->sum('amount');
     }
 }
