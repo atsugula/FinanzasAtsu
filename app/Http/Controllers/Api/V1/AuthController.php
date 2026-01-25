@@ -69,11 +69,13 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = User::create([
-            'username' => $request->username,
-            'email' => mb_strtolower($request->email),
-            'password' => Hash::make($request->password), // clave
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => mb_strtolower($request->email)],
+            [
+                'username' => $request->username,
+                'password' => Hash::make($request->password),
+            ]
+        );
 
         // No necesitas auth()->login($user) para emitir token,
         // pero no hace daño si tu app lo usa.
