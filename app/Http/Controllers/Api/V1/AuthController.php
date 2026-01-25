@@ -91,7 +91,9 @@ class AuthController extends Controller
 
         // 3) Si NO existe, ahora sí validamos lo necesario para crearlo
         $createValidator = Validator::make($request->all(), [
-            'username' => ['required', 'string', 'min:2', 'max:255'],
+            // 'username' => ['required', 'string', 'min:2', 'max:255'],
+            'firstname' => ['required', 'string', 'min:2', 'max:255'],
+            'lastname' => ['required', 'string', 'min:2', 'max:255'],
             'password' => ['required', 'string', 'min:5', 'max:255', 'confirmed'],
             // Unique aquí (aunque ya revisamos arriba) para cubrir carreras + consistencia
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
@@ -106,8 +108,15 @@ class AuthController extends Controller
         }
 
         try {
+
+            $firstname = mb_strtolower(trim($request->input('firstname')));
+            $lastname = mb_strtolower(trim($request->input('lastname')));
+            $username = str_replace(' ', '_', $firstname . $lastname);
+
             $user = User::create([
-                'username' => $request->input('username'),
+                'username' => $username,
+                'firstname' => $firstname,
+                'lastname' => $lastname,
                 'email' => $email,
                 'password' => Hash::make($request->input('password')),
             ]);
