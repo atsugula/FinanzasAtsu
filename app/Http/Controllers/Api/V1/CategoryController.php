@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CategoryResource;
-use App\Http\Requests\Category\StoreCategoryRequest;
-use App\Http\Requests\Category\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -15,6 +13,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'type' => ['nullable', 'in:income,expense'],
+            'archived' => ['nullable', 'in:0,1'],
         ]);
 
         $q = Category::query()
@@ -24,45 +23,102 @@ class CategoryController extends Controller
             $q->where('type', $request->string('type'));
         }
 
+        if ($request->filled('archived')) {
+            $q->where('is_archived', (bool) $request->integer('archived'));
+        }
+
         $categories = $q->orderBy('is_archived')
             ->orderBy('type')
             ->orderBy('name')
-            ->get();
+            ->paginate(30);
 
-        return CategoryResource::collection($categories);
+        return response()->json([
+            'success' => true,
+            'data' => $categories,
+        ]);
     }
 
-    public function store(StoreCategoryRequest $request)
+    public function store(Request $request)
     {
-        $category = Category::create([
-            'user_id' => auth()->id(),
-            ...$request->validated(),
+        $data = $request->validate([
+            'type' => ['required', 'in:income,expense'],
+            'icon' => ['nullable', 'string', 'max:120'],
+            'name' => [
+                'required',
+                'string',
+                'max:120',
+                Rule::unique('categories', 'name')
+                    ->where('user_id', auth()->id())
+                    ->where('type', $request->input('type')),
+            ],
         ]);
 
-        return (new CategoryResource($category))->response()->setStatusCode(201);
+        $category = Category::create([
+            'user_id' => auth()->id(),
+            'type' => $data['type'],
+            'name' => $data['name'],
+            'icon' => $data['icon'] ?? null,
+            'is_archived' => false,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $category,
+        ], 201);
     }
 
     public function show(int $id)
     {
         $category = Category::where('user_id', auth()->id())->findOrFail($id);
-        return new CategoryResource($category);
+
+        return response()->json([
+            'success' => true,
+            'data' => $category,
+        ]);
     }
 
-    public function update(UpdateCategoryRequest $request, int $id)
+    public function update(Request $request, int $id)
     {
         $category = Category::where('user_id', auth()->id())->findOrFail($id);
-        $category->update($request->validated());
 
-        return new CategoryResource($category);
+        $data = $request->validate([
+            'type' => ['required', 'in:income,expense'],
+            'icon' => ['nullable', 'string', 'max:120'],
+            'name' => [
+                'required',
+                'string',
+                'max:120',
+                Rule::unique('categories', 'name')
+                    ->where('user_id', auth()->id())
+                    ->where('type', $request->input('type'))
+                    ->ignore($category->id),
+            ],
+            'is_archived' => ['nullable', 'boolean'],
+        ]);
+
+        $category->update([
+            'type' => $data['type'],
+            'name' => $data['name'],
+            'icon' => $data['icon'] ?? null,
+            'is_archived' => (bool) ($data['is_archived'] ?? $category->is_archived),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $category->fresh(),
+        ]);
     }
 
     public function destroy(int $id)
     {
         $category = Category::where('user_id', auth()->id())->findOrFail($id);
 
-        // MVP: archivar, no borrar
+        // MVP: archivamos, no borramos
         $category->update(['is_archived' => true]);
 
-        return response()->json(['message' => 'Categoría archivada.']);
+        return response()->json([
+            'success' => true,
+            'data' => $category->fresh(),
+        ]);
     }
 }
