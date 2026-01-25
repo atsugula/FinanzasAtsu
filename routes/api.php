@@ -65,16 +65,6 @@ Route::prefix('v1')->group(function () {
     Route::post('/reset-password', [AuthController::class, 'sendPasswordResetLink'])->middleware('guest')->name('reset.api');
 });
 
-// Route::middleware('api.auth')->prefix('v1')->group(function () {
-//     Route::get('/user', function (Request $request) {
-//         return response()->json(['user' => $request->user()]);
-//     });
-//     Route::apiResource('goals', GoalController::class);
-//     Route::apiResource('transactions', TransactionController::class);
-//     Route::apiResource('expenses-categories', CategoryController::class);
-//     Route::get('getData', [HomeController::class, 'getDataSelects']);
-// });
-
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -93,5 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('accounts', AccountController::class);
     Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('transactions', TransactionController::class);
+    Route::apiResource('transactions', TransactionController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+
+    Route::get('transactions-meta', [TransactionController::class, 'meta']);
 });
