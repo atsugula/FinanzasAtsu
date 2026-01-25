@@ -42,6 +42,7 @@
                                         <th>{{ __('No') }}</th>
                                         <th>{{ __('Name') }}</th>
                                         <th>{{ __('Initial Balance') }}</th>
+                                        <th>{{ __('Current Balance') }}</th>
                                         <th>{{ __('Status') }}</th>
                                         <th>{{ __('Actions') }}</th>
                                     </tr>
@@ -53,6 +54,7 @@
 
                                             <td>{{ $account->name }}</td>
                                             <td>{{ $account->initial_balance }}</td>
+                                            <td>{{ $account->current_balance }}</td>
                                             <td>
                                                 {{ $account->is_archived ? __('Archived') : __('Active') }}
                                             </td>
