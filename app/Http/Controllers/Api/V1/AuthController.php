@@ -18,7 +18,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
-            'device_name' => 'sometimes|string|max:120', // opcional, útil para móvil/web
+            'device_name' => 'sometimes|string|max:120',
         ]);
 
         if ($validator->fails()) {
