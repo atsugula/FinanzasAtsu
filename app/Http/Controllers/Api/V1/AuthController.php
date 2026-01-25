@@ -54,7 +54,10 @@ class AuthController extends Controller
         // Si quieres cerrar sesión en todos los dispositivos:
         // $request->user()->tokens()->delete();
 
-        return response()->json(['message' => 'Sesión cerrada exitosamente'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Sesión cerrada exitosamente'
+        ], 200);
     }
 
     public function register(Request $request)
