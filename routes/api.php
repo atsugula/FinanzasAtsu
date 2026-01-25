@@ -11,13 +11,29 @@ use App\Http\Controllers\Api\V1\TransactionController;
 
 Route::post('/v1/deploy-hook', function (\Illuminate\Http\Request $request) {
     $signature = $request->header('X-Hub-Signature-256');
+
+    if (!is_string($signature) || $signature === '') {
+        Log::warning('Deploy hook sin firma X-Hub-Signature-256', [
+            'ip' => $request->ip(),
+            'ua' => $request->userAgent(),
+        ]);
+        abort(401, 'Missing signature');
+    }
+
     $payload = $request->getContent();
 
-    $secret = config('services.github.webhook_secret', 'not_found');
+    $secret = (string) config('services.github.webhook_secret');
+    if ($secret === '' || $secret === 'not_found') {
+        Log::error('Webhook secret no configurado en services.github.webhook_secret');
+        abort(500, 'Server misconfigured');
+    }
+
     $hash = 'sha256=' . hash_hmac('sha256', $payload, $secret);
 
     if (!hash_equals($hash, $signature)) {
-        Log::warning('Firma de GitHub inválida.' . $secret);
+        Log::warning('Firma de GitHub inválida', [
+            'ip' => $request->ip(),
+        ]);
         abort(403, 'Unauthorized');
     }
 
