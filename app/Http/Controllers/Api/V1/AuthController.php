@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\ForgotPassword;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -58,28 +59,66 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|max:255|min:2',
-            'email' => 'required|email|max:255|unique:users,email',
-            'password' => 'required|min:5|max:255|confirmed', // agrega password_confirmation
-            'device_name' => 'sometimes|string|max:120',
+        // 1) Validación mínima para poder buscar
+        $baseValidator = Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'device_name' => ['sometimes', 'string', 'max:120'],
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        if ($baseValidator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validación fallida',
+                'errors' => $baseValidator->errors(),
+            ], 422);
         }
 
-        $user = User::firstOrCreate(
-            ['email' => mb_strtolower($request->email)],
-            [
-                'username' => $request->username,
-                'password' => Hash::make($request->password),
-            ]
-        );
+        $email = mb_strtolower(trim($request->input('email')));
 
-        // No necesitas auth()->login($user) para emitir token,
-        // pero no hace daño si tu app lo usa.
-        // auth()->login($user);
+        // 2) Si ya existe, devolvemos el usuario (SIN TOKEN)
+        $existing = User::where('email', $email)->first();
+        if ($existing) {
+            return response()->json([
+                'success' => true,
+                'message' => 'El usuario ya estaba creado',
+                'user' => $existing,
+                'exists' => true,
+            ], 200);
+        }
+
+        // 3) Si NO existe, ahora sí validamos lo necesario para crearlo
+        $createValidator = Validator::make($request->all(), [
+            'username' => ['required', 'string', 'min:2', 'max:255'],
+            'password' => ['required', 'string', 'min:5', 'max:255', 'confirmed'],
+            // Unique aquí (aunque ya revisamos arriba) para cubrir carreras + consistencia
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+        ]);
+
+        if ($createValidator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validación fallida',
+                'errors' => $createValidator->errors(),
+            ], 422);
+        }
+
+        try {
+            $user = User::create([
+                'username' => $request->input('username'),
+                'email' => $email,
+                'password' => Hash::make($request->input('password')),
+            ]);
+        } catch (QueryException $e) {
+            // Por si entran dos requests al tiempo: ya lo creó el otro
+            $user = User::where('email', $email)->first();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'El usuario ya estaba creado',
+                'user' => $user,
+                'exists' => true,
+            ], 200);
+        }
 
         $tokenName = $request->input('device_name', 'authToken');
         $token = $user->createToken($tokenName)->plainTextToken;
@@ -89,6 +128,7 @@ class AuthController extends Controller
             'message' => 'Usuario registrado exitosamente',
             'user' => $user,
             'token' => $token,
+            'exists' => false,
         ], 201);
     }
 
