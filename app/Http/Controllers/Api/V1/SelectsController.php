@@ -31,19 +31,19 @@ class SelectsController extends Controller
         $data = [];
 
         if (in_array('accounts', $fields, true)) {
-            $data['accounts'] = Account::query()
+            $data['accounts'] = Account::with('transactions')
                 ->where('user_id', $user->id)
                 ->where('is_archived', false)
                 ->orderBy('name')
-                ->get(['id', 'name']);
+                ->get(['id', 'name', 'current_balance', 'current_balance_formatted']);
         }
 
         if (in_array('categories', $fields, true)) {
-            $data['categories'] = Category::query()
+            $data['categories'] = Category::with('transactions')
                 ->where('user_id', $user->id)
                 ->where('is_archived', false)
                 ->orderBy('name')
-                ->get(['id', 'name', 'type']);
+                ->get(['id', 'name', 'type', 'icon']);
         }
 
         return response()->json([
