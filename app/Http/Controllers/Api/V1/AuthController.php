@@ -52,7 +52,7 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()?->delete();
 
         // Si quieres cerrar sesión en todos los dispositivos:
-        // $request->user()->tokens()->delete();
+        $request->user()->tokens()->delete();
 
         return response()->json([
             'success' => true,
