@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Account extends Model
 {
@@ -37,12 +37,13 @@ class Account extends Model
 
     public function getCurrentBalanceAttribute(): float
     {
-        return (float) ($this->transactions()->sum('amount') ?? 0);
+        $sum = $this->getAttribute('transactions_sum_amount');
+
+        return (float) $this->initial_balance + (float) ($sum ?? 0);
     }
 
     public function getCurrentBalanceFormattedAttribute(): string
     {
-        return number_format($this->current_balance, 2, '.', ',');
+        return number_format((float) $this->current_balance, 2, '.', ',');
     }
-
 }
