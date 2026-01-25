@@ -141,7 +141,7 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token,
             'exists' => false,
-        ], 201);
+        ], 200);
     }
 
     public function sendPasswordResetLink(Request $request)
