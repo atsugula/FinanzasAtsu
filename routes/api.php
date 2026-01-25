@@ -75,7 +75,7 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/summary', [SummaryController::class, 'show']);
 
     Route::get('/settings', [SettingsController::class, 'show']);
