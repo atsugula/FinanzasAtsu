@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\SummaryController;
 use App\Http\Controllers\Api\V1\AccountController;
+use App\Http\Controllers\Api\V1\SelectsController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\SettingsController;
 use App\Http\Controllers\Api\V1\TransactionController;
@@ -86,4 +87,6 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::apiResource('transactions', TransactionController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
 
     Route::get('transactions-meta', [TransactionController::class, 'meta']);
+
+    Route::get('getData', [SelectsController::class, 'getData']);
 });
