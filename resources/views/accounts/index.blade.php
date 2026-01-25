@@ -54,7 +54,7 @@
 
                                             <td>{{ $account->name }}</td>
                                             <td>{{ $account->initial_balance }}</td>
-                                            <td>{{ $account->current_balance }}</td>
+                                            <td>{{ $account->current_balance_formatted }}</td>
                                             <td>
                                                 {{ $account->is_archived ? __('Archived') : __('Active') }}
                                             </td>
