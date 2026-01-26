@@ -94,4 +94,17 @@ class AccountController extends Controller
             ->where('user_id', $userId)
             ->findOrFail($id);
     }
+
+    public function destroy(Request $request, int $id)
+    {
+        $account = $this->ownedAccount($request->user()->id, $id);
+
+        $account->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cuenta eliminada exitosamente',
+        ]);
+    }
+
 }
