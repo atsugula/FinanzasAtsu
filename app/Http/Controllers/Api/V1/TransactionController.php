@@ -15,14 +15,14 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $month = $request->query('month', now()->format('Y-m'));
+        // $month = $request->query('month', now()->format('Y-m'));
 
         $monthStartDay = (int) ($user->settings->month_start_day ?? 1);
-        [$start, $end] = $this->monthRangeFromString($month, $monthStartDay);
+        // [$start, $end] = $this->monthRangeFromString($month, $monthStartDay);
 
         $transactions = Transaction::query()
             ->where('user_id', $user->id)
-            ->whereBetween('date', [$start, $end])
+            // ->whereBetween('date', [$start, $end])
             ->with(['account:id,name', 'category:id,name,type', 'attachments:id,user_id,transaction_id,path'])
             ->orderByDesc('date')
             ->orderByDesc('id')
@@ -31,11 +31,11 @@ class TransactionController extends Controller
 
         return response()->json([
             'success' => true,
-            'filters' => [
-                'month' => $month,
-                'start' => $start,
-                'end' => $end,
-            ],
+            // 'filters' => [
+            //     'month' => $month,
+            //     'start' => $start,
+            //     'end' => $end,
+            // ],
             'data' => $transactions,
         ]);
     }
