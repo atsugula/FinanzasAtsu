@@ -28,7 +28,7 @@ class TransactionController extends Controller
             ->paginate(25)
             ->withQueryString();
 
-        return view('transactions.index', compact('transactions', 'month', 'start', 'end'));
+        return view('transactions.index', compact('transactions'/* , 'month', 'start', 'end' */));
     }
 
     public function create(Request $request)
